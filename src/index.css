@@ -2,132 +2,270 @@
    MESH BASKETBALL — GLOBAL DESIGN SYSTEM
    ========================================= */
 
-   :root {
-    /* Core backgrounds */
-    --mba-black: #090a0c;
-    --mba-header: #0b0c0f;
-    --mba-nav: #0b0c0f;
-  
-    --mba-bg: #151619;
-    --mba-surface: #1d1e21;
-    --mba-surface-2: #252629;
-    --mba-charcoal: #323232;
-  
-    /* Borders */
-    --mba-border: #36373b;
-    --mba-border-soft: #292a2e;
-  
-    /* Brand accent */
-    --mba-orange: #ff6a00;
-    --mba-orange-bright: #ff7a1a;
-    --mba-orange-dark: #b94d00;
-  
-    /* Text */
-    --mba-white: #ffffff;
-    --mba-text: #f5f5f5;
-    --mba-text-secondary: #c7c8cb;
-    --mba-text-muted: #8f9298;
-  
-    /* Layout */
-    --mba-header-height: 64px;
-    --mba-bottom-nav-height: 68px;
-  
-    /* Shape */
-    --mba-radius-sm: 8px;
-    --mba-radius-md: 12px;
-    --mba-radius-lg: 16px;
-    --mba-radius-xl: 18px;
-  
-    /* Shadows */
-    --mba-shadow-card:
-      0 12px 30px rgba(0, 0, 0, 0.28);
-  
-    --mba-shadow-orange:
-      0 0 24px rgba(255, 106, 0, 0.16);
-  
-    font-family:
-      Arial,
-      Helvetica,
-      sans-serif;
-  
-    color: var(--mba-text);
-    background: var(--mba-bg);
-  
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
+:root {
+  /* Core backgrounds */
+  --mba-black: #090a0c;
+  --mba-header: #0b0c0f;
+  --mba-nav: #0b0c0f;
+
+  --mba-bg: #151619;
+  --mba-surface: #1d1e21;
+  --mba-surface-2: #252629;
+  --mba-charcoal: #323232;
+
+  /* Borders */
+  --mba-border: #36373b;
+  --mba-border-soft: #292a2e;
+
+  /* Brand accent */
+  --mba-orange: #ff6a00;
+  --mba-orange-bright: #ff7a1a;
+  --mba-orange-dark: #b94d00;
+
+  /* Text */
+  --mba-white: #ffffff;
+  --mba-text: #f5f5f5;
+  --mba-text-secondary: #c7c8cb;
+  --mba-text-muted: #8f9298;
+
+  /* Layout */
+  --mba-header-height: 64px;
+  --mba-bottom-nav-height: 68px;
+
+  /* Shape */
+  --mba-radius-sm: 8px;
+  --mba-radius-md: 12px;
+  --mba-radius-lg: 16px;
+  --mba-radius-xl: 18px;
+
+  /* Shadows */
+  --mba-shadow-card:
+    0 12px 30px rgba(0, 0, 0, 0.28);
+
+  --mba-shadow-orange:
+    0 0 24px rgba(255, 106, 0, 0.16);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  color: var(--mba-text);
+  background: var(--mba-bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+
+/* =========================================
+   RESET
+   ========================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+html {
+  background: var(--mba-black);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+
+  margin: 0;
+
+  background: var(--mba-bg);
+
+  color: var(--mba-text);
+
+  overflow-x: hidden;
+}
+
+
+/* =========================================
+   BASIC ELEMENTS
+   ========================================= */
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+
+/* =========================================
+   MESH APP
+   ========================================= */
+
+#root {
+  min-height: 100vh;
+
+  background:
+    linear-gradient(
+      180deg,
+      #17181b 0%,
+      #151619 100%
+    );
+}
+
+
+/* =========================================
+   BOTTOM NAVIGATION
+   ========================================= */
+
+.bottom-nav {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 100;
+
+  height: calc(
+    var(--mba-bottom-nav-height) + env(safe-area-inset-bottom)
+  );
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(29, 30, 33, 0.98),
+      rgba(9, 10, 12, 0.995)
+    );
+
+  border-top: 1px solid var(--mba-border);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.34);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.bottom-nav-inner {
+  width: min(100%, 700px);
+  height: 100%;
+  margin: 0 auto;
+
+  padding:
+    5px
+    8px
+    max(5px, env(safe-area-inset-bottom));
+
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.bottom-nav-link {
+  position: relative;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+
+  border-radius: var(--mba-radius-sm);
+
+  color: var(--mba-text-muted);
+
+  transition:
+    color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-nav-link:hover {
+  color: var(--mba-white);
+}
+
+.bottom-nav-link:active {
+  transform: scale(0.95);
+}
+
+.bottom-nav-link.active {
+  color: var(--mba-orange);
+}
+
+.bottom-nav-link.active::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 50%;
+
+  width: 28px;
+  height: 3px;
+
+  border-radius: 999px;
+  background: var(--mba-orange);
+
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px rgba(255, 106, 0, 0.55);
+}
+
+.bottom-nav-icon {
+  display: grid;
+  place-items: center;
+}
+
+.bottom-nav-label {
+  max-width: 100%;
+  overflow: hidden;
+
+  font-size: 0.63rem;
+  font-weight: 700;
+  line-height: 1;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 700px) {
+  .bottom-nav-label {
+    font-size: 0.7rem;
   }
-  
-  
-  /* =========================================
-     RESET
-     ========================================= */
-  
-  * {
-    box-sizing: border-box;
+}
+
+@media (min-width: 1000px) {
+  .bottom-nav {
+    left: 50%;
+    right: auto;
+    bottom: 16px;
+
+    width: min(680px, calc(100% - 32px));
+    height: 70px;
+
+    border: 1px solid var(--mba-border);
+    border-radius: var(--mba-radius-lg);
+
+    transform: translateX(-50%);
   }
-  
-  html,
-  body,
-  #root {
+
+  .bottom-nav-inner {
     width: 100%;
-    min-height: 100%;
-    margin: 0;
+    padding-bottom: 5px;
   }
-  
-  html {
-    background: var(--mba-black);
-  }
-  
-  body {
-    min-width: 320px;
-    min-height: 100vh;
-  
-    margin: 0;
-  
-    background: var(--mba-bg);
-  
-    color: var(--mba-text);
-  
-    overflow-x: hidden;
-  }
-  
-  
-  /* =========================================
-     BASIC ELEMENTS
-     ========================================= */
-  
-  button,
-  input,
-  select,
-  textarea {
-    font: inherit;
-  }
-  
-  button {
-    cursor: pointer;
-  }
-  
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-  
-  img {
-    max-width: 100%;
-  }
-  
-  
-  /* =========================================
-     MESH APP
-     ========================================= */
-  
-  #root {
-    min-height: 100vh;
-  
-    background:
-      linear-gradient(
-        180deg,
-        #17181b 0%,
-        #151619 100%
-      );
-  }
+}

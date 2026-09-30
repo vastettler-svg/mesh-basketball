@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import { Activity, ChevronLeft, ChevronRight, Clock3, Radio, Sparkles, Trophy } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Activity, ChevronDown, ChevronLeft, ChevronRight, Clock3, Radio, Sparkles, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
+import ConferenceBadge from "../components/ConferenceBadge";
 import mbaLogo from "../assets/mba-logo.png";
 import "../styles/scores.css";
 
@@ -9,6 +10,17 @@ const MAX_WEEK = 24;
 
 const SCORES_API_URL =
   "https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
+
+const SCORES_VIEW_STORAGE_KEY = "mba-scores-view";
+
+function readSavedScoresView() {
+  try {
+    return JSON.parse(sessionStorage.getItem(SCORES_VIEW_STORAGE_KEY) || "null");
+  } catch {
+    return null;
+  }
+}
+
 
 
 const CONFERENCES = [
@@ -43,18 +55,18 @@ const MID_MAJOR_MAYHEM_CONFERENCES = new Set([
 ]);
 
 const EVENT = {
-  SKI_REG: { id: "ski-reg", label: "SKI Reg" },
-  SKI_CB: { id: "ski-cb", label: "SKI CB" },
-  INVITATIONAL: { id: "invitational", label: "Invitational" },
+  SKI_REG: { id: "ski-reg", label: "SKI Reg", fullLabel: "Season Kickoff Inv. - Regionals" },
+  SKI_CB: { id: "ski-cb", label: "SKI CB", fullLabel: "SKI Champions Bracket" },
+  INVITATIONAL: { id: "invitational", label: "Invitational", fullLabel: "Invitational Tournaments" },
   MID_MAJOR: {
     id: "mid-major-mayhem",
     label: "Mid Major Mayhem",
     midMajorOnly: true,
   },
-  CONF_CHALL: { id: "conf-chall", label: "Conf Chall" },
-  RIVALRY: { id: "rivalry", label: "Rivalry" },
-  CONF_TOURN: { id: "conf-tourn", label: "Conf Tourn" },
-  REG_SHOWDOWN: { id: "reg-showdown", label: "Reg. Showdown" },
+  CONF_CHALL: { id: "conf-chall", label: "Conf Chall", fullLabel: "Conference Challenger Series" },
+  RIVALRY: { id: "rivalry", label: "Rivalry", fullLabel: "Rivalry Week" },
+  CONF_TOURN: { id: "conf-tourn", label: "Conf Tourn", fullLabel: "Conference Tournament" },
+  REG_SHOWDOWN: { id: "reg-showdown", label: "Reg. Showdown", fullLabel: "Regional Showdown Tournament" },
   POSTSEASON: { id: "postseason", label: "Postseason" },
 };
 
@@ -178,6 +190,96 @@ function teamInitial(team) {
     : String(words[0] || "M").slice(0, 2).toUpperCase();
 }
 
+function ScoresDropdown({
+  label,
+  value,
+  options,
+  onChange,
+  ariaLabel,
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef(null);
+
+  const selectedOption =
+    options.find((option) => String(option.value) === String(value)) ??
+    options[0];
+
+  useEffect(() => {
+    function handlePointerDown(event) {
+      if (!rootRef.current?.contains(event.target)) {
+        setOpen(false);
+      }
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  function choose(option) {
+    onChange(option.value);
+    setOpen(false);
+  }
+
+  return (
+    <div
+      className={`scores-dropdown-control${open ? " is-open" : ""}`}
+      ref={rootRef}
+    >
+      <span>{label}</span>
+
+      <button
+        type="button"
+        className="scores-dropdown-trigger"
+        aria-label={ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((current) => !current)}
+      >
+        <strong>{selectedOption?.label || ""}</strong>
+        <ChevronDown size={16} aria-hidden="true" />
+      </button>
+
+      {open ? (
+        <div className="scores-dropdown-menu" role="listbox" aria-label={ariaLabel}>
+          {options.map((option) => {
+            const selected = String(option.value) === String(value);
+
+            return (
+              <button
+                type="button"
+                role="option"
+                aria-selected={selected}
+                key={String(option.value)}
+                className={[
+                  selected ? "active" : "",
+                  option.className || "",
+                  option.isCurrent ? "current-week" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => choose(option)}
+              >
+                {option.menuLabel || option.label}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function TeamRow({ team, status, winnerFranchiseId }) {
   if (!team) {
     return (
@@ -253,8 +355,13 @@ function TeamRow({ team, status, winnerFranchiseId }) {
 
       <div className="score-team-numbers">
         <strong>{formatScore(team.score, status)}</strong>
-        {normalized.id !== "final" && team.projectedScore !== null ? (
-          <span>{formatProjection(team.projectedScore)}</span>
+        {normalized.id !== "final" ? (
+          <span className="score-team-projection">
+            {team.projectedScore !== null &&
+            team.projectedScore !== undefined
+              ? formatProjection(team.projectedScore)
+              : "Proj: —"}
+          </span>
         ) : null}
       </div>
     </div>
@@ -359,10 +466,13 @@ function ScoreCard({ game, featured = false, featuredPosition = 0 }) {
         />
       </div>
 
-      <button type="button" className="score-game-center-button">
+      <Link
+        className="score-game-center-button"
+        to={`/scores/${encodeURIComponent(game.gameId)}`}
+      >
         View Game Center
         <ChevronRight size={15} />
-      </button>
+      </Link>
     </article>
   );
 }
@@ -424,6 +534,7 @@ function ScoresResults({
   selectedSecondaryFilter,
   primaryLabel,
   secondaryLabel,
+  selectedConference,
 }) {
   const allGames = Array.isArray(data?.games) ? data.games : [];
 
@@ -521,9 +632,17 @@ function ScoresResults({
           </h2>
         </div>
 
-        <span className="scores-section-badge">
-          {isFeatured ? "MBA" : primaryLabel}
-        </span>
+        {selectedConference ? (
+          <ConferenceBadge
+            conference={selectedConference.label}
+            className="scores-conference-badge"
+            alt={`${selectedConference.label} conference badge`}
+          />
+        ) : (
+          <span className="scores-section-badge">
+            {isFeatured ? "MBA" : primaryLabel}
+          </span>
+        )}
       </div>
 
       {visibleGames.length > 0 ? (
@@ -557,10 +676,16 @@ function ScoresResults({
 }
 
 export default function Scores() {
-  const [selectedWeek, setSelectedWeek] = useState(1);
-  const [selectedPrimaryFilter, setSelectedPrimaryFilter] = useState("featured");
-  const [selectedSecondaryFilter, setSelectedSecondaryFilter] =
-    useState("conference");
+  const savedScoresView = useMemo(() => readSavedScoresView(), []);
+  const [selectedWeek, setSelectedWeek] = useState(
+    Number(savedScoresView?.selectedWeek) || 1,
+  );
+  const [selectedPrimaryFilter, setSelectedPrimaryFilter] = useState(
+    savedScoresView?.selectedPrimaryFilter || "featured",
+  );
+  const [selectedSecondaryFilter, setSelectedSecondaryFilter] = useState(
+    savedScoresView?.selectedSecondaryFilter || "conference",
+  );
   const [scoresData, setScoresData] = useState(null);
   const [scoresLoading, setScoresLoading] = useState(true);
   const [scoresError, setScoresError] = useState("");
@@ -611,9 +736,23 @@ export default function Scores() {
     return () => controller.abort();
   }, [selectedWeek]);
 
+  useEffect(() => {
+    sessionStorage.setItem(
+      SCORES_VIEW_STORAGE_KEY,
+      JSON.stringify({
+        selectedWeek,
+        selectedPrimaryFilter,
+        selectedSecondaryFilter,
+      }),
+    );
+  }, [selectedWeek, selectedPrimaryFilter, selectedSecondaryFilter]);
+
   const primaryLabel =
     PRIMARY_FILTERS.find((item) => item.id === selectedPrimaryFilter)?.label ??
     "Featured";
+
+  const selectedConference =
+    CONFERENCES.find((item) => item.id === selectedPrimaryFilter) ?? null;
 
   const secondaryFilters = useMemo(() => {
     if (selectedPrimaryFilter === "featured") return [];
@@ -625,15 +764,21 @@ export default function Scores() {
       (event) =>
         event.id !== baseFilter.id &&
         (!event.midMajorOnly ||
+          selectedPrimaryFilter === "top-25" ||
           MID_MAJOR_MAYHEM_CONFERENCES.has(selectedPrimaryFilter)),
     );
 
     return [baseFilter, ...visibleEvents];
   }, [selectedPrimaryFilter, selectedWeek]);
 
+  const selectedSecondaryOption =
+    secondaryFilters.find((item) => item.id === selectedSecondaryFilter) ??
+    secondaryFilters[0];
+
   const secondaryLabel =
-    secondaryFilters.find((item) => item.id === selectedSecondaryFilter)
-      ?.label ?? secondaryFilters[0]?.label ?? "";
+    selectedSecondaryOption?.fullLabel ??
+    selectedSecondaryOption?.label ??
+    "";
 
   function resetSecondaryForWeek(week) {
     setSelectedSecondaryFilter(getBaseFilterForWeek(week).id);
@@ -662,57 +807,36 @@ export default function Scores() {
         size="compact"
       />
 
-      <section className="scores-controls">
-        <div className="scores-week-selector">
-          <button
-            type="button"
-            onClick={() => changeWeek(selectedWeek - 1)}
-            disabled={selectedWeek === 1}
-            aria-label="Previous week"
-          >
-            <ChevronLeft size={19} />
-          </button>
+      <section className="scores-controls scores-controls-dropdowns">
+        <ScoresDropdown
+          label="MESH Week"
+          value={selectedWeek}
+          options={Array.from({ length: MAX_WEEK }, (_, index) => {
+            const week = index + 1;
+            const isCurrent = Number(scoresData?.activeWeek) === week;
 
-          <div className="scores-week-copy">
-            <span>MESH Week</span>
-            <strong>Week {selectedWeek}</strong>
-          </div>
+            return {
+              value: week,
+              label: `Week ${week}`,
+              menuLabel: isCurrent ? `Week ${week} (Current)` : `Week ${week}`,
+              isCurrent,
+            };
+          })}
+          onChange={(week) => changeWeek(Number(week))}
+          ariaLabel="Choose MESH week"
+        />
 
-          <button
-            type="button"
-            onClick={() => changeWeek(selectedWeek + 1)}
-            disabled={selectedWeek === MAX_WEEK}
-            aria-label="Next week"
-          >
-            <ChevronRight size={19} />
-          </button>
-        </div>
-
-        <div className="scores-primary-filter-shell">
-          <div className="scores-filter-heading">
-            <span>Scoreboard</span>
-            <strong>{primaryLabel}</strong>
-          </div>
-
-          <div className="scores-primary-tabs" aria-label="Choose MBA scores view">
-            {PRIMARY_FILTERS.map((filter) => (
-              <button
-                type="button"
-                key={filter.id}
-                className={[
-                  "scores-primary-tab",
-                  filter.midMajor ? "scores-primary-tab-mid-major" : "",
-                  selectedPrimaryFilter === filter.id ? "active" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => selectPrimaryFilter(filter.id)}
-              >
-                {filter.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        <ScoresDropdown
+          label="Scoreboard"
+          value={selectedPrimaryFilter}
+          options={PRIMARY_FILTERS.map((filter) => ({
+            value: filter.id,
+            label: filter.label,
+            className: filter.midMajor ? "mid-major-option" : "",
+          }))}
+          onChange={selectPrimaryFilter}
+          ariaLabel="Choose scoreboard view"
+        />
       </section>
 
       {selectedPrimaryFilter !== "featured" ? (
@@ -752,6 +876,7 @@ export default function Scores() {
         selectedSecondaryFilter={selectedSecondaryFilter}
         primaryLabel={primaryLabel}
         secondaryLabel={secondaryLabel}
+        selectedConference={selectedConference}
       />
     </main>
   );

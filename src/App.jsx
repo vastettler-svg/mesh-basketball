@@ -7,6 +7,7 @@ import BottomNav from './components/BottomNav'
 
 import Home from './pages/Home'
 import Scores from './pages/Scores'
+import GameCenter from './pages/GameCenter'
 import Standings from './pages/Standings'
 import Events from './pages/Events'
 import Stats from './pages/Stats'
@@ -22,6 +23,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/scores" element={<Scores />} />
+            <Route path="/scores/:gameId" element={<GameCenter />} />
             <Route path="/standings" element={<Standings />} />
             <Route path="/events" element={<Events />} />
             <Route path="/stats" element={<Stats />} />

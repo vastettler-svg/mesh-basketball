@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import ConferenceBadge from "../components/ConferenceBadge";
@@ -71,8 +72,8 @@ function StandingsDropdown({ label, value, options, onChange, ariaLabel }) {
 }
 
 function TeamIdentity({ team, showNationalRank = false }) {
-  return (
-    <div className="standings-team">
+  const content = (
+    <>
       <div className="standings-team-logo-wrap">
         {team.logoUrl ? <img src={team.logoUrl} alt="" className="standings-team-logo" /> : null}
       </div>
@@ -85,7 +86,21 @@ function TeamIdentity({ team, showNationalRank = false }) {
         </strong>
         <span>{team.coachName || team.coachId || "—"}</span>
       </div>
-    </div>
+    </>
+  );
+
+  if (!team.franchiseId) {
+    return <div className="standings-team">{content}</div>;
+  }
+
+  return (
+    <Link
+      className="standings-team standings-team-link"
+      to={`/franchise/${encodeURIComponent(team.franchiseId)}`}
+      aria-label={`Open ${team.name || "franchise"} profile`}
+    >
+      {content}
+    </Link>
   );
 }
 
@@ -240,9 +255,23 @@ export default function Standings() {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [season, setSeason] = useState(null);
-  const [view, setView] = useState("pulse");
-  const [conference, setConference] = useState("ACC");
+  const savedStandings = (() => {
+    try {
+      return JSON.parse(sessionStorage.getItem("mba-standings-state") || "{}");
+    } catch {
+      return {};
+    }
+  })();
+  const [season, setSeason] = useState(savedStandings.season ?? null);
+  const [view, setView] = useState(savedStandings.view || "pulse");
+  const [conference, setConference] = useState(savedStandings.conference || "ACC");
+
+  useEffect(() => {
+    sessionStorage.setItem(
+      "mba-standings-state",
+      JSON.stringify({ season, view, conference }),
+    );
+  }, [season, view, conference]);
 
   useEffect(() => {
     const controller = new AbortController();

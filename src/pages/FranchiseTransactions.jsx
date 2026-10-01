@@ -1,0 +1,214 @@
+import { useEffect, useState } from "react";
+import {
+  Activity,
+  ArrowDownLeft,
+  ArrowLeft,
+  ArrowRightLeft,
+  ArrowUpRight,
+  Repeat2,
+  ShieldCheck,
+  UserPlus,
+} from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import "../styles/franchiseTransactions.css";
+
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
+
+function splitFranchiseName(name) {
+  const full = String(name || "").trim();
+  const parts = full.split(/\s+/);
+  if (parts.length < 2) return { school: full, mascot: "" };
+  return { school: parts.slice(0, -1).join(" "), mascot: parts[parts.length - 1] };
+}
+
+function typeLabel(type) {
+  const value = String(type || "").toLowerCase();
+  if (value === "trade") return "Trade";
+  if (value === "waiver") return "Waiver Claim";
+  if (value === "free_agent") return "Free Agent";
+  return value ? value.replaceAll("_", " ") : "Transaction";
+}
+
+function formatDate(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
+function PlayerLine({ player }) {
+  const eligible = Array.isArray(player?.fantasyPositions) && player.fantasyPositions.length
+    ? player.fantasyPositions.join(" / ")
+    : player?.position || "—";
+  return (
+    <div className="mba-tx-player">
+      <strong>{player?.playerName || "Unknown Player"}</strong>
+      <span>{eligible}{player?.nbaTeam ? ` • ${player.nbaTeam}` : ""}</span>
+    </div>
+  );
+}
+
+function MovementBlock({ tone, title, players, icon: Icon }) {
+  if (!players?.length) return null;
+  return (
+    <div className={`mba-tx-movement ${tone}`}>
+      <div className="mba-tx-movement-label"><Icon size={14} /><span>{title}</span></div>
+      <div className="mba-tx-player-list">
+        {players.map((player, index) => (
+          <PlayerLine key={`${player.playerId || player.playerName || "player"}-${index}`} player={player} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function TransactionCard({ transaction }) {
+  const isTrade = transaction.type === "trade";
+  const partners = transaction.partnerFranchiseIds || [];
+  const date = formatDate(transaction.createdAt);
+  return (
+    <article className={`mba-tx-card ${isTrade ? "trade" : transaction.type || "other"}`}>
+      <header className="mba-tx-card-head">
+        <div className="mba-tx-type">
+          <div className="mba-tx-type-icon">
+            {isTrade ? <Repeat2 size={16} /> : transaction.type === "waiver" ? <ShieldCheck size={16} /> : <UserPlus size={16} />}
+          </div>
+          <div>
+            <span>{typeLabel(transaction.type)}</span>
+            <strong>{transaction.season} Season • Week {transaction.week}</strong>
+          </div>
+        </div>
+        <div className="mba-tx-date">
+          {date ? <strong>{date}</strong> : null}
+          {isTrade && partners.length ? <span>with {partners.join(", ")}</span> : null}
+        </div>
+      </header>
+
+      <div className="mba-tx-movements">
+        <MovementBlock
+          tone="in"
+          title={isTrade ? "Received" : "Added"}
+          players={transaction.adds}
+          icon={ArrowDownLeft}
+        />
+        <MovementBlock
+          tone="out"
+          title={isTrade ? "Sent" : "Dropped"}
+          players={transaction.drops}
+          icon={ArrowUpRight}
+        />
+      </div>
+
+      {transaction.type === "waiver" && transaction.waiverBid !== null && transaction.waiverBid !== undefined ? (
+        <div className="mba-tx-footnote">FAAB bid <strong>${transaction.waiverBid}</strong></div>
+      ) : null}
+    </article>
+  );
+}
+
+export default function FranchiseTransactions() {
+  const { franchiseId } = useParams();
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
+  const [transactions, setTransactions] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    setError("");
+
+    const profileUrl = new URL(API_URL);
+    profileUrl.searchParams.set("action", "franchise");
+    profileUrl.searchParams.set("franchiseId", franchiseId);
+
+    const txUrl = new URL(API_URL);
+    txUrl.searchParams.set("action", "transactions");
+    txUrl.searchParams.set("franchiseId", franchiseId);
+
+    Promise.all([
+      fetch(profileUrl.toString(), { signal: controller.signal }).then((response) => response.json()),
+      fetch(txUrl.toString(), { signal: controller.signal }).then((response) => response.json()),
+    ])
+      .then(([profilePayload, txPayload]) => {
+        if (!profilePayload?.ok) throw new Error(profilePayload?.error || "Franchise profile unavailable.");
+        if (!txPayload?.ok) throw new Error(txPayload?.error || "Transactions unavailable.");
+        setProfile(profilePayload);
+        setTransactions(txPayload);
+      })
+      .catch((requestError) => {
+        if (requestError.name !== "AbortError") setError(requestError.message || "Unable to load franchise transactions.");
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+
+    return () => controller.abort();
+  }, [franchiseId]);
+
+  if (loading) {
+    return <main className="mba-tx-page"><div className="mba-tx-state"><Activity size={28} /><strong>Loading franchise transactions</strong></div></main>;
+  }
+
+  if (error || !profile?.franchise) {
+    return (
+      <main className="mba-tx-page">
+        <button className="mba-tx-back" type="button" onClick={() => navigate(-1)}><ArrowLeft size={15} /> Back</button>
+        <div className="mba-tx-state error"><strong>Transactions unavailable</strong><span>{error || "This transaction history could not be loaded."}</span></div>
+      </main>
+    );
+  }
+
+  const f = profile.franchise;
+  const displayName = splitFranchiseName(f.name);
+  const totals = transactions?.totals || {};
+  const feed = transactions?.transactions || [];
+
+  return (
+    <main
+      className="mba-tx-page"
+      style={{
+        "--team-primary": f.primaryColor || "#ff6a00",
+        "--team-secondary": f.secondaryColor || "#d7d7d7",
+      }}
+    >
+      <button className="mba-tx-back" type="button" onClick={() => navigate(`/franchise/${encodeURIComponent(franchiseId)}`)}>
+        <ArrowLeft size={15} /> Franchise Profile
+      </button>
+
+      <section className="mba-tx-hero">
+        <div className="mba-tx-logo">
+          {f.logoUrl ? <img src={f.logoUrl} alt={`${f.name} logo`} /> : <ArrowRightLeft size={38} />}
+        </div>
+        <div className="mba-tx-identity">
+          <span>{f.conference} • FRANCHISE TRANSACTION HISTORY</span>
+          <h1>{displayName.school || f.name}</h1>
+          {displayName.mascot ? <h2>{displayName.mascot}</h2> : null}
+          <small>Permanent MESH franchise record</small>
+        </div>
+      </section>
+
+      <div className="mba-tx-tab"><ArrowRightLeft size={15} /> TRANSACTIONS</div>
+
+      <section className="mba-tx-summary">
+        <div><span>CAREER TRADES</span><strong>{Number(totals.trades || 0).toLocaleString()}</strong></div>
+        <div><span>WAIVER CLAIMS</span><strong>{Number(totals.waiverClaims || 0).toLocaleString()}</strong></div>
+      </section>
+
+      <section className="mba-tx-section">
+        <div className="mba-tx-section-heading">
+          <div><span>FRANCHISE HISTORY</span><h2>Transaction Log</h2></div>
+          <small>{feed.length} transactions</small>
+        </div>
+
+        {feed.length ? (
+          <div className="mba-tx-feed">{feed.map((transaction, index) => <TransactionCard key={`${transaction.season}-${transaction.transactionId}-${index}`} transaction={transaction} />)}</div>
+        ) : (
+          <div className="mba-tx-empty">No archived transactions are available for this franchise yet.</div>
+        )}
+      </section>
+    </main>
+  );
+}

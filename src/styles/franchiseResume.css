@@ -1,0 +1,72 @@
+.franchise-resume-page{width:min(100%,980px);margin:0 auto;padding:24px 20px 110px;color:#f7f7f7}
+.resume-back{display:inline-flex;align-items:center;gap:7px;margin:0 0 18px;color:#aeb7c1;text-decoration:none;font-size:.78rem;font-weight:800}
+.resume-hero{position:relative;overflow:hidden;display:flex;align-items:center;gap:18px;padding:22px;border:1px solid rgba(255,255,255,.12);border-top:3px solid var(--resume-primary);border-radius:18px;background:radial-gradient(circle at 12% 35%,color-mix(in srgb,var(--resume-primary) 20%,transparent),transparent 34%),linear-gradient(145deg,#24272a,#141618)}
+.resume-hero:after{content:"";position:absolute;right:-80px;bottom:-110px;width:300px;height:230px;border-radius:50%;border:1px solid rgba(255,255,255,.035)}
+.resume-hero-logo{position:relative;z-index:1;width:92px;height:92px;flex:0 0 92px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.11);border-radius:50%;background:rgba(0,0,0,.18)}
+.resume-hero-logo img{max-width:78%;max-height:78%;object-fit:contain}
+.resume-hero>div:last-child{position:relative;z-index:1;min-width:0}
+.resume-hero span,.resume-heading span,.resume-march-title span,.resume-event-card>div:first-child span{display:block;color:#9aa7b4;font-size:.55rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.resume-hero h1{margin:5px 0 3px;font-family:Georgia,serif;font-size:clamp(1.7rem,4vw,2.55rem);line-height:1;color:#fff}
+.resume-hero p{margin:0;color:#c4cbd1;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.resume-section{margin-top:28px}
+.resume-heading{margin:0 2px 12px}
+.resume-heading h2{margin:3px 0 0;font-family:Georgia,serif;font-size:1.22rem;color:#fff}
+.resume-performance-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.resume-stat{min-width:0;padding:12px;border:1px solid rgba(255,255,255,.09);border-radius:11px;background:linear-gradient(145deg,#1d2023,#151719)}
+.resume-stat span{display:block;color:#8e9aa5;font-size:.5rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase;line-height:1.25}
+.resume-stat strong{display:block;margin-top:5px;color:#fff;font-size:1.03rem;line-height:1.05}
+.resume-stat small{display:block;margin-top:4px;color:#8e9aa5;font-size:.56rem}
+.resume-events-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.resume-event-card{padding:15px;border:1px solid rgba(211,219,226,.14);border-radius:13px;background:radial-gradient(circle at 0 50%,rgba(205,215,224,.08),transparent 38%),linear-gradient(145deg,#202326,#16181a)}
+.resume-event-card>div:first-child strong{display:block;margin-top:3px;font-family:Georgia,serif;font-size:1rem}
+.resume-event-numbers{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
+.resume-event-numbers .resume-stat{padding:9px;background:rgba(0,0,0,.13)}
+.resume-march-card{padding:18px;border:1px solid rgba(255,106,0,.24);border-radius:16px;background:radial-gradient(circle at 8% 20%,rgba(255,106,0,.12),transparent 35%),linear-gradient(145deg,#252321,#161719);box-shadow:inset 0 0 28px rgba(255,106,0,.025)}
+.resume-march-title{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.resume-march-icon{width:45px;height:45px;display:grid;place-items:center;border:1px solid rgba(255,154,69,.22);border-radius:50%;color:#ff9a45;background:rgba(255,106,0,.08)}
+.resume-march-title strong{display:block;margin-top:2px;font-family:Georgia,serif;font-size:1.12rem}
+.resume-march-primary{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.resume-march-rounds{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.resume-march-finals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.resume-march-card .resume-stat{background:rgba(0,0,0,.15)}
+.resume-postseason-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
+.resume-tournament-card{padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:13px;background:linear-gradient(145deg,#1e2124,#151719)}
+.resume-tournament-card>strong{display:block;margin-bottom:10px;font-family:Georgia,serif;font-size:1rem}
+.resume-tournament-card>div{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.resume-tournament-card .resume-stat{padding:8px;background:rgba(0,0,0,.12)}
+.resume-state{margin:40px auto;padding:22px;border:1px solid rgba(255,255,255,.1);border-radius:14px;color:#aeb7c1;text-align:center;background:#17191b}
+@media(max-width:720px){.franchise-resume-page{padding:18px 14px 100px}.resume-hero{padding:17px;gap:13px}.resume-hero-logo{width:76px;height:76px;flex-basis:76px}.resume-performance-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.resume-events-grid{grid-template-columns:1fr}.resume-postseason-grid{grid-template-columns:1fr}.resume-tournament-card>div{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:390px){.resume-hero{align-items:flex-start}.resume-hero h1{font-size:1.35rem}.resume-march-rounds{grid-template-columns:repeat(3,minmax(0,1fr))}.resume-stat{padding:10px}.resume-stat strong{font-size:.92rem}}
+
+/* v1.1 résumé polish */
+.resume-event-wide{grid-column:1/-1}
+.resume-event-card .resume-stat span,
+.resume-tournament-card .resume-stat span,
+.resume-march-card .resume-stat span{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:.46rem;
+  font-weight:700;
+  letter-spacing:.075em;
+}
+.resume-event-card .resume-stat strong,
+.resume-tournament-card .resume-stat strong,
+.resume-march-card .resume-stat strong{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:.94rem;
+  font-weight:700;
+  letter-spacing:-.01em;
+}
+.resume-event-card>div:first-child strong,
+.resume-tournament-card>strong{
+  font-size:.94rem;
+  font-weight:700;
+  letter-spacing:-.01em;
+}
+.resume-event-card{padding:14px}
+.resume-event-numbers{margin-top:10px}
+.resume-event-numbers .resume-stat,
+.resume-tournament-card .resume-stat{padding:8px}
+.resume-tournament-card{padding:13px}
+@media(max-width:720px){
+  .resume-event-wide{grid-column:auto}
+}

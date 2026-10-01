@@ -1,0 +1,844 @@
+.mba-franchise-page{
+  width:min(100%,1180px);
+  margin:0 auto;
+  padding:0 0 96px;
+  color:#f5f5f5;
+}
+.mba-franchise-back{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin:3px 0 11px;
+  padding:0;
+  border:0;
+  color:#9a9da1;
+  background:transparent;
+  font-size:.7rem;
+  font-weight:800;
+  cursor:pointer;
+}
+.mba-franchise-back:hover{color:#fff}
+.mba-franchise-hero{
+  position:relative;
+  display:grid;
+  grid-template-columns:150px minmax(0,1fr);
+  align-items:center;
+  gap:24px;
+  min-height:240px;
+  overflow:hidden;
+  padding:25px 28px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 12% 50%,color-mix(in srgb,var(--team-primary) 22%,transparent),transparent 35%),
+    radial-gradient(circle at 90% 20%,color-mix(in srgb,var(--team-secondary) 18%,transparent),transparent 33%),
+    linear-gradient(145deg,#292c2f 0%,#181a1c 62%,#111214 100%);
+  box-shadow:0 15px 35px rgba(0,0,0,.24);
+}
+.mba-franchise-hero::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto;
+  height:4px;
+  background:linear-gradient(90deg,var(--team-primary),var(--team-secondary));
+}
+.mba-franchise-hero-glow{
+  position:absolute;
+  width:330px;
+  height:330px;
+  right:-140px;
+  bottom:-180px;
+  border:1px solid rgba(255,255,255,.04);
+  border-radius:50%;
+  box-shadow:0 0 0 35px rgba(255,255,255,.012),0 0 0 70px rgba(255,255,255,.008);
+}
+.mba-franchise-logo-column{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}
+.mba-franchise-logo{
+  display:grid;
+  place-items:center;
+  width:140px;
+  height:140px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:50%;
+  background:rgba(255,255,255,.025);
+  box-shadow:inset 0 0 35px rgba(255,255,255,.015);
+}
+.mba-franchise-logo img{
+  width:112px;
+  height:112px;
+  object-fit:contain;
+  filter:drop-shadow(0 12px 15px rgba(0,0,0,.28));
+}
+.mba-franchise-logo>span{
+  font-family:var(--heading-font,"Graduate",Georgia,serif);
+  font-size:2rem;
+}
+.mba-franchise-prestige{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  padding:8px 10px;
+  border:1px solid rgba(239,200,90,.14);
+  border-radius:10px;
+  background:rgba(239,200,90,.04);
+}
+.mba-franchise-prestige>svg{flex:0 0 auto;color:#efc85a}
+.mba-franchise-prestige div{min-width:0}
+.mba-franchise-prestige span{
+  display:block;
+  font-size:.42rem;
+  font-weight:900;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  color:#a18d52;
+}
+.mba-franchise-prestige strong{
+  display:block;
+  margin-top:2px;
+  font-size:.68rem;
+  color:#fff;
+}
+.mba-franchise-identity{
+  position:relative;
+  z-index:2;
+  min-width:0;
+}
+.mba-franchise-kicker{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:7px;
+  font-size:.51rem;
+  font-weight:900;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:#a9adb1;
+}
+.mba-franchise-identity h1{
+  margin:0;
+  max-width:760px;
+  font-family:var(--heading-font,"Graduate",Georgia,serif);
+  font-size:clamp(1.75rem,5vw,3.15rem);
+  font-weight:400;
+  line-height:1.03;
+  color:#fff;
+}
+.mba-franchise-meta-row{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:stretch;
+  gap:8px;
+  margin-top:14px;
+}
+.mba-franchise-coach,
+.mba-franchise-roster{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:46px;
+  padding:8px 11px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
+  background:rgba(255,255,255,.026);
+}
+.mba-franchise-coach{min-width:240px}
+.mba-franchise-coach div{
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+}
+.mba-franchise-coach span,
+.mba-franchise-roster span{
+  font-size:.42rem;
+  font-weight:900;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  color:#858a8f;
+}
+.mba-franchise-coach strong{
+  font-size:.72rem;
+  color:#fff;
+}
+.mba-franchise-roster{
+  color:#d8dde1;
+  border-color:color-mix(in srgb,var(--team-primary) 45%,rgba(255,255,255,.08));
+}
+.mba-franchise-roster span{color:#fff}
+.mba-franchise-current{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:6px;
+  width:100%;
+  max-width:720px;
+  margin-top:14px;
+}
+.mba-franchise-current>div{
+  min-width:0;
+  padding:8px 7px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:9px;
+  background:rgba(0,0,0,.16);
+}
+.mba-franchise-current span{
+  display:block;
+  min-height:2.25em;
+  font-size:.36rem;
+  font-weight:900;
+  line-height:1.12;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  color:#858a8f;
+}
+.mba-franchise-current strong{
+  display:block;
+  margin-top:4px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-family:var(--heading-font,"Graduate",Georgia,serif);
+  font-size:.7rem;
+  font-weight:400;
+  color:#fff;
+}
+.mba-franchise-section{margin-top:25px}
+.mba-franchise-trophy-section{margin-top:18px}
+.mba-franchise-section-heading{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 2px 9px;
+}
+.mba-franchise-section-heading span{
+  display:block;
+  margin-bottom:3px;
+  font-size:.48rem;
+  font-weight:900;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:#8b9095;
+}
+.mba-franchise-section-heading h2{
+  margin:0;
+  font-family:var(--heading-font,"Graduate",Georgia,serif);
+  font-size:1rem;
+  font-weight:400;
+  color:#fff;
+}
+.mba-franchise-section-heading>small{
+  padding-bottom:2px;
+  font-size:.46rem;
+  font-weight:800;
+  color:#777d82;
+}
+.mba-franchise-trophy-section .mba-franchise-section-heading h2{color:#f5e3a3}
+.mba-franchise-legacy-card{
+  display:grid;
+  grid-template-columns:64px minmax(0,1fr) auto;
+  align-items:center;
+  gap:14px;
+  min-height:118px;
+  padding:16px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  background:linear-gradient(145deg,#292c2f,#17191b);
+  box-shadow:0 12px 28px rgba(0,0,0,.16);
+}
+.mba-franchise-legacy-trophy{
+  border-color:rgba(239,200,90,.13);
+  background:
+    radial-gradient(circle at 8% 50%,rgba(239,200,90,.10),transparent 30%),
+    linear-gradient(145deg,#2a2c2e,#17191b);
+  box-shadow:0 12px 28px rgba(0,0,0,.16),inset 0 0 28px rgba(239,200,90,.018);
+}
+.mba-franchise-legacy-icon{
+  display:grid;
+  place-items:center;
+  width:60px;
+  height:60px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:50%;
+  color:#c9cdd1;
+  background:rgba(255,255,255,.035);
+}
+.mba-franchise-legacy-trophy .mba-franchise-legacy-icon{
+  border-color:rgba(239,200,90,.16);
+  color:#efc85a;
+  background:rgba(239,200,90,.06);
+}
+.mba-franchise-legacy-copy{min-width:0}
+.mba-franchise-legacy-copy>span{
+  display:block;
+  font-size:.42rem;
+  font-weight:900;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  color:#898e93;
+}
+.mba-franchise-legacy-trophy .mba-franchise-legacy-copy>span{color:#a28c4e}
+.mba-franchise-legacy-copy>strong{
+  display:block;
+  margin-top:3px;
+  font-size:.72rem;
+  color:#fff;
+}
+.mba-franchise-legacy-copy>p{
+  margin:5px 0 0;
+  max-width:760px;
+  font-size:.5rem;
+  line-height:1.5;
+  color:#8f9499;
+}
+.mba-franchise-legacy-card>svg{color:#c8cdd1}
+.mba-franchise-legacy-trophy>svg{color:#f3e2a5}
+.mba-franchise-resume-section{margin-top:18px}
+.mba-franchise-schedule-heading{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:9px;
+}
+.mba-franchise-schedule-heading .mba-franchise-section-heading{
+  flex:1;
+  margin-bottom:0;
+}
+.mba-franchise-season{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-height:36px;
+  padding:0 9px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;
+  background:#202225;
+}
+.mba-franchise-season>span{
+  font-size:.4rem;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#8c9196;
+}
+.mba-franchise-season select{
+  appearance:none;
+  border:0;
+  outline:0;
+  color:#fff;
+  background:#202225;
+  font-size:.54rem;
+  font-weight:900;
+  color-scheme:dark;
+}
+.mba-franchise-season option{color:#fff;background:#202225}
+.mba-franchise-game-log{
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:13px;
+  background:rgba(255,255,255,.014);
+}
+.mba-franchise-game-row{
+  display:grid;
+  grid-template-columns:45px 42px minmax(0,1fr) auto 16px;
+  align-items:center;
+  gap:10px;
+  min-height:68px;
+  padding:8px 11px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  color:inherit;
+  text-decoration:none;
+}
+.mba-franchise-game-row:last-child{border-bottom:0}
+.mba-franchise-game-row:hover{background:rgba(255,255,255,.026)}
+.mba-franchise-game-week{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  line-height:1;
+}
+.mba-franchise-game-week span{
+  font-size:.37rem;
+  font-weight:900;
+  letter-spacing:.08em;
+  color:#7d8287;
+}
+.mba-franchise-game-week strong{
+  margin-top:3px;
+  font-family:var(--heading-font,"Graduate",Georgia,serif);
+  font-size:.78rem;
+  font-weight:400;
+  color:#d5d9dd;
+}
+.mba-franchise-game-logo{
+  display:grid;
+  place-items:center;
+  width:40px;
+  height:40px;
+  min-width:40px;
+  overflow:hidden;
+}
+.mba-franchise-game-logo img{
+  display:block;
+  width:36px;
+  height:36px;
+  object-fit:contain;
+}
+.mba-franchise-game-copy{min-width:0}
+.mba-franchise-game-copy>span{
+  display:block;
+  margin-bottom:2px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:.4rem;
+  font-weight:800;
+  text-transform:uppercase;
+  color:#81868b;
+}
+.mba-franchise-game-copy strong{
+  display:block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:.62rem;
+  color:#eef1f3;
+}
+.mba-franchise-game-copy b{
+  margin-right:5px;
+  color:#ff7a1a;
+}
+.mba-franchise-game-result{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  text-align:right;
+}
+.mba-franchise-game-result>strong{
+  min-width:82px;
+  font-size:.53rem;
+  color:#a9aeb3;
+}
+.result-pill{
+  display:grid;
+  place-items:center;
+  min-width:29px;
+  height:24px;
+  padding:0 6px;
+  border-radius:7px;
+  font-size:.45rem;
+  font-weight:950;
+}
+.result-pill.win{color:#69dda4;background:rgba(40,188,119,.12)}
+.result-pill.loss{color:#ff818c;background:rgba(239,64,82,.12)}
+.result-pill.tie{color:#e7c969;background:rgba(231,201,105,.10)}
+.result-pill.live{color:#ffb36f;background:rgba(255,106,0,.12)}
+.result-pill.scheduled{color:#92979c;background:rgba(255,255,255,.04)}
+.mba-franchise-season-list,
+.mba-franchise-coaches{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.mba-franchise-season-card{
+  position:relative;
+  display:grid;
+  grid-template-columns:58px minmax(190px,1fr) minmax(250px,auto);
+  align-items:center;
+  column-gap:8px;
+  overflow:hidden;
+  padding:13px 14px;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:13px;
+  background:linear-gradient(145deg,#272a2d,#181a1c);
+}
+.mba-franchise-season-card.current::before{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:3px;
+  background:var(--team-primary);
+}
+.season-year span,
+.season-team span{
+  display:block;
+  font-size:.42rem;
+  color:#858a8f;
+}
+.season-year strong{
+  display:block;
+  margin-top:2px;
+  font-family:var(--heading-font,"Graduate",Georgia,serif);
+  font-size:.94rem;
+  font-weight:400;
+  color:#fff;
+}
+.season-team{min-width:0}
+.season-team strong{
+  display:block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:.62rem;
+  color:#fff;
+}
+.season-team span{margin-top:2px}
+.season-stats{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:5px;
+}
+.season-stats>span{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:5px 7px;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:7px;
+  font-size:.42rem;
+  font-weight:800;
+  color:#80858a;
+  background:rgba(255,255,255,.018);
+}
+.season-stats strong{color:#e1e4e7}
+.season-postseason{
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-top:2px;
+  padding:7px 9px;
+  border:1px solid rgba(239,200,90,.10);
+  border-radius:8px;
+  color:#d8bd6d;
+  background:rgba(239,200,90,.035);
+  font-size:.46rem;
+  font-weight:850;
+}
+.mba-franchise-coach-row{
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr);
+  align-items:center;
+  gap:10px;
+  padding:11px 13px;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:12px;
+  background:rgba(255,255,255,.022);
+}
+.coach-avatar{
+  display:grid;
+  place-items:center;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  color:#b2b7bc;
+  background:rgba(255,255,255,.045);
+}
+.mba-franchise-coach-row>div:nth-child(2){min-width:0}
+.mba-franchise-coach-row span{
+  display:block;
+  font-size:.4rem;
+  font-weight:850;
+  text-transform:uppercase;
+  color:#858a8f;
+}
+.mba-franchise-coach-row strong{
+  display:block;
+  margin-top:2px;
+  font-size:.62rem;
+  color:#fff;
+}
+.mba-franchise-coach-row small{
+  display:block;
+  margin-top:3px;
+  font-size:.45rem;
+  color:#92979c;
+}
+.mba-franchise-state,
+.mba-franchise-empty{
+  min-height:160px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  text-align:center;
+  color:#999ea3;
+}
+.mba-franchise-empty{
+  min-height:86px;
+  padding:14px;
+  border:1px dashed rgba(255,255,255,.08);
+  border-radius:12px;
+  background:rgba(255,255,255,.012);
+}
+.mba-franchise-empty strong,
+.mba-franchise-empty span{display:block}
+.mba-franchise-empty span{margin-top:3px;font-size:.52rem}
+.mba-franchise-state.error strong{color:#fff}
+
+@media(max-width:850px){
+  .mba-franchise-season-card{
+    grid-template-columns:50px minmax(0,1fr);
+  }
+  .season-stats,
+  .season-postseason{
+    grid-column:1/-1;
+    justify-content:flex-start;
+  }
+}
+
+@media(max-width:720px){
+  .mba-franchise-page{
+    width:min(100% - 18px,1180px);
+    padding-top:8px;
+  }
+  .mba-franchise-current{
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:4px;
+  }
+  .mba-franchise-current>div{padding:7px 5px}
+  .mba-franchise-current span{font-size:.31rem}
+  .mba-franchise-current strong{font-size:.56rem}
+  .mba-franchise-section-heading>small{display:none}
+}
+
+@media(max-width:560px){
+  .mba-franchise-hero{
+    grid-template-columns:88px minmax(0,1fr);
+    gap:14px;
+    min-height:188px;
+    padding:19px 15px;
+  }
+  .mba-franchise-logo-column{gap:9px}
+  .mba-franchise-logo{
+    width:82px;
+    height:82px;
+  }
+  .mba-franchise-logo img{
+    width:68px;
+    height:68px;
+  }
+  .mba-franchise-prestige{
+    grid-column:1/-1;
+    padding:7px 8px;
+  }
+  .mba-franchise-prestige span{font-size:.34rem}
+  .mba-franchise-prestige strong{font-size:.56rem}
+  .mba-franchise-identity h1{
+    font-size:clamp(1.32rem,7.5vw,1.9rem);
+  }
+  .mba-franchise-meta-row{
+    grid-column:1/-1;
+    margin-top:12px;
+  }
+  .mba-franchise-coach{
+    flex:1 1 0;
+    min-width:0;
+  }
+  .mba-franchise-roster{
+    flex:0 0 auto;
+  }
+  .mba-franchise-current{
+    grid-column:1/-1;
+    width:100%;
+    max-width:none;
+    margin-top:10px;
+  }
+  .mba-franchise-legacy-card{
+    grid-template-columns:48px minmax(0,1fr) auto;
+    gap:10px;
+    min-height:100px;
+    padding:13px;
+  }
+  .mba-franchise-legacy-icon{
+    width:46px;
+    height:46px;
+  }
+  .mba-franchise-legacy-copy>p{
+    font-size:.46rem;
+  }
+  .mba-franchise-schedule-heading{align-items:end}
+  .mba-franchise-season{
+    min-height:33px;
+    padding-inline:7px;
+  }
+  .mba-franchise-season>span{display:none}
+  .mba-franchise-game-row{
+    grid-template-columns:35px 38px minmax(0,1fr) auto;
+    gap:7px;
+    padding-inline:8px;
+  }
+  .mba-franchise-game-row>svg{display:none}
+  .mba-franchise-game-logo{
+    width:36px;
+    height:36px;
+    min-width:36px;
+  }
+  .mba-franchise-game-logo img{
+    width:32px;
+    height:32px;
+  }
+  .mba-franchise-game-result{
+    flex-direction:column;
+    align-items:flex-end;
+    gap:3px;
+  }
+  .mba-franchise-game-result>strong{
+    min-width:0;
+    font-size:.46rem;
+  }
+  .mba-franchise-season-card{
+    grid-template-columns:46px minmax(0,1fr)!important;
+    column-gap:6px;
+    padding-inline:11px;
+  }
+}
+
+@media(max-width:390px){
+  .mba-franchise-hero{
+    grid-template-columns:72px minmax(0,1fr);
+    gap:11px;
+    padding-inline:12px;
+  }
+  .mba-franchise-logo{
+    width:68px;
+    height:68px;
+  }
+  .mba-franchise-logo img{
+    width:56px;
+    height:56px;
+  }
+  .mba-franchise-kicker{font-size:.43rem}
+  .mba-franchise-current span{font-size:.28rem}
+  .mba-franchise-current strong{font-size:.5rem}
+  .mba-franchise-legacy-copy>p{display:none}
+}
+
+/* v2.1 — silver Career Resume identity */
+.mba-franchise-legacy-resume{
+  border-color:rgba(210,218,225,.18);
+  background:
+    radial-gradient(circle at 8% 50%,rgba(210,218,225,.10),transparent 31%),
+    linear-gradient(145deg,#2b2e31,#181a1c);
+  box-shadow:0 12px 28px rgba(0,0,0,.16),inset 0 0 30px rgba(225,231,236,.022);
+}
+.mba-franchise-legacy-resume .mba-franchise-legacy-icon{
+  border-color:rgba(220,227,233,.22);
+  color:#dbe2e8;
+  background:rgba(220,227,233,.07);
+  box-shadow:inset 0 0 16px rgba(255,255,255,.025);
+}
+.mba-franchise-legacy-resume .mba-franchise-legacy-copy>span{color:#aeb8c0}
+.mba-franchise-legacy-resume .mba-franchise-legacy-copy>strong{color:#f2f5f7}
+.mba-franchise-legacy-resume>svg{color:#d7dee4}
+.season-accomplishments{
+  grid-column:1/-1;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:4px;
+}
+.season-accomplishments>span{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 9px;
+  border:1px solid rgba(239,200,90,.11);
+  border-radius:8px;
+  color:#d9c275;
+  background:rgba(239,200,90,.035);
+  font-size:.45rem;
+  font-weight:850;
+}
+
+/* v2.2 — locked franchise hero hierarchy */
+.mba-franchise-kicker-centered{
+  justify-content:center;
+  width:100%;
+  margin-bottom:10px;
+  text-align:center;
+}
+.mba-franchise-team-name{
+  width:100%;
+  text-align:left;
+}
+.mba-franchise-team-name h1,
+.mba-franchise-team-name h2{
+  margin:0;
+  font-family:var(--heading-font,"Graduate",Georgia,serif);
+  font-weight:400;
+  line-height:1.02;
+  color:#fff;
+}
+.mba-franchise-team-name h1{
+  font-size:clamp(1.55rem,4.4vw,2.7rem);
+}
+.mba-franchise-team-name h2{
+  margin-top:2px;
+  font-size:clamp(1.42rem,4vw,2.35rem);
+}
+@media(max-width:560px){
+  .mba-franchise-kicker-centered{margin-bottom:7px}
+  .mba-franchise-team-name h1{font-size:clamp(1.12rem,6.3vw,1.62rem)}
+  .mba-franchise-team-name h2{font-size:clamp(1.08rem,6vw,1.52rem)}
+}
+
+/* v2.2.1 — final franchise-profile refinements */
+.mba-franchise-team-name{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
+  text-align:left!important;
+}
+.mba-franchise-team-name h1,
+.mba-franchise-team-name h2{
+  width:100%;
+  text-align:left!important;
+  align-self:flex-start;
+}
+.mba-franchise-action-button{
+  appearance:none;
+  font:inherit;
+  cursor:pointer;
+}
+
+.season-accomplishments{
+  flex-direction:column;
+  align-items:flex-start;
+}
+.season-accomplishments>span{
+  width:max-content;
+  max-width:100%;
+}
+@media(max-width:560px){
+  .mba-franchise-meta-row{
+    align-items:stretch;
+  }
+  .mba-franchise-coach{
+    flex:1 1 100%;
+  }
+  .mba-franchise-action-button{
+    flex:1 1 0;
+    justify-content:center;
+    min-width:0;
+  }
+  .mba-franchise-action-button span{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+}
+
+.mba-franchise-legacy-card[href]{text-decoration:none;color:inherit}
+
+.mba-franchise-action-button[href]{text-decoration:none;color:#d8dde1}

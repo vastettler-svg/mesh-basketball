@@ -12,6 +12,10 @@ import Standings from './pages/Standings'
 import Events from './pages/Events'
 import Stats from './pages/Stats'
 import More from './pages/More'
+import FranchiseProfile from './pages/FranchiseProfile'
+import FranchiseResume from './pages/FranchiseResume'
+import FranchiseRoster from './pages/FranchiseRoster'
+import FranchiseTransactions from './pages/FranchiseTransactions'
 
 function App() {
   return (
@@ -28,6 +32,10 @@ function App() {
             <Route path="/events" element={<Events />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/more" element={<More />} />
+            <Route path="/franchise/:franchiseId" element={<FranchiseProfile />} />
+            <Route path="/franchise/:franchiseId/resume" element={<FranchiseResume />} />
+            <Route path="/franchise/:franchiseId/roster" element={<FranchiseRoster />} />
+            <Route path="/franchise/:franchiseId/transactions" element={<FranchiseTransactions />} />
           </Routes>
         </main>
 

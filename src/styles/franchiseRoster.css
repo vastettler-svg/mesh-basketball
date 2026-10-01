@@ -1,0 +1,35 @@
+.mba-roster-page{width:min(100%,1180px);margin:0 auto;padding:0 0 96px;color:#f5f5f5}
+.mba-roster-back{display:inline-flex;align-items:center;gap:6px;margin:3px 0 11px;padding:0;border:0;color:#9a9da1;background:transparent;font-size:.7rem;font-weight:800;cursor:pointer}
+.mba-roster-back:hover{color:#fff}
+.mba-roster-hero{position:relative;display:grid;grid-template-columns:126px minmax(0,1fr);align-items:center;gap:22px;min-height:205px;overflow:hidden;padding:24px 28px;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:radial-gradient(circle at 12% 50%,color-mix(in srgb,var(--team-primary) 22%,transparent),transparent 35%),radial-gradient(circle at 90% 20%,color-mix(in srgb,var(--team-secondary) 18%,transparent),transparent 33%),linear-gradient(145deg,#292c2f 0%,#181a1c 62%,#111214 100%);box-shadow:0 15px 35px rgba(0,0,0,.24)}
+.mba-roster-hero::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,var(--team-primary),var(--team-secondary))}
+.mba-roster-logo{display:grid;place-items:center;width:118px;height:118px;border:1px solid rgba(255,255,255,.09);border-radius:50%;background:rgba(255,255,255,.025)}
+.mba-roster-logo img{width:94px;height:94px;object-fit:contain;filter:drop-shadow(0 12px 15px rgba(0,0,0,.28))}
+.mba-roster-identity{text-align:left}
+.mba-roster-identity>span{display:block;text-align:left;margin-bottom:8px;font-size:.48rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#9da2a7}
+.mba-roster-identity h1,.mba-roster-identity h2{width:100%;margin:0;text-align:left;font-family:var(--heading-font,"Graduate",Georgia,serif);font-weight:400;line-height:1.03;color:#fff}
+.mba-roster-identity h1{font-size:clamp(1.55rem,4.4vw,2.65rem)}
+.mba-roster-identity h2{margin-top:2px;font-size:clamp(1.35rem,4vw,2.2rem)}
+.mba-roster-identity small{display:block;margin-top:10px;font-size:.5rem;font-weight:800;color:#8f9499}
+.mba-roster-tab{display:inline-flex;align-items:center;gap:7px;margin-top:18px;padding:9px 13px;border:1px solid color-mix(in srgb,var(--team-primary) 45%,rgba(255,255,255,.08));border-radius:9px;color:#fff;background:rgba(255,255,255,.025);font-size:.5rem;font-weight:900;letter-spacing:.07em}
+.mba-roster-section{margin-top:22px}
+.mba-roster-section-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:0 2px 9px}
+.mba-roster-section-heading span{display:block;margin-bottom:3px;font-size:.45rem;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:#8b9095}
+.mba-roster-section-heading h2{margin:0;font-family:var(--heading-font,"Graduate",Georgia,serif);font-size:1rem;font-weight:400;color:#fff}
+.mba-roster-section-heading small{padding:5px 8px;border:1px solid rgba(255,255,255,.07);border-radius:999px;font-size:.44rem;font-weight:850;color:#8e9499;background:rgba(255,255,255,.02)}
+.mba-roster-list{overflow:hidden;border:1px solid rgba(255,255,255,.075);border-radius:13px;background:rgba(255,255,255,.014)}
+.mba-roster-player-row{display:grid;grid-template-columns:64px minmax(0,1fr) minmax(115px,auto);align-items:center;gap:12px;min-height:65px;padding:9px 13px;border-bottom:1px solid rgba(255,255,255,.06)}
+.mba-roster-player-row:last-child{border-bottom:0}
+.mba-roster-slot{display:grid;place-items:center;width:48px;height:34px;border:1px solid rgba(255,255,255,.08);border-radius:8px;font-family:var(--heading-font,"Graduate",Georgia,serif);font-size:.58rem;color:#dfe3e6;background:rgba(255,255,255,.025)}
+.mba-roster-slot.starter{border-color:color-mix(in srgb,var(--team-primary) 52%,rgba(255,255,255,.08));background:color-mix(in srgb,var(--team-primary) 10%,transparent)}
+.mba-roster-slot.bench{width:58px;font-family:inherit;font-size:.42rem;font-weight:900;letter-spacing:.04em;color:#a6abb0}
+.mba-roster-player-copy{min-width:0}
+.mba-roster-player-copy strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.68rem;color:#f1f3f4}
+.mba-roster-player-meta{min-width:105px;text-align:right}
+.mba-roster-player-meta strong{display:block;font-size:.56rem;color:#d8dde1}
+.mba-roster-player-meta span{display:block;margin-top:3px;font-size:.44rem;font-weight:800;text-transform:uppercase;color:#83898e}
+.mba-roster-state{min-height:220px;display:flex;gap:10px;align-items:center;justify-content:center;flex-direction:column;text-align:center;color:#999ea3}
+.mba-roster-state span{font-size:.55rem}.mba-roster-state.error strong{color:#fff}
+@media(max-width:720px){.mba-roster-page{width:min(100% - 18px,1180px);padding-top:8px}.mba-roster-hero{grid-template-columns:86px minmax(0,1fr);gap:14px;min-height:165px;padding:18px 15px}.mba-roster-logo{width:82px;height:82px}.mba-roster-logo img{width:66px;height:66px}.mba-roster-identity h1{font-size:clamp(1.15rem,6.2vw,1.65rem)}.mba-roster-identity h2{font-size:clamp(1.08rem,5.8vw,1.5rem)}}
+@media(max-width:560px){.mba-roster-player-row{grid-template-columns:58px minmax(0,1fr) minmax(76px,auto);gap:9px;padding-inline:10px}.mba-roster-slot{width:50px}.mba-roster-slot.bench{width:54px}.mba-roster-player-meta{min-width:76px}.mba-roster-player-meta strong{font-size:.5rem}.mba-roster-player-meta span{font-size:.4rem}}
+@media(max-width:390px){.mba-roster-player-row{grid-template-columns:54px minmax(0,1fr) minmax(66px,auto);gap:7px;padding-inline:8px}.mba-roster-slot{width:46px}.mba-roster-slot.bench{width:50px;font-size:.38rem}.mba-roster-player-meta{min-width:66px}.mba-roster-section-heading small{font-size:.4rem}}

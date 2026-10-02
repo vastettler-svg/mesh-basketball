@@ -70,3 +70,12 @@
 @media(max-width:720px){
   .resume-event-wide{grid-column:auto}
 }
+
+
+/* Final identity alignment: match Franchise Profile and Roster. */
+.resume-hero>div:last-child,
+.resume-hero>div:last-child>span,
+.resume-hero h1,
+.resume-hero p{
+  text-align:left;
+}

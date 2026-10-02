@@ -6,6 +6,19 @@ import "../styles/franchiseResume.css";
 const API_URL =
   "https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
 
+const RESUME_PREFETCH_PREFIX = "mesh:resume-prefetch:";
+
+function readPrefetchedResume(franchiseId) {
+  try {
+    const raw = sessionStorage.getItem(`${RESUME_PREFETCH_PREFIX}${franchiseId}`);
+    if (!raw) return null;
+    const payload = JSON.parse(raw);
+    return payload?.ok ? payload : null;
+  } catch {
+    return null;
+  }
+}
+
 function record(value) {
   if (!value) return "0–0";
   const w = Number(value.wins) || 0;
@@ -65,6 +78,16 @@ export default function FranchiseResume() {
   useEffect(() => {
     let cancelled = false;
     setStatus("loading");
+
+    const prefetched = readPrefetchedResume(franchiseId);
+    if (prefetched) {
+      setData(prefetched);
+      setStatus("ready");
+      return () => {
+        cancelled = true;
+      };
+    }
+
     fetch(`${API_URL}?action=franchiseResume&franchiseId=${encodeURIComponent(franchiseId)}`)
       .then((response) => response.json())
       .then((payload) => {

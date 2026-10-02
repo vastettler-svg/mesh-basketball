@@ -347,21 +347,54 @@ export default function GameCenter() {
 
   useEffect(()=>{
     const controller=new AbortController();
+
     async function load(){
       try{
-        setLoading(true); setError("");
+        setLoading(true);
+        setError("");
+        setGame(null);
+        setHistory([]);
+        setRosters({team1:[],team2:[],locked:false});
+
         const id=decodeURIComponent(gameId||"");
         const gp=await fetchJson(apiUrl("game",{gameId:id}),controller.signal);
         const next=normalizeGame(gp);
-        const [rp,hp]=await Promise.all([
-          fetchJson(apiUrl("gameRoster",{gameId:id}),controller.signal),
-          fetchJson(apiUrl("history",{team1:next.team1?.franchiseId,team2:next.team2?.franchiseId,excludeGameId:id}),controller.signal)
-        ]);
-        setGame(next); setRosters(normalizeRoster(rp)); setHistory(Array.isArray(hp?.meetings)?hp.meetings:[]);
-      }catch(err){if(err?.name!=="AbortError"){console.error(err);setError(err?.message||"Unable to load this matchup.");}}
-      finally{if(!controller.signal.aborted)setLoading(false);}
+
+        // The matchup itself is now enough to render Game Center.
+        setGame(next);
+        setLoading(false);
+
+        // Roster/live scoring and series history are secondary data. Load them
+        // independently so neither can hold the entire Game Center screen hostage.
+        fetchJson(apiUrl("gameRoster",{gameId:id}),controller.signal)
+          .then((rp)=>setRosters(normalizeRoster(rp)))
+          .catch((err)=>{
+            if(err?.name!=="AbortError") console.error("Unable to load Game Center roster:",err);
+          });
+
+        fetchJson(
+          apiUrl("history",{
+            team1:next.team1?.franchiseId,
+            team2:next.team2?.franchiseId,
+            excludeGameId:id
+          }),
+          controller.signal
+        )
+          .then((hp)=>setHistory(Array.isArray(hp?.meetings)?hp.meetings:[]))
+          .catch((err)=>{
+            if(err?.name!=="AbortError") console.error("Unable to load Game Center history:",err);
+          });
+      }catch(err){
+        if(err?.name!=="AbortError"){
+          console.error(err);
+          setError(err?.message||"Unable to load this matchup.");
+          setLoading(false);
+        }
+      }
     }
-    load(); return()=>controller.abort();
+
+    load();
+    return()=>controller.abort();
   },[gameId]);
 
   if(loading)return <main className="game-center-page"><div className="gc-message"><Activity size={28}/><h2>Loading Game Center</h2></div></main>;

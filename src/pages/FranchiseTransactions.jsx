@@ -5,7 +5,6 @@ import {
   ArrowLeft,
   ArrowRightLeft,
   ArrowUpRight,
-  Repeat2,
   ShieldCheck,
   UserPlus,
 } from "lucide-react";
@@ -14,6 +13,18 @@ import "../styles/franchiseTransactions.css";
 
 const API_URL =
   "https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
+
+const TRANSACTIONS_PREFETCH_PREFIX = "mesh:transactions-prefetch:";
+const FRANCHISE_PROFILE_PREFIX = "mesh:franchise-profile:";
+
+function readSessionPayload(key) {
+  try {
+    const raw = sessionStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
 
 function splitFranchiseName(name) {
   const full = String(name || "").trim();
@@ -49,15 +60,75 @@ function PlayerLine({ player }) {
   );
 }
 
-function MovementBlock({ tone, title, players, icon: Icon }) {
-  if (!players?.length) return null;
+function pickNumber(pick, keys) {
+  for (const key of keys) {
+    if (pick?.[key] !== undefined && pick?.[key] !== null && pick?.[key] !== "") {
+      const value = Number(pick[key]);
+      if (Number.isFinite(value)) return value;
+    }
+  }
+  return null;
+}
+
+function pickText(pick) {
+  const season = pickNumber(pick, ["season", "draft_season", "draftSeason"]);
+  const round = pickNumber(pick, ["round", "draft_round", "draftRound"]);
+  if (season && round) return `${season} Round ${round} Draft Pick`;
+  if (round) return `Round ${round} Draft Pick`;
+  if (season) return `${season} Draft Pick`;
+  return "Draft Pick";
+}
+
+function splitDraftPicks(transaction) {
+  const rosterId = Number(transaction?.sleeperRosterId);
+  const received = [];
+  const sent = [];
+  const unclassified = [];
+
+  (Array.isArray(transaction?.draftPicks) ? transaction.draftPicks : []).forEach((pick) => {
+    const newOwner = pickNumber(pick, [
+      "owner_id", "ownerId", "new_owner_id", "newOwnerId", "new_roster_id", "newRosterId",
+    ]);
+    const previousOwner = pickNumber(pick, [
+      "previous_owner_id", "previousOwnerId", "old_owner_id", "oldOwnerId",
+      "previous_roster_id", "previousRosterId",
+    ]);
+
+    if (Number.isFinite(rosterId) && newOwner === rosterId && previousOwner !== rosterId) {
+      received.push(pick);
+    } else if (Number.isFinite(rosterId) && previousOwner === rosterId && newOwner !== rosterId) {
+      sent.push(pick);
+    } else {
+      unclassified.push(pick);
+    }
+  });
+
+  return { received, sent, unclassified };
+}
+
+function DraftPickList({ picks }) {
+  if (!picks?.length) return null;
+  return (
+    <div className="mba-tx-pick-list">
+      {picks.map((pick, index) => (
+        <div className="mba-tx-pick" key={`${pickText(pick)}-${index}`}>
+          <strong>{pickText(pick)}</strong>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function MovementBlock({ tone, title, players, picks, icon: Icon }) {
+  if (!players?.length && !picks?.length) return null;
   return (
     <div className={`mba-tx-movement ${tone}`}>
       <div className="mba-tx-movement-label"><Icon size={14} /><span>{title}</span></div>
       <div className="mba-tx-player-list">
-        {players.map((player, index) => (
+        {(players || []).map((player, index) => (
           <PlayerLine key={`${player.playerId || player.playerName || "player"}-${index}`} player={player} />
         ))}
+        <DraftPickList picks={picks} />
       </div>
     </div>
   );
@@ -65,14 +136,21 @@ function MovementBlock({ tone, title, players, icon: Icon }) {
 
 function TransactionCard({ transaction }) {
   const isTrade = transaction.type === "trade";
-  const partners = transaction.partnerFranchiseIds || [];
+  const partners = Array.isArray(transaction.partnerFranchises) && transaction.partnerFranchises.length
+    ? transaction.partnerFranchises.map((partner) => {
+        const display = splitFranchiseName(partner?.name || partner?.franchiseId || "");
+        return display.school || partner?.name || partner?.franchiseId || "";
+      }).filter(Boolean)
+    : (transaction.partnerFranchiseIds || []);
   const date = formatDate(transaction.createdAt);
+  const picks = isTrade ? splitDraftPicks(transaction) : { received: [], sent: [], unclassified: [] };
+
   return (
     <article className={`mba-tx-card ${isTrade ? "trade" : transaction.type || "other"}`}>
       <header className="mba-tx-card-head">
         <div className="mba-tx-type">
           <div className="mba-tx-type-icon">
-            {isTrade ? <Repeat2 size={16} /> : transaction.type === "waiver" ? <ShieldCheck size={16} /> : <UserPlus size={16} />}
+            {isTrade ? <ArrowRightLeft size={16} /> : <UserPlus size={16} />}
           </div>
           <div>
             <span>{typeLabel(transaction.type)}</span>
@@ -90,18 +168,27 @@ function TransactionCard({ transaction }) {
           tone="in"
           title={isTrade ? "Received" : "Added"}
           players={transaction.adds}
+          picks={picks.received}
           icon={ArrowDownLeft}
         />
         <MovementBlock
           tone="out"
           title={isTrade ? "Sent" : "Dropped"}
           players={transaction.drops}
+          picks={picks.sent}
           icon={ArrowUpRight}
         />
       </div>
 
+      {isTrade && picks.unclassified.length ? (
+        <div className="mba-tx-unclassified-picks">
+          <span>Draft Picks</span>
+          <DraftPickList picks={picks.unclassified} />
+        </div>
+      ) : null}
+
       {transaction.type === "waiver" && transaction.waiverBid !== null && transaction.waiverBid !== undefined ? (
-        <div className="mba-tx-footnote">FAAB bid <strong>${transaction.waiverBid}</strong></div>
+        <div className="mba-tx-faab-inline"><span>FAAB BID</span><strong>${transaction.waiverBid}</strong></div>
       ) : null}
     </article>
   );
@@ -119,6 +206,20 @@ export default function FranchiseTransactions() {
     const controller = new AbortController();
     setLoading(true);
     setError("");
+
+    const prefetchedProfile = readSessionPayload(`${FRANCHISE_PROFILE_PREFIX}${franchiseId}`);
+    const prefetchedTransactions = readSessionPayload(`${TRANSACTIONS_PREFETCH_PREFIX}${franchiseId}`);
+
+    if (
+      prefetchedProfile?.ok &&
+      prefetchedProfile?.franchise &&
+      prefetchedTransactions?.ok
+    ) {
+      setProfile(prefetchedProfile);
+      setTransactions(prefetchedTransactions);
+      setLoading(false);
+      return () => controller.abort();
+    }
 
     const profileUrl = new URL(API_URL);
     profileUrl.searchParams.set("action", "franchise");
@@ -204,7 +305,18 @@ export default function FranchiseTransactions() {
         </div>
 
         {feed.length ? (
-          <div className="mba-tx-feed">{feed.map((transaction, index) => <TransactionCard key={`${transaction.season}-${transaction.transactionId}-${index}`} transaction={transaction} />)}</div>
+          <div className="mba-tx-feed">
+            {feed.map((transaction, index) => {
+              const previousSeason = index > 0 ? feed[index - 1]?.season : null;
+              const showSeason = index === 0 || transaction.season !== previousSeason;
+              return (
+                <div className="mba-tx-season-group" key={`${transaction.season}-${transaction.transactionId}-${index}`}>
+                  {showSeason ? <div className="mba-tx-season-divider"><span>{transaction.season}</span></div> : null}
+                  <TransactionCard transaction={transaction} />
+                </div>
+              );
+            })}
+          </div>
         ) : (
           <div className="mba-tx-empty">No archived transactions are available for this franchise yet.</div>
         )}

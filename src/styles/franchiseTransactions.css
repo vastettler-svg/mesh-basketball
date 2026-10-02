@@ -14,3 +14,163 @@
 @media(max-width:720px){.mba-tx-page{width:min(100% - 18px,1180px);padding-top:8px}.mba-tx-hero{grid-template-columns:86px minmax(0,1fr);gap:14px;min-height:165px;padding:18px 15px}.mba-tx-logo{width:82px;height:82px}.mba-tx-logo img{width:66px;height:66px}.mba-tx-identity h1{font-size:clamp(1.15rem,6.2vw,1.65rem)}.mba-tx-identity h2{font-size:clamp(1.08rem,5.8vw,1.5rem)}}
 @media(max-width:560px){.mba-tx-summary{gap:7px}.mba-tx-summary>div{padding:12px}.mba-tx-summary strong{font-size:1.05rem}.mba-tx-card-head{align-items:flex-start;padding:10px}.mba-tx-type strong{font-size:.56rem}.mba-tx-date strong{font-size:.45rem}.mba-tx-movements{grid-template-columns:1fr}.mba-tx-movement{padding:11px 12px}.mba-tx-movement+.mba-tx-movement{border-left:0;border-top:1px solid rgba(255,255,255,.06)}}
 @media(max-width:390px){.mba-tx-identity>span{font-size:.4rem}.mba-tx-summary span{font-size:.38rem}.mba-tx-section-heading small{font-size:.4rem}.mba-tx-date span{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+
+
+/* =========================================================
+   FINAL TRANSACTIONS POLISH
+   - Silver trade headers
+   - Season dividers
+   - Draft-pick display
+   - Two icon states: trade vs waiver/free agent
+========================================================= */
+
+.mba-tx-card.trade .mba-tx-card-head{
+  background:linear-gradient(145deg,rgba(196,202,208,.11),rgba(123,130,137,.055));
+  border-bottom-color:rgba(210,216,221,.14);
+}
+.mba-tx-card.trade .mba-tx-type-icon{
+  border-color:rgba(210,216,221,.25);
+  color:#e2e6e9;
+  background:rgba(205,211,216,.075);
+}
+.mba-tx-card.trade .mba-tx-type span{
+  color:#c3c9ce;
+}
+
+.mba-tx-season-group{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.mba-tx-season-divider{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:7px 2px 0;
+}
+.mba-tx-season-divider::after{
+  content:"";
+  height:1px;
+  flex:1;
+  background:linear-gradient(90deg,rgba(255,255,255,.16),rgba(255,255,255,.025));
+}
+.mba-tx-season-divider span{
+  font-family:var(--heading-font,"Graduate",Georgia,serif);
+  font-size:.88rem;
+  font-weight:400;
+  color:#c8cdd1;
+}
+
+.mba-tx-pick-list{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.mba-tx-pick strong{
+  display:block;
+  font-size:.65rem;
+  color:#f0f2f3;
+}
+.mba-tx-unclassified-picks{
+  padding:10px 14px;
+  border-top:1px solid rgba(255,255,255,.055);
+}
+.mba-tx-unclassified-picks>span{
+  display:block;
+  margin-bottom:6px;
+  font-size:.43rem;
+  font-weight:900;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:#aeb5ba;
+}
+
+/* Keep school + mascot identity explicitly left aligned. */
+.mba-tx-identity,
+.mba-tx-identity>span,
+.mba-tx-identity h1,
+.mba-tx-identity h2,
+.mba-tx-identity small{
+  text-align:left;
+}
+
+
+/* =========================================================
+   FINAL VISUAL REFINEMENT v2
+========================================================= */
+
+/* Make trade headers noticeably lighter than waiver/free-agent headers. */
+.mba-tx-card.trade .mba-tx-card-head{
+  background:linear-gradient(145deg,rgba(220,224,228,.18),rgba(160,167,173,.10));
+  border-bottom-color:rgba(225,229,232,.22);
+}
+.mba-tx-card.trade .mba-tx-type-icon{
+  border-color:rgba(225,229,232,.34);
+  color:#eef1f3;
+  background:rgba(220,224,228,.12);
+}
+
+/* Trade icon reads as arrows inside the existing circular/square avatar shell. */
+.mba-tx-card.trade .mba-tx-type-icon svg{
+  stroke-width:2;
+}
+
+/* FAAB now sits at the right edge of the transaction body, beside player movement. */
+.mba-tx-card.waiver{
+  position:relative;
+}
+.mba-tx-card.waiver .mba-tx-movements{
+  padding-right:76px;
+}
+.mba-tx-faab-inline{
+  position:absolute;
+  right:14px;
+  bottom:14px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:center;
+  min-width:52px;
+  text-align:right;
+}
+.mba-tx-faab-inline span{
+  color:#82909b;
+  font-size:.42rem;
+  font-weight:900;
+  letter-spacing:.09em;
+}
+.mba-tx-faab-inline strong{
+  margin-top:2px;
+  color:#fff;
+  font-size:.72rem;
+}
+
+/* Stronger, easier-to-scan season breaks. */
+.mba-tx-season-divider{
+  gap:13px;
+  margin:18px 1px 5px;
+}
+.mba-tx-season-divider::after{
+  height:2px;
+  background:linear-gradient(90deg,rgba(210,216,221,.46),rgba(210,216,221,.07));
+}
+.mba-tx-season-divider span{
+  font-size:1.16rem;
+  font-weight:700;
+  letter-spacing:.035em;
+  color:#eef0f2;
+}
+
+@media(max-width:520px){
+  .mba-tx-card.waiver .mba-tx-movements{
+    padding-right:68px;
+  }
+  .mba-tx-faab-inline{
+    right:11px;
+    bottom:12px;
+    min-width:48px;
+  }
+  .mba-tx-season-divider span{
+    font-size:1.08rem;
+  }
+}

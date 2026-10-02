@@ -19,6 +19,76 @@ const API_URL =
 
 const MID_MAJOR_CONFERENCES = new Set(["Coastal", "C-USA", "OVC", "West Coast"]);
 
+const ROSTER_PREFETCH_PREFIX = "mesh:roster-prefetch:";
+
+function rosterPrefetchKey(franchiseId) {
+  return `${ROSTER_PREFETCH_PREFIX}${franchiseId}`;
+}
+
+function readPrefetchedRoster(franchiseId) {
+  try {
+    const raw = sessionStorage.getItem(rosterPrefetchKey(franchiseId));
+    if (!raw) return null;
+    const payload = JSON.parse(raw);
+    return payload?.ok && payload?.franchiseId === franchiseId ? payload : null;
+  } catch {
+    return null;
+  }
+}
+
+function writePrefetchedRoster(franchiseId, payload) {
+  try {
+    sessionStorage.setItem(rosterPrefetchKey(franchiseId), JSON.stringify(payload));
+  } catch {
+    // Preloading is optional; normal page loading remains the fallback.
+  }
+}
+
+const TRANSACTIONS_PREFETCH_PREFIX = "mesh:transactions-prefetch:";
+
+function transactionsPrefetchKey(franchiseId) {
+  return `${TRANSACTIONS_PREFETCH_PREFIX}${franchiseId}`;
+}
+
+function writePrefetchedTransactions(franchiseId, payload) {
+  try {
+    sessionStorage.setItem(transactionsPrefetchKey(franchiseId), JSON.stringify(payload));
+  } catch {
+    // Preloading is optional; normal page loading remains the fallback.
+  }
+}
+
+const FRANCHISE_PROFILE_PREFIX = "mesh:franchise-profile:";
+
+function readFranchiseProfile(franchiseId) {
+  try {
+    const raw = sessionStorage.getItem(`${FRANCHISE_PROFILE_PREFIX}${franchiseId}`);
+    if (!raw) return null;
+    const payload = JSON.parse(raw);
+    return payload?.ok && payload?.franchise ? payload : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeFranchiseProfile(franchiseId, payload) {
+  try {
+    sessionStorage.setItem(`${FRANCHISE_PROFILE_PREFIX}${franchiseId}`, JSON.stringify(payload));
+  } catch {
+    // Optional optimization only.
+  }
+}
+
+const RESUME_PREFETCH_PREFIX = "mesh:resume-prefetch:";
+
+function writePrefetchedResume(franchiseId, payload) {
+  try {
+    sessionStorage.setItem(`${RESUME_PREFETCH_PREFIX}${franchiseId}`, JSON.stringify(payload));
+  } catch {
+    // Preloading is optional; normal page loading remains the fallback.
+  }
+}
+
 function fmtScore(value) {
   const n = Number(value);
   return Number.isFinite(n) ? n.toFixed(1) : "—";
@@ -254,7 +324,15 @@ export default function FranchiseProfile() {
 
   useEffect(() => {
     const controller = new AbortController();
-    setLoading(true);
+    const prefetchedProfile = readFranchiseProfile(franchiseId);
+
+    if (prefetchedProfile) {
+      setData(prefetchedProfile);
+      setSeason(prefetchedProfile.activeSeason);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
     setError("");
 
     const url = new URL(API_URL);
@@ -274,6 +352,61 @@ export default function FranchiseProfile() {
         }
         setData(payload);
         setSeason(payload.activeSeason);
+        writeFranchiseProfile(franchiseId, payload);
+
+        const rosterUrl = new URL(API_URL);
+        rosterUrl.searchParams.set("action", "roster");
+        rosterUrl.searchParams.set("franchiseId", franchiseId);
+
+        fetch(rosterUrl.toString())
+          .then((response) => {
+            if (!response.ok) return null;
+            return response.json();
+          })
+          .then((rosterPayload) => {
+            if (rosterPayload?.ok) {
+              writePrefetchedRoster(franchiseId, rosterPayload);
+            }
+          })
+          .catch(() => {
+            // Preloading is optional. Roster keeps its normal fetch fallback.
+          });
+
+        const transactionsUrl = new URL(API_URL);
+        transactionsUrl.searchParams.set("action", "transactions");
+        transactionsUrl.searchParams.set("franchiseId", franchiseId);
+
+        fetch(transactionsUrl.toString())
+          .then((response) => {
+            if (!response.ok) return null;
+            return response.json();
+          })
+          .then((transactionsPayload) => {
+            if (transactionsPayload?.ok) {
+              writePrefetchedTransactions(franchiseId, transactionsPayload);
+            }
+          })
+          .catch(() => {
+            // Preloading is optional. Transactions keeps its normal fetch fallback.
+          });
+
+        const resumeUrl = new URL(API_URL);
+        resumeUrl.searchParams.set("action", "franchiseResume");
+        resumeUrl.searchParams.set("franchiseId", franchiseId);
+
+        fetch(resumeUrl.toString())
+          .then((response) => {
+            if (!response.ok) return null;
+            return response.json();
+          })
+          .then((resumePayload) => {
+            if (resumePayload?.ok) {
+              writePrefetchedResume(franchiseId, resumePayload);
+            }
+          })
+          .catch(() => {
+            // Preloading is optional. Career Résumé keeps its normal fetch fallback.
+          });
       })
       .catch((requestError) => {
         if (requestError.name !== "AbortError") {

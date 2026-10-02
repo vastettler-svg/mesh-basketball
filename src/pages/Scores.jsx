@@ -11,17 +11,6 @@ const MAX_WEEK = 24;
 const SCORES_API_URL =
   "https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
 
-const SCORES_VIEW_STORAGE_KEY = "mba-scores-view";
-
-function readSavedScoresView() {
-  try {
-    return JSON.parse(sessionStorage.getItem(SCORES_VIEW_STORAGE_KEY) || "null");
-  } catch {
-    return null;
-  }
-}
-
-
 
 const CONFERENCES = [
   { id: "acc", label: "ACC" },
@@ -676,16 +665,10 @@ function ScoresResults({
 }
 
 export default function Scores() {
-  const savedScoresView = useMemo(() => readSavedScoresView(), []);
-  const [selectedWeek, setSelectedWeek] = useState(
-    Number(savedScoresView?.selectedWeek) || 1,
-  );
-  const [selectedPrimaryFilter, setSelectedPrimaryFilter] = useState(
-    savedScoresView?.selectedPrimaryFilter || "featured",
-  );
-  const [selectedSecondaryFilter, setSelectedSecondaryFilter] = useState(
-    savedScoresView?.selectedSecondaryFilter || "conference",
-  );
+  const [selectedWeek, setSelectedWeek] = useState(1);
+  const [selectedPrimaryFilter, setSelectedPrimaryFilter] = useState("featured");
+  const [selectedSecondaryFilter, setSelectedSecondaryFilter] =
+    useState("conference");
   const [scoresData, setScoresData] = useState(null);
   const [scoresLoading, setScoresLoading] = useState(true);
   const [scoresError, setScoresError] = useState("");
@@ -735,17 +718,6 @@ export default function Scores() {
 
     return () => controller.abort();
   }, [selectedWeek]);
-
-  useEffect(() => {
-    sessionStorage.setItem(
-      SCORES_VIEW_STORAGE_KEY,
-      JSON.stringify({
-        selectedWeek,
-        selectedPrimaryFilter,
-        selectedSecondaryFilter,
-      }),
-    );
-  }, [selectedWeek, selectedPrimaryFilter, selectedSecondaryFilter]);
 
   const primaryLabel =
     PRIMARY_FILTERS.find((item) => item.id === selectedPrimaryFilter)?.label ??

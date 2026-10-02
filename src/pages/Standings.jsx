@@ -255,23 +255,11 @@ export default function Standings() {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const savedStandings = (() => {
-    try {
-      return JSON.parse(sessionStorage.getItem("mba-standings-state") || "{}");
-    } catch {
-      return {};
-    }
-  })();
-  const [season, setSeason] = useState(savedStandings.season ?? null);
-  const [view, setView] = useState(savedStandings.view || "pulse");
-  const [conference, setConference] = useState(savedStandings.conference || "ACC");
-
-  useEffect(() => {
-    sessionStorage.setItem(
-      "mba-standings-state",
-      JSON.stringify({ season, view, conference }),
-    );
-  }, [season, view, conference]);
+  const [pulse, setPulse] = useState(null);
+  const [pulseLoading, setPulseLoading] = useState(false);
+  const [season, setSeason] = useState(null);
+  const [view, setView] = useState("pulse");
+  const [conference, setConference] = useState("ACC");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -300,7 +288,47 @@ export default function Standings() {
     return () => controller.abort();
   }, [season]);
 
-  const teams = data?.teams ?? [];
+  useEffect(() => {
+    if (!data?.ok || view !== "pulse") return;
+
+    const pulseSeason = Number(data.activeSeason || season);
+    if (!pulseSeason) return;
+
+    const controller = new AbortController();
+    setPulse(null);
+    setPulseLoading(true);
+
+    const url = new URL(STANDINGS_API_URL);
+    url.searchParams.set("action", "standingsPulse");
+    url.searchParams.set("season", String(pulseSeason));
+
+    fetch(url.toString(), { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Pulse request failed with HTTP ${response.status}.`);
+        return response.json();
+      })
+      .then((payload) => {
+        if (payload?.ok) setPulse(payload.pulse || null);
+      })
+      .catch((err) => {
+        if (err?.name !== "AbortError") setPulse(null);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setPulseLoading(false);
+      });
+
+    return () => controller.abort();
+  }, [data?.ok, data?.activeSeason, view, season]);
+
+  const teams = useMemo(
+    () =>
+      (data?.teams ?? []).map((team) =>
+        team.conference === "Conf USA"
+          ? { ...team, conference: "C-USA" }
+          : team
+      ),
+    [data?.teams],
+  );
   const ranked = useMemo(
     () => [...teams].sort((a, b) => (a.nationalRank ?? 9999) - (b.nationalRank ?? 9999)),
     [teams],
@@ -381,7 +409,11 @@ export default function Standings() {
       {!loading && !error && data ? (
         <>
           {view === "pulse" ? (
-            <PulseView data={data} />
+            pulseLoading || !pulse ? (
+              <div className="standings-message">Loading MESH Pulse…</div>
+            ) : (
+              <PulseView data={{ ...data, pulse }} />
+            )
           ) : null}
           {view === "top-25" ? (
             <RankingsTable title="MESH Top 25" eyebrow="National Rankings" teams={displayTeams} />

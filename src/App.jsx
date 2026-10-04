@@ -16,6 +16,7 @@ import FranchiseProfile from './pages/FranchiseProfile'
 import FranchiseResume from './pages/FranchiseResume'
 import FranchiseRoster from './pages/FranchiseRoster'
 import FranchiseTransactions from './pages/FranchiseTransactions'
+import CoachProfile from './pages/CoachProfile'
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path="/franchise/:franchiseId/resume" element={<FranchiseResume />} />
             <Route path="/franchise/:franchiseId/roster" element={<FranchiseRoster />} />
             <Route path="/franchise/:franchiseId/transactions" element={<FranchiseTransactions />} />
+            <Route path="/coach/:coachId" element={<CoachProfile />} />
           </Routes>
         </main>
 

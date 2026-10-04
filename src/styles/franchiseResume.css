@@ -71,11 +71,14 @@
   .resume-event-wide{grid-column:auto}
 }
 
-
-/* Final identity alignment: match Franchise Profile and Roster. */
-.resume-hero>div:last-child,
-.resume-hero>div:last-child>span,
-.resume-hero h1,
-.resume-hero p{
-  text-align:left;
+/* Back Navigation Update #2 — keep the résumé Back control visually identical to the original text link. */
+button.resume-back{
+  appearance:none;
+  padding:0;
+  border:0;
+  background:transparent;
+  font:inherit;
+  color:#aeb7c1;
+  cursor:pointer;
 }
+button.resume-back:hover{color:#fff}

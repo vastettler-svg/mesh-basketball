@@ -14,18 +14,6 @@ import "../styles/franchiseTransactions.css";
 const API_URL =
   "https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
 
-const TRANSACTIONS_PREFETCH_PREFIX = "mesh:transactions-prefetch:";
-const FRANCHISE_PROFILE_PREFIX = "mesh:franchise-profile:";
-
-function readSessionPayload(key) {
-  try {
-    const raw = sessionStorage.getItem(key);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
 function splitFranchiseName(name) {
   const full = String(name || "").trim();
   const parts = full.split(/\s+/);
@@ -207,20 +195,6 @@ export default function FranchiseTransactions() {
     setLoading(true);
     setError("");
 
-    const prefetchedProfile = readSessionPayload(`${FRANCHISE_PROFILE_PREFIX}${franchiseId}`);
-    const prefetchedTransactions = readSessionPayload(`${TRANSACTIONS_PREFETCH_PREFIX}${franchiseId}`);
-
-    if (
-      prefetchedProfile?.ok &&
-      prefetchedProfile?.franchise &&
-      prefetchedTransactions?.ok
-    ) {
-      setProfile(prefetchedProfile);
-      setTransactions(prefetchedTransactions);
-      setLoading(false);
-      return () => controller.abort();
-    }
-
     const profileUrl = new URL(API_URL);
     profileUrl.searchParams.set("action", "franchise");
     profileUrl.searchParams.set("franchiseId", franchiseId);
@@ -275,8 +249,8 @@ export default function FranchiseTransactions() {
         "--team-secondary": f.secondaryColor || "#d7d7d7",
       }}
     >
-      <button className="mba-tx-back" type="button" onClick={() => navigate(`/franchise/${encodeURIComponent(franchiseId)}`)}>
-        <ArrowLeft size={15} /> Franchise Profile
+      <button className="mba-tx-back" type="button" onClick={() => navigate(-1)}>
+        <ArrowLeft size={15} /> Back
       </button>
 
       <section className="mba-tx-hero">

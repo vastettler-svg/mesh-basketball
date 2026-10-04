@@ -8,19 +8,6 @@ const API_URL =
 
 const STARTER_ORDER = { PG: 1, SG: 2, G: 3, SF: 4, PF: 5, F: 6, C: 7, UTIL: 8 };
 
-const ROSTER_PREFETCH_PREFIX = "mesh:roster-prefetch:";
-
-function readPrefetchedRoster(franchiseId) {
-  try {
-    const raw = sessionStorage.getItem(`${ROSTER_PREFETCH_PREFIX}${franchiseId}`);
-    if (!raw) return null;
-    const payload = JSON.parse(raw);
-    return payload?.ok && payload?.franchiseId === franchiseId ? payload : null;
-  } catch {
-    return null;
-  }
-}
-
 function splitFranchiseName(name) {
   const full = String(name || "").trim();
   const parts = full.split(/\s+/);
@@ -38,7 +25,7 @@ function PlayerRow({ player, starter }) {
         <strong>{player.playerName || "Unknown Player"}</strong>
       </div>
       <div className="mba-roster-player-meta">
-        <strong>{player.position || "—"}</strong>
+        <strong>{player.eligiblePositions || player.position || "—"}</strong>
         <span>{player.nbaTeam || "NBA team unavailable"}</span>
       </div>
     </article>
@@ -48,6 +35,7 @@ function PlayerRow({ player, starter }) {
 export default function FranchiseRoster() {
   const { franchiseId } = useParams();
   const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
   const [roster, setRoster] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -57,27 +45,22 @@ export default function FranchiseRoster() {
     setLoading(true);
     setError("");
 
-    const prefetched = readPrefetchedRoster(franchiseId);
-    if (prefetched?.franchise) {
-      setRoster(prefetched);
-      setLoading(false);
-      return () => controller.abort();
-    }
+    const profileUrl = new URL(API_URL);
+    profileUrl.searchParams.set("action", "franchise");
+    profileUrl.searchParams.set("franchiseId", franchiseId);
 
     const rosterUrl = new URL(API_URL);
     rosterUrl.searchParams.set("action", "roster");
     rosterUrl.searchParams.set("franchiseId", franchiseId);
 
-    fetch(rosterUrl.toString(), { signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`API request failed with HTTP ${response.status}.`);
-        }
-        return response.json();
-      })
-      .then((rosterPayload) => {
+    Promise.all([
+      fetch(profileUrl.toString(), { signal: controller.signal }).then((response) => response.json()),
+      fetch(rosterUrl.toString(), { signal: controller.signal }).then((response) => response.json()),
+    ])
+      .then(([profilePayload, rosterPayload]) => {
+        if (!profilePayload?.ok) throw new Error(profilePayload?.error || "Franchise profile unavailable.");
         if (!rosterPayload?.ok) throw new Error(rosterPayload?.error || "Roster unavailable.");
-        if (!rosterPayload?.franchise) throw new Error("Roster franchise identity unavailable.");
+        setProfile(profilePayload);
         setRoster(rosterPayload);
       })
       .catch((requestError) => {
@@ -124,7 +107,7 @@ export default function FranchiseRoster() {
     );
   }
 
-  if (error || !roster?.franchise) {
+  if (error || !profile?.franchise) {
     return (
       <main className="mba-roster-page">
         <button className="mba-roster-back" type="button" onClick={() => navigate(-1)}>
@@ -138,7 +121,7 @@ export default function FranchiseRoster() {
     );
   }
 
-  const f = roster.franchise;
+  const f = profile.franchise;
   const displayName = splitFranchiseName(f.name);
 
   return (
@@ -152,9 +135,9 @@ export default function FranchiseRoster() {
       <button
         className="mba-roster-back"
         type="button"
-        onClick={() => navigate(`/franchise/${encodeURIComponent(franchiseId)}`)}
+        onClick={() => navigate(-1)}
       >
-        <ArrowLeft size={15} /> Franchise Profile
+        <ArrowLeft size={15} /> Back
       </button>
 
       <section className="mba-roster-hero">

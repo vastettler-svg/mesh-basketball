@@ -1,14 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import PageHeader from "../components/PageHeader";
 import ConferenceBadge from "../components/ConferenceBadge";
 import mbaLogo from "../assets/mba-logo.png";
 import "../styles/standings.css";
-
 const STANDINGS_API_URL =
   "https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
-
 const VIEWS = [
   { value: "pulse", label: "Pulse" },
   { value: "top-25", label: "Top 25" },
@@ -16,19 +14,27 @@ const VIEWS = [
   { value: "overall", label: "Overall" },
   { value: "conferences", label: "Conferences" },
 ];
-
 const CONFERENCES = [
   "ACC", "American", "Big 12", "Big East", "Big Ten", "Coastal", "C-USA",
   "Ivy", "MAC", "Mtn West", "OVC", "SEC", "Sun Belt", "West Coast",
 ];
-
 const MID_MAJOR = new Set(["Coastal", "C-USA", "OVC", "West Coast"]);
-
+function normalizeConference(value) {
+  const conference = String(value || "").trim();
+  const compact = conference.toLowerCase().replace(/[.\s_-]+/g, "");
+  if (
+    compact === "confusa" ||
+    compact === "conferenceusa" ||
+    compact === "cusa"
+  ) {
+    return "C-USA";
+  }
+  return conference;
+}
 function StandingsDropdown({ label, value, options, onChange, ariaLabel }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const selected = options.find((option) => String(option.value) === String(value));
-
   useEffect(() => {
     function close(event) {
       if (ref.current && !ref.current.contains(event.target)) setOpen(false);
@@ -36,7 +42,6 @@ function StandingsDropdown({ label, value, options, onChange, ariaLabel }) {
     document.addEventListener("pointerdown", close);
     return () => document.removeEventListener("pointerdown", close);
   }, []);
-
   return (
     <div className="standings-dropdown" ref={ref}>
       <span className="standings-dropdown-label">{label}</span>
@@ -70,40 +75,59 @@ function StandingsDropdown({ label, value, options, onChange, ariaLabel }) {
     </div>
   );
 }
-
 function TeamIdentity({ team, showNationalRank = false }) {
-  const content = (
+  const teamName = (
     <>
-      <div className="standings-team-logo-wrap">
-        {team.logoUrl ? <img src={team.logoUrl} alt="" className="standings-team-logo" /> : null}
-      </div>
-      <div className="standings-team-copy">
-        <strong>
-          {showNationalRank && team.nationalRank && team.nationalRank <= 25 ? (
-            <span className="standings-inline-rank">#{team.nationalRank}</span>
-          ) : null}
-          {team.name}
-        </strong>
-        <span>{team.coachName || team.coachId || "—"}</span>
-      </div>
+      {showNationalRank && team.nationalRank && team.nationalRank <= 25 ? (
+        <span className="standings-inline-rank">#{team.nationalRank}</span>
+      ) : null}
+      {team.name}
     </>
   );
-
-  if (!team.franchiseId) {
-    return <div className="standings-team">{content}</div>;
-  }
-
   return (
-    <Link
-      className="standings-team standings-team-link"
-      to={`/franchise/${encodeURIComponent(team.franchiseId)}`}
-      aria-label={`Open ${team.name || "franchise"} profile`}
-    >
-      {content}
-    </Link>
+    <div className="standings-team">
+      {team.franchiseId ? (
+        <Link
+          className="standings-team-logo-link"
+          to={`/franchise/${encodeURIComponent(team.franchiseId)}`}
+          aria-label={`Open ${team.name || "franchise"} profile`}
+        >
+          <div className="standings-team-logo-wrap">
+            {team.logoUrl ? <img src={team.logoUrl} alt="" className="standings-team-logo" /> : null}
+          </div>
+        </Link>
+      ) : (
+        <div className="standings-team-logo-wrap">
+          {team.logoUrl ? <img src={team.logoUrl} alt="" className="standings-team-logo" /> : null}
+        </div>
+      )}
+      <div className="standings-team-copy">
+        <strong>
+          {team.franchiseId ? (
+            <Link
+              className="standings-team-name-link"
+              to={`/franchise/${encodeURIComponent(team.franchiseId)}`}
+            >
+              {teamName}
+            </Link>
+          ) : (
+            teamName
+          )}
+        </strong>
+        {team.coachId ? (
+          <Link
+            className="standings-coach-link"
+            to={`/coach/${encodeURIComponent(team.coachId)}`}
+          >
+            {team.coachName || team.coachId}
+          </Link>
+        ) : (
+          <span>{team.coachName || "—"}</span>
+        )}
+      </div>
+    </div>
   );
 }
-
 function RankingsTable({ title, eyebrow, teams, rankField = "nationalRank", conferenceMode = false }) {
   return (
     <section className="standings-section">
@@ -129,7 +153,6 @@ function RankingsTable({ title, eyebrow, teams, rankField = "nationalRank", conf
     </section>
   );
 }
-
 function PulseTeamRow({ team, position, tone = "" }) {
   if (!team) return null;
   return (
@@ -139,7 +162,6 @@ function PulseTeamRow({ team, position, tone = "" }) {
     </div>
   );
 }
-
 function PulseView({ data }) {
   const teams = data.teams ?? [];
   const pulse = data.pulse ?? {};
@@ -153,7 +175,6 @@ function PulseView({ data }) {
   const promoted = pulse.promoted ?? mid.slice(0, 10);
   const promotionWatch = pulse.promotionWatch ?? mid.slice(10, 13);
   const powerStart = Math.max(1, power.length - 12);
-
   return (
     <section className="standings-section standings-pulse">
       <div className="standings-section-heading standings-pulse-heading">
@@ -161,7 +182,6 @@ function PulseView({ data }) {
         <h2>MESH Pulse</h2>
         <p>The biggest live movement across MESH Basketball — leaders, ranking swings, new Top 25 teams, promotion and relegation pressure.</p>
       </div>
-
       <div className="pulse-card">
         <div className="pulse-card-top pulse-card-top-clean">
           <div>
@@ -169,13 +189,11 @@ function PulseView({ data }) {
             <span>{data.isLiveSeason ? (data.lastCompletedWeek === 0 ? `${data.season} preseason snapshot` : `Through Week ${data.lastCompletedWeek}`) : `${data.season} final standings`}</span>
           </div>
         </div>
-
         <div className="pulse-stats">
           <div><strong>184</strong><span>Franchises</span></div>
           <div><strong>10</strong><span>Power Conference Coaches Relegated</span></div>
           <div><strong>10</strong><span>Mid Major Coaches Promoted</span></div>
         </div>
-
         <div className="pulse-leader">
           <div className="pulse-leader-team">
             <span>Current No. 1</span>
@@ -186,7 +204,6 @@ function PulseView({ data }) {
             <strong>{pulse.weeksAtNo1 ?? 0}</strong>
           </div>
         </div>
-
         <div className="pulse-movement">
           <div>
             <span>Biggest Top 25 Rise</span>
@@ -220,7 +237,6 @@ function PulseView({ data }) {
             </div>
           </div>
         </div>
-
         <div className="pulse-race-block">
           <span className="pulse-race-label">Power Conference Relegation Watch</span>
           <div className="pulse-race-list">
@@ -233,7 +249,6 @@ function PulseView({ data }) {
             ))}
           </div>
         </div>
-
         <div className="pulse-race-block">
           <span className="pulse-race-label">Mid Major Promotion Race</span>
           <div className="pulse-race-list">
@@ -250,17 +265,36 @@ function PulseView({ data }) {
     </section>
   );
 }
-
 export default function Standings() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const restoredStandings = location.state?.standingsState || {};
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [pulse, setPulse] = useState(null);
-  const [pulseLoading, setPulseLoading] = useState(false);
-  const [season, setSeason] = useState(null);
-  const [view, setView] = useState("pulse");
-  const [conference, setConference] = useState("ACC");
-
+  const [season, setSeason] = useState(
+    restoredStandings.season != null ? Number(restoredStandings.season) : null,
+  );
+  const [view, setView] = useState(restoredStandings.view || "pulse");
+  const [conference, setConference] = useState(restoredStandings.conference || "ACC");
+  useEffect(() => {
+    const current = location.state?.standingsState || {};
+    const next = { season, view, conference };
+    if (
+      Number(current.season ?? 0) === Number(next.season ?? 0) &&
+      current.view === next.view &&
+      current.conference === next.conference
+    ) {
+      return;
+    }
+    navigate(location.pathname + location.search, {
+      replace: true,
+      state: {
+        ...(location.state || {}),
+        standingsState: next,
+      },
+    });
+  }, [season, view, conference, location.pathname, location.search, location.state, navigate]);
   useEffect(() => {
     const controller = new AbortController();
     async function load() {
@@ -287,78 +321,33 @@ export default function Standings() {
     load();
     return () => controller.abort();
   }, [season]);
-
-  useEffect(() => {
-    if (!data?.ok || view !== "pulse") return;
-
-    const pulseSeason = Number(data.activeSeason || season);
-    if (!pulseSeason) return;
-
-    const controller = new AbortController();
-    setPulse(null);
-    setPulseLoading(true);
-
-    const url = new URL(STANDINGS_API_URL);
-    url.searchParams.set("action", "standingsPulse");
-    url.searchParams.set("season", String(pulseSeason));
-
-    fetch(url.toString(), { signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) throw new Error(`Pulse request failed with HTTP ${response.status}.`);
-        return response.json();
-      })
-      .then((payload) => {
-        if (payload?.ok) setPulse(payload.pulse || null);
-      })
-      .catch((err) => {
-        if (err?.name !== "AbortError") setPulse(null);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setPulseLoading(false);
-      });
-
-    return () => controller.abort();
-  }, [data?.ok, data?.activeSeason, view, season]);
-
-  const teams = useMemo(
-    () =>
-      (data?.teams ?? []).map((team) =>
-        team.conference === "Conf USA"
-          ? { ...team, conference: "C-USA" }
-          : team
-      ),
-    [data?.teams],
-  );
+  const teams = data?.teams ?? [];
   const ranked = useMemo(
     () => [...teams].sort((a, b) => (a.nationalRank ?? 9999) - (b.nationalRank ?? 9999)),
     [teams],
   );
-
   const displayTeams = useMemo(() => {
     if (view === "top-25") return ranked.filter((team) => team.nationalRank <= 25);
-    if (view === "mid-major-top-25") return ranked.filter((team) => MID_MAJOR.has(team.conference)).slice(0, 25);
+    if (view === "mid-major-top-25") return ranked.filter((team) => MID_MAJOR.has(normalizeConference(team.conference))).slice(0, 25);
     if (view === "overall") return ranked;
     if (view === "conferences") {
       return teams
-        .filter((team) => team.conference === conference)
+        .filter((team) => normalizeConference(team.conference) === normalizeConference(conference))
         .sort((a, b) => (a.conferenceRank ?? 9999) - (b.conferenceRank ?? 9999) || (a.nationalRank ?? 9999) - (b.nationalRank ?? 9999));
     }
     return [];
   }, [view, ranked, teams, conference]);
-
   const availableSeasonYears = data?.availableSeasons?.length ? data.availableSeasons : [data?.activeSeason || 2027];
   const seasonYears = view === "pulse" ? [data?.activeSeason || 2027] : availableSeasonYears;
   const seasonOptions = seasonYears.map((year) => ({
     value: year,
     label: Number(year) === Number(data?.activeSeason) ? `${year} Live` : String(year),
   }));
-
   useEffect(() => {
     if (view === "pulse" && data?.activeSeason && Number(season) !== Number(data.activeSeason)) {
       setSeason(Number(data.activeSeason));
     }
   }, [view, data?.activeSeason, season]);
-
   return (
     <main className="standings-page">
       <PageHeader
@@ -370,7 +359,6 @@ export default function Standings() {
         accent="standings"
         size="compact"
       />
-
       <section className="standings-controls">
         <StandingsDropdown
           label="Season"
@@ -387,7 +375,6 @@ export default function Standings() {
           ariaLabel="Choose standings view"
         />
       </section>
-
       {view === "conferences" ? (
         <section className="standings-conference-control">
           <div className="standings-conference-badge">
@@ -402,18 +389,12 @@ export default function Standings() {
           />
         </section>
       ) : null}
-
       {loading ? <div className="standings-message">Loading MESH standings…</div> : null}
       {error ? <div className="standings-message standings-error">{error}</div> : null}
-
       {!loading && !error && data ? (
         <>
           {view === "pulse" ? (
-            pulseLoading || !pulse ? (
-              <div className="standings-message">Loading MESH Pulse…</div>
-            ) : (
-              <PulseView data={{ ...data, pulse }} />
-            )
+            <PulseView data={data} />
           ) : null}
           {view === "top-25" ? (
             <RankingsTable title="MESH Top 25" eyebrow="National Rankings" teams={displayTeams} />

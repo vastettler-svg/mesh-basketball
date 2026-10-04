@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Activity, ChevronDown, ChevronLeft, ChevronRight, Clock3, Radio, Sparkles, Trophy } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 import ConferenceBadge from "../components/ConferenceBadge";
 import mbaLogo from "../assets/mba-logo.png";
@@ -311,29 +311,73 @@ function TeamRow({ team, status, winnerFranchiseId }) {
         .filter(Boolean)
         .join(" ")}
     >
-      <div className="score-team-logo">
-        {team.logoUrl ? (
-          <img
-            src={team.logoUrl}
-            alt={`${team.name || "Team"} logo`}
-            loading="lazy"
-            onError={(event) => {
-              event.currentTarget.style.display = "none";
-              event.currentTarget.nextElementSibling?.removeAttribute("hidden");
-            }}
-          />
-        ) : null}
-        <span hidden={Boolean(team.logoUrl)}>{teamInitial(team)}</span>
-      </div>
+      {team.franchiseId ? (
+        <Link
+          to={`/franchise/${encodeURIComponent(team.franchiseId)}`}
+          className="score-team-profile-logo-link"
+          aria-label={`Open ${team.name || "team"} franchise profile`}
+        >
+          <div className="score-team-logo">
+            {team.logoUrl ? (
+              <img
+                src={team.logoUrl}
+                alt={`${team.name || "Team"} logo`}
+                loading="lazy"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                  event.currentTarget.nextElementSibling?.removeAttribute("hidden");
+                }}
+              />
+            ) : null}
+            <span hidden={Boolean(team.logoUrl)}>{teamInitial(team)}</span>
+          </div>
+        </Link>
+      ) : (
+        <div className="score-team-logo">
+          {team.logoUrl ? (
+            <img
+              src={team.logoUrl}
+              alt={`${team.name || "Team"} logo`}
+              loading="lazy"
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+                event.currentTarget.nextElementSibling?.removeAttribute("hidden");
+              }}
+            />
+          ) : null}
+          <span hidden={Boolean(team.logoUrl)}>{teamInitial(team)}</span>
+        </div>
+      )}
 
       <div className="score-team-info">
         <strong title={team.name || "TBD"}>
-          {showRank ? <b className="score-team-rank">#{team.rank}</b> : null}
-          {team.name || "TBD"}
+          {team.franchiseId ? (
+            <Link
+              to={`/franchise/${encodeURIComponent(team.franchiseId)}`}
+              className="score-team-profile-name-link"
+            >
+              {showRank ? <b className="score-team-rank">#{team.rank}</b> : null}
+              {team.name || "TBD"}
+            </Link>
+          ) : (
+            <>
+              {showRank ? <b className="score-team-rank">#{team.rank}</b> : null}
+              {team.name || "TBD"}
+            </>
+          )}
         </strong>
 
         {team.coachName ? (
-          <span className="score-team-coach">{team.coachName}</span>
+          team.coachId ? (
+            <Link
+              to={`/coach/${encodeURIComponent(team.coachId)}`}
+              className="score-team-coach score-team-coach-link"
+            >
+              {team.coachName}
+            </Link>
+          ) : (
+            <span className="score-team-coach">{team.coachName}</span>
+          )
         ) : null}
 
         <span className="score-team-records">
@@ -665,13 +709,40 @@ function ScoresResults({
 }
 
 export default function Scores() {
-  const [selectedWeek, setSelectedWeek] = useState(1);
-  const [selectedPrimaryFilter, setSelectedPrimaryFilter] = useState("featured");
-  const [selectedSecondaryFilter, setSelectedSecondaryFilter] =
-    useState("conference");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const restoredScoresState = location.state?.scoresState;
+  const [selectedWeek, setSelectedWeek] = useState(() => Number(restoredScoresState?.week) || 1);
+  const [selectedPrimaryFilter, setSelectedPrimaryFilter] = useState(
+    () => restoredScoresState?.primaryFilter || "featured",
+  );
+  const [selectedSecondaryFilter, setSelectedSecondaryFilter] = useState(
+    () => restoredScoresState?.secondaryFilter || "conference",
+  );
   const [scoresData, setScoresData] = useState(null);
   const [scoresLoading, setScoresLoading] = useState(true);
   const [scoresError, setScoresError] = useState("");
+
+  useEffect(() => {
+    const scoresState = {
+      week: selectedWeek,
+      primaryFilter: selectedPrimaryFilter,
+      secondaryFilter: selectedSecondaryFilter,
+    };
+    navigate(location.pathname, {
+      replace: true,
+      state: {
+        ...(location.state || {}),
+        scoresState,
+      },
+    });
+  }, [
+    selectedWeek,
+    selectedPrimaryFilter,
+    selectedSecondaryFilter,
+    navigate,
+    location.pathname,
+  ]);
 
   useEffect(() => {
     const controller = new AbortController();

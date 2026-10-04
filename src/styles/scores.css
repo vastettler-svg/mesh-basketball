@@ -793,3 +793,42 @@
   }
 }
 
+
+.score-team-profile-logo-link,
+.score-team-profile-name-link,
+.score-team-coach-link {
+  color: inherit;
+  text-decoration: none;
+}
+.score-team-profile-logo-link {
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.score-team-profile-name-link {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.score-team-profile-logo-link:hover .score-team-logo,
+.score-team-profile-name-link:hover,
+.score-team-coach-link:hover {
+  color: #ff9a4e;
+}
+.score-team-profile-logo-link:focus-visible,
+.score-team-profile-name-link:focus-visible,
+.score-team-coach-link:focus-visible {
+  outline: 2px solid rgba(255, 122, 26, .72);
+  outline-offset: 2px;
+}
+@media (max-width: 410px) {
+  .score-team-profile-logo-link {
+    width: 36px;
+    height: 36px;
+  }
+}

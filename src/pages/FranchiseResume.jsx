@@ -1,23 +1,10 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, Award, Crown, Medal, Trophy, TrendingUp } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "../styles/franchiseResume.css";
 
 const API_URL =
   "https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
-
-const RESUME_PREFETCH_PREFIX = "mesh:resume-prefetch:";
-
-function readPrefetchedResume(franchiseId) {
-  try {
-    const raw = sessionStorage.getItem(`${RESUME_PREFETCH_PREFIX}${franchiseId}`);
-    if (!raw) return null;
-    const payload = JSON.parse(raw);
-    return payload?.ok ? payload : null;
-  } catch {
-    return null;
-  }
-}
 
 function record(value) {
   if (!value) return "0–0";
@@ -72,22 +59,13 @@ function TournamentCard({ title, data }) {
 
 export default function FranchiseResume() {
   const { franchiseId } = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [status, setStatus] = useState("loading");
 
   useEffect(() => {
     let cancelled = false;
     setStatus("loading");
-
-    const prefetched = readPrefetchedResume(franchiseId);
-    if (prefetched) {
-      setData(prefetched);
-      setStatus("ready");
-      return () => {
-        cancelled = true;
-      };
-    }
-
     fetch(`${API_URL}?action=franchiseResume&franchiseId=${encodeURIComponent(franchiseId)}`)
       .then((response) => response.json())
       .then((payload) => {
@@ -111,7 +89,7 @@ export default function FranchiseResume() {
   if (status === "error" || !data) {
     return (
       <main className="franchise-resume-page">
-        <Link className="resume-back" to={`/franchise/${encodeURIComponent(franchiseId)}`}><ArrowLeft size={15} /> Franchise</Link>
+        <button type="button" className="resume-back" onClick={() => navigate(-1)}><ArrowLeft size={15} /> Back</button>
         <div className="resume-state">Career résumé could not be loaded.</div>
       </main>
     );
@@ -129,9 +107,9 @@ export default function FranchiseResume() {
         "--resume-secondary": f.secondaryColor || "#aeb6bf",
       }}
     >
-      <Link className="resume-back" to={`/franchise/${encodeURIComponent(franchiseId)}`}>
-        <ArrowLeft size={15} /> Franchise
-      </Link>
+      <button type="button" className="resume-back" onClick={() => navigate(-1)}>
+        <ArrowLeft size={15} /> Back
+      </button>
 
       <section className="resume-hero">
         <div className="resume-hero-logo">

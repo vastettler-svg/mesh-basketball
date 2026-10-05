@@ -339,6 +339,9 @@ function SeriesHistory({ meetings, team1, team2 }) {
 }
 function cleanEventLabel(game) {
   const raw = String(game?.eventName || "").trim();
+  const normalized = raw.toLowerCase();
+  if (normalized === "season kickoff invitational regionals") return "SKI Regional";
+  if (normalized === "invitational tournaments") return "Invitational";
   const generic = new Set([
     "", "Regular Season", "Conference", "Non-Conference",
     "Invitational", "Invitational Tournament", "Tournament"

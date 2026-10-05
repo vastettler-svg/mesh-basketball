@@ -5,13 +5,9 @@ import PageHeader from "../components/PageHeader";
 import ConferenceBadge from "../components/ConferenceBadge";
 import mbaLogo from "../assets/mba-logo.png";
 import "../styles/scores.css";
-
 const MAX_WEEK = 24;
-
 const SCORES_API_URL =
   "https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
-
-
 const CONFERENCES = [
   { id: "acc", label: "ACC" },
   { id: "american", label: "American" },
@@ -28,21 +24,18 @@ const CONFERENCES = [
   { id: "sun-belt", label: "Sun Belt" },
   { id: "west-coast", label: "West Coast", midMajor: true },
 ];
-
 const PRIMARY_FILTERS = [
   { id: "featured", label: "Featured" },
   { id: "top-25", label: "Top 25" },
   { id: "all-mesh", label: "All MESH" },
   ...CONFERENCES,
 ];
-
 const MID_MAJOR_MAYHEM_CONFERENCES = new Set([
   "coastal",
   "c-usa",
   "ovc",
   "west-coast",
 ]);
-
 const EVENT = {
   SKI_REG: { id: "ski-reg", label: "SKI Reg", fullLabel: "Season Kickoff Inv. - Regionals" },
   SKI_CB: { id: "ski-cb", label: "SKI CB", fullLabel: "SKI Champions Bracket" },
@@ -58,7 +51,6 @@ const EVENT = {
   REG_SHOWDOWN: { id: "reg-showdown", label: "Reg. Showdown", fullLabel: "Regional Showdown Tournament" },
   POSTSEASON: { id: "postseason", label: "Postseason" },
 };
-
 /*
  * Temporary controls schedule based on the supplied 2025-2026 schedule.
  * When GAME_RESULTS is connected, these event buttons should be derived from
@@ -90,14 +82,11 @@ const WEEKLY_EVENTS = {
   23: [EVENT.POSTSEASON],
   24: [EVENT.POSTSEASON],
 };
-
 function getBaseFilterForWeek(week) {
   if (week >= 15 && week <= 18) return EVENT.CONF_TOURN;
   if (week >= 19) return EVENT.POSTSEASON;
   return { id: "conference", label: "Conference" };
 }
-
-
 const CONFERENCE_API_LABELS = {
   acc: ["ACC"],
   american: ["American"],
@@ -114,14 +103,11 @@ const CONFERENCE_API_LABELS = {
   "sun-belt": ["Sun Belt"],
   "west-coast": ["West Coast"],
 };
-
 function normalizeStatus(status) {
   const value = String(status || "").trim().toLowerCase();
-
   if (value === "final") {
     return { id: "final", label: "Final" };
   }
-
   if (
     value.includes("progress") ||
     value === "live" ||
@@ -129,10 +115,8 @@ function normalizeStatus(status) {
   ) {
     return { id: "live", label: "In Progress" };
   }
-
   return { id: "upcoming", label: "Scheduled" };
 }
-
 function StatusBadge({ status }) {
   const normalized = normalizeStatus(status);
   const icons = {
@@ -141,7 +125,6 @@ function StatusBadge({ status }) {
     final: Trophy,
   };
   const Icon = icons[normalized.id] ?? Activity;
-
   return (
     <span className={`scores-status-badge scores-status-${normalized.id}`}>
       <Icon size={11} />
@@ -149,36 +132,28 @@ function StatusBadge({ status }) {
     </span>
   );
 }
-
 function formatScore(score, status) {
   const normalized = normalizeStatus(status);
-
   if (score === null || score === undefined || score === "") {
     return normalized.id === "upcoming" ? "—" : "0.0";
   }
-
   return Number(score).toFixed(1);
 }
-
 function formatProjection(projection) {
   if (projection === null || projection === undefined || projection === "") {
     return "";
   }
-
   return `Proj: ${Number(projection).toFixed(1)}`;
 }
-
 function teamInitial(team) {
   const words = String(team?.name || "MBA")
     .trim()
     .split(/\s+/)
     .filter(Boolean);
-
   return words.length > 1
     ? `${words[0][0]}${words[1][0]}`.toUpperCase()
     : String(words[0] || "M").slice(0, 2).toUpperCase();
 }
-
 function ScoresDropdown({
   label,
   value,
@@ -188,45 +163,37 @@ function ScoresDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
-
   const selectedOption =
     options.find((option) => String(option.value) === String(value)) ??
     options[0];
-
   useEffect(() => {
     function handlePointerDown(event) {
       if (!rootRef.current?.contains(event.target)) {
         setOpen(false);
       }
     }
-
     function handleKeyDown(event) {
       if (event.key === "Escape") {
         setOpen(false);
       }
     }
-
     document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("keydown", handleKeyDown);
-
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
-
   function choose(option) {
     onChange(option.value);
     setOpen(false);
   }
-
   return (
     <div
       className={`scores-dropdown-control${open ? " is-open" : ""}`}
       ref={rootRef}
     >
       <span>{label}</span>
-
       <button
         type="button"
         className="scores-dropdown-trigger"
@@ -238,12 +205,10 @@ function ScoresDropdown({
         <strong>{selectedOption?.label || ""}</strong>
         <ChevronDown size={16} aria-hidden="true" />
       </button>
-
       {open ? (
         <div className="scores-dropdown-menu" role="listbox" aria-label={ariaLabel}>
           {options.map((option) => {
             const selected = String(option.value) === String(value);
-
             return (
               <button
                 type="button"
@@ -268,7 +233,6 @@ function ScoresDropdown({
     </div>
   );
 }
-
 function TeamRow({ team, status, winnerFranchiseId }) {
   if (!team) {
     return (
@@ -286,21 +250,17 @@ function TeamRow({ team, status, winnerFranchiseId }) {
       </div>
     );
   }
-
   const normalized = normalizeStatus(status);
   const isWinner =
     normalized.id === "final" &&
     winnerFranchiseId &&
     winnerFranchiseId === team.franchiseId;
-
   const hasWinner =
     normalized.id === "final" && Boolean(winnerFranchiseId);
-
   const showRank =
     Number.isFinite(Number(team.rank)) &&
     Number(team.rank) > 0 &&
     Number(team.rank) <= 25;
-
   return (
     <div
       className={[
@@ -348,7 +308,6 @@ function TeamRow({ team, status, winnerFranchiseId }) {
           <span hidden={Boolean(team.logoUrl)}>{teamInitial(team)}</span>
         </div>
       )}
-
       <div className="score-team-info">
         <strong title={team.name || "TBD"}>
           {team.franchiseId ? (
@@ -366,7 +325,6 @@ function TeamRow({ team, status, winnerFranchiseId }) {
             </>
           )}
         </strong>
-
         {team.coachName ? (
           team.coachId ? (
             <Link
@@ -379,13 +337,11 @@ function TeamRow({ team, status, winnerFranchiseId }) {
             <span className="score-team-coach">{team.coachName}</span>
           )
         ) : null}
-
         <span className="score-team-records">
           <span>OVR: {team.overallRecord || "0-0"}</span>
           <span>CONF: {team.conferenceRecord || "0-0"}</span>
         </span>
       </div>
-
       <div className="score-team-numbers">
         <strong>{formatScore(team.score, status)}</strong>
         {normalized.id !== "final" ? (
@@ -400,7 +356,6 @@ function TeamRow({ team, status, winnerFranchiseId }) {
     </div>
   );
 }
-
 function isBracketEvent(game) {
   const haystack = [
     game?.eventId,
@@ -411,7 +366,6 @@ function isBracketEvent(game) {
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
-
   const bracketTerms = [
     "ski",
     "season kickoff",
@@ -426,29 +380,41 @@ function isBracketEvent(game) {
     "cbi",
     "postseason",
   ];
-
   return bracketTerms.some((term) => haystack.includes(term));
 }
-
+function regionalSlug(value) {
+  return String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 function eventBracketUrl(game) {
+  const eventName = String(game?.eventName || "").toLowerCase();
+  const eventId = String(game?.eventId || "").toLowerCase();
+  const tournamentName = String(game?.tournamentName || "").trim();
+  const isSkiRegional =
+    tournamentName &&
+    (eventName.includes("season kickoff invitational regionals") ||
+      eventName.includes("season kickoff") ||
+      eventId.includes("ski-r"));
+  if (isSkiRegional) {
+    return `/events/ski-regionals/${regionalSlug(tournamentName)}`;
+  }
   const params = new URLSearchParams();
-
   if (game?.eventId) params.set("event", game.eventId);
   if (game?.bracket) params.set("bracket", game.bracket);
   if (game?.week) params.set("week", String(game.week));
-
   const query = params.toString();
   return query ? `/events?${query}` : "/events";
 }
-
-function ScoreCard({ game, featured = false, featuredPosition = 0 }) {
+function ScoreCard({ game, featured = false, featuredPosition = 0, scoresState }) {
   const stage =
     game.stageLabel ||
     game.round ||
     game.gameType ||
     game.eventName ||
     "Game";
-
   return (
     <article
       className={[
@@ -471,21 +437,24 @@ function ScoreCard({ game, featured = false, featuredPosition = 0 }) {
             </span>
           ) : null}
         </div>
-
         {isBracketEvent(game) ? (
           <Link
             className="score-bracket-link"
             to={eventBracketUrl(game)}
+            state={{
+              season: Number(game?.season) || 2027,
+              tournamentName: game?.tournamentName || "",
+              fromScores: true,
+              scoresState,
+            }}
             title="Open this event bracket"
           >
             View Bracket
             <ChevronRight size={12} />
           </Link>
         ) : null}
-
         <StatusBadge status={game.status} />
       </div>
-
       <div className="score-team-list">
         <TeamRow
           team={game.team1}
@@ -498,7 +467,6 @@ function ScoreCard({ game, featured = false, featuredPosition = 0 }) {
           winnerFranchiseId={game.winnerFranchiseId}
         />
       </div>
-
       <Link
         className="score-game-center-button"
         to={`/scores/${encodeURIComponent(game.gameId)}`}
@@ -509,19 +477,16 @@ function ScoreCard({ game, featured = false, featuredPosition = 0 }) {
     </article>
   );
 }
-
 function gameMatchesConference(game, filterId) {
   const accepted = CONFERENCE_API_LABELS[filterId] ?? [];
   const conferences = [
     game?.team1?.conference,
     game?.team2?.conference,
   ].map((value) => String(value || "").trim().toLowerCase());
-
   return accepted.some((label) =>
     conferences.includes(label.toLowerCase()),
   );
 }
-
 function gameMatchesEvent(game, filterId) {
   const haystack = [
     game?.eventId,
@@ -534,7 +499,6 @@ function gameMatchesEvent(game, filterId) {
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
-
   const matchers = {
     conference: ["conference"],
     "conf-tourn": ["conference tournament", "conf tourn"],
@@ -553,12 +517,10 @@ function gameMatchesEvent(game, filterId) {
       "postseason",
     ],
   };
-
   return (matchers[filterId] ?? []).some((term) =>
     haystack.includes(term),
   );
 }
-
 function ScoresResults({
   data,
   loading,
@@ -568,9 +530,9 @@ function ScoresResults({
   primaryLabel,
   secondaryLabel,
   selectedConference,
+  scoresState,
 }) {
   const allGames = Array.isArray(data?.games) ? data.games : [];
-
   const visibleGames = useMemo(() => {
     if (selectedPrimaryFilter === "featured") {
       return allGames
@@ -585,9 +547,7 @@ function ScoresResults({
         .sort((a, b) => Number(a.featuredRank) - Number(b.featuredRank))
         .slice(0, 3);
     }
-
     let games = allGames;
-
     if (selectedPrimaryFilter === "top-25") {
       games = games.filter(
         (game) =>
@@ -601,32 +561,26 @@ function ScoresResults({
         gameMatchesConference(game, selectedPrimaryFilter),
       );
     }
-
     games = games.filter((game) =>
       gameMatchesEvent(game, selectedSecondaryFilter),
     );
-
     if (selectedPrimaryFilter === "top-25") {
       const bestTop25Rank = (game) => {
         const ranks = [game?.team1?.rank, game?.team2?.rank]
           .map(Number)
           .filter((rank) => Number.isFinite(rank) && rank > 0 && rank <= 25);
-
         return ranks.length > 0 ? Math.min(...ranks) : 999;
       };
-
       games = [...games].sort(
         (a, b) => bestTop25Rank(a) - bestTop25Rank(b),
       );
     }
-
     return games;
   }, [
     allGames,
     selectedPrimaryFilter,
     selectedSecondaryFilter,
   ]);
-
   if (loading) {
     return (
       <div className="scores-empty-state">
@@ -636,7 +590,6 @@ function ScoresResults({
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="scores-empty-state">
@@ -646,9 +599,7 @@ function ScoresResults({
       </div>
     );
   }
-
   const isFeatured = selectedPrimaryFilter === "featured";
-
   return (
     <section className="scores-results">
       <div className="scores-section-heading">
@@ -664,7 +615,6 @@ function ScoresResults({
               : secondaryLabel || primaryLabel}
           </h2>
         </div>
-
         {selectedConference ? (
           <ConferenceBadge
             conference={selectedConference.label}
@@ -677,7 +627,6 @@ function ScoresResults({
           </span>
         )}
       </div>
-
       {visibleGames.length > 0 ? (
         <div className="scores-grid">
           {visibleGames.map((game, index) => (
@@ -686,6 +635,7 @@ function ScoresResults({
               game={game}
               featured={isFeatured}
               featuredPosition={index}
+              scoresState={scoresState}
             />
           ))}
         </div>
@@ -707,7 +657,6 @@ function ScoresResults({
     </section>
   );
 }
-
 export default function Scores() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -722,7 +671,6 @@ export default function Scores() {
   const [scoresData, setScoresData] = useState(null);
   const [scoresLoading, setScoresLoading] = useState(true);
   const [scoresError, setScoresError] = useState("");
-
   useEffect(() => {
     const scoresState = {
       week: selectedWeek,
@@ -743,37 +691,28 @@ export default function Scores() {
     navigate,
     location.pathname,
   ]);
-
   useEffect(() => {
     const controller = new AbortController();
-
     async function loadScores() {
       setScoresLoading(true);
       setScoresError("");
-
       try {
         const url = new URL(SCORES_API_URL);
         url.searchParams.set("action", "scores");
         url.searchParams.set("week", String(selectedWeek));
-
         const response = await fetch(url.toString(), {
           signal: controller.signal,
         });
-
         if (!response.ok) {
           throw new Error(`API request failed with HTTP ${response.status}.`);
         }
-
         const data = await response.json();
-
         if (!data?.ok) {
           throw new Error(data?.error || "The MESH Basketball API returned an error.");
         }
-
         setScoresData(data);
       } catch (error) {
         if (error?.name === "AbortError") return;
-
         setScoresData(null);
         setScoresError(
           error?.message || "Unable to load MESH Basketball scores.",
@@ -784,25 +723,18 @@ export default function Scores() {
         }
       }
     }
-
     loadScores();
-
     return () => controller.abort();
   }, [selectedWeek]);
-
   const primaryLabel =
     PRIMARY_FILTERS.find((item) => item.id === selectedPrimaryFilter)?.label ??
     "Featured";
-
   const selectedConference =
     CONFERENCES.find((item) => item.id === selectedPrimaryFilter) ?? null;
-
   const secondaryFilters = useMemo(() => {
     if (selectedPrimaryFilter === "featured") return [];
-
     const baseFilter = getBaseFilterForWeek(selectedWeek);
     const events = WEEKLY_EVENTS[selectedWeek] ?? [];
-
     const visibleEvents = events.filter(
       (event) =>
         event.id !== baseFilter.id &&
@@ -810,34 +742,27 @@ export default function Scores() {
           selectedPrimaryFilter === "top-25" ||
           MID_MAJOR_MAYHEM_CONFERENCES.has(selectedPrimaryFilter)),
     );
-
     return [baseFilter, ...visibleEvents];
   }, [selectedPrimaryFilter, selectedWeek]);
-
   const selectedSecondaryOption =
     secondaryFilters.find((item) => item.id === selectedSecondaryFilter) ??
     secondaryFilters[0];
-
   const secondaryLabel =
     selectedSecondaryOption?.fullLabel ??
     selectedSecondaryOption?.label ??
     "";
-
   function resetSecondaryForWeek(week) {
     setSelectedSecondaryFilter(getBaseFilterForWeek(week).id);
   }
-
   function selectPrimaryFilter(filterId) {
     setSelectedPrimaryFilter(filterId);
     resetSecondaryForWeek(selectedWeek);
   }
-
   function changeWeek(nextWeek) {
     if (nextWeek < 1 || nextWeek > MAX_WEEK) return;
     setSelectedWeek(nextWeek);
     resetSecondaryForWeek(nextWeek);
   }
-
   return (
     <main className="scores-page">
       <PageHeader
@@ -849,7 +774,6 @@ export default function Scores() {
         accent="scores"
         size="compact"
       />
-
       <section className="scores-controls scores-controls-dropdowns">
         <ScoresDropdown
           label="MESH Week"
@@ -857,7 +781,6 @@ export default function Scores() {
           options={Array.from({ length: MAX_WEEK }, (_, index) => {
             const week = index + 1;
             const isCurrent = Number(scoresData?.activeWeek) === week;
-
             return {
               value: week,
               label: `Week ${week}`,
@@ -868,7 +791,6 @@ export default function Scores() {
           onChange={(week) => changeWeek(Number(week))}
           ariaLabel="Choose MESH week"
         />
-
         <ScoresDropdown
           label="Scoreboard"
           value={selectedPrimaryFilter}
@@ -881,14 +803,12 @@ export default function Scores() {
           ariaLabel="Choose scoreboard view"
         />
       </section>
-
       {selectedPrimaryFilter !== "featured" ? (
         <section className="scores-secondary-filter">
           <div className="scores-filter-heading">
             <span>Filter {primaryLabel}</span>
             <strong>{secondaryLabel}</strong>
           </div>
-
           <div
             className="scores-secondary-tabs"
             aria-label={`Filter ${primaryLabel} games by event`}
@@ -910,7 +830,6 @@ export default function Scores() {
           </div>
         </section>
       ) : null}
-
       <ScoresResults
         data={scoresData}
         loading={scoresLoading}
@@ -920,6 +839,11 @@ export default function Scores() {
         primaryLabel={primaryLabel}
         secondaryLabel={secondaryLabel}
         selectedConference={selectedConference}
+        scoresState={{
+          week: selectedWeek,
+          primaryFilter: selectedPrimaryFilter,
+          secondaryFilter: selectedSecondaryFilter,
+        }}
       />
     </main>
   );

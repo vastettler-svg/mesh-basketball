@@ -1,0 +1,24 @@
+import {useEffect,useMemo,useState} from "react";
+import {ChevronLeft,Trophy} from "lucide-react";
+import {useNavigate} from "react-router-dom";
+import PageHeader from "../components/PageHeader";
+import mbaLogo from "../assets/mba-logo.png";
+import acc from "../assets/conference-badges/acc.png";
+import american from "../assets/conference-badges/american.png";
+import big12 from "../assets/conference-badges/big-12.png";
+import bigEast from "../assets/conference-badges/big-east.png";
+import bigTen from "../assets/conference-badges/big-ten.png";
+import cusa from "../assets/conference-badges/c-usa.png";
+import coastal from "../assets/conference-badges/coastal.png";
+import ivy from "../assets/conference-badges/ivy.png";
+import mac from "../assets/conference-badges/mac.png";
+import mountainWest from "../assets/conference-badges/mountain-west.png";
+import ovc from "../assets/conference-badges/ovc.png";
+import sec from "../assets/conference-badges/sec.png";
+import sunBelt from "../assets/conference-badges/sun-belt.png";
+import westCoast from "../assets/conference-badges/west-coast.png";
+import "../styles/conferenceTournaments.css";
+const API_URL="https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
+const DEFAULT_SEASON=2027;
+const CONFERENCES=[["american","AAC","AAC Tournament",american,12],["acc","ACC","ACC Tournament",acc,12],["big-12","Big 12","Big 12 Tournament",big12,12],["big-east","Big East","Big East Tournament",bigEast,12],["big-ten","Big Ten","Big Ten Tournament",bigTen,12],["c-usa","C-USA","Conference USA Tournament",cusa,16],["coastal","Coastal","Coastal Tournament",coastal,16],["ivy","Ivy League","Ivy League Tournament",ivy,12],["mac","MAC","MAC Tournament",mac,12],["mountain-west","Mountain West","Mountain West Tournament",mountainWest,12],["ovc","Ohio Valley","Ohio Valley Tournament",ovc,16],["sec","SEC","SEC Tournament",sec,12],["sun-belt","Sun Belt","Sun Belt Tournament",sunBelt,12],["west-coast","West Coast","West Coast Tournament",westCoast,16]].map(([slug,label,eventName,badge,size])=>({slug,label,eventName,badge,size}));
+export default function ConferenceTournaments(){const navigate=useNavigate();const season=DEFAULT_SEASON;const [data,setData]=useState(null);const [loading,setLoading]=useState(true);const [error,setError]=useState("");useEffect(()=>{let cancelled=false;setLoading(true);setError("");fetch(`${API_URL}?action=conferenceTournaments&season=${season}`).then(r=>{if(!r.ok)throw new Error("Conference Tournament request failed.");return r.json();}).then(v=>{if(!cancelled){if(!v?.ok)throw new Error(v?.error||"Unable to load Conference Tournaments.");setData(v);}}).catch(e=>{if(!cancelled)setError(e.message);}).finally(()=>{if(!cancelled)setLoading(false);});return()=>{cancelled=true;};},[]);const lookup=useMemo(()=>Object.fromEntries((data?.tournaments||[]).map(x=>[x.eventName,x])),[data]);return <div className="ct-page"><PageHeader eyebrow="MESH Basketball Events" title="Conference Tournaments" description="Fourteen conference championships. Automatic bids and conference glory are decided across Weeks 15–18." imageSrc={mbaLogo} imageAlt="MBA logo" accent="events" size="compact"/><div className="ct-toolbar ct-toolbar--landing"><button type="button" className="ct-back" onClick={()=>navigate("/events")}><ChevronLeft size={17}/>Events</button></div><div className="ct-note"><Trophy size={16}/><span>Select a conference to open its complete tournament bracket.</span></div>{loading?<div className="ct-state">Loading Conference Tournaments…</div>:error?<div className="ct-state ct-state--error">{error}</div>:<div className="ct-list">{CONFERENCES.map(conf=>{const info=lookup[conf.eventName]||{};const champ=info.defendingChampion;return <button key={conf.slug} type="button" className="ct-card" onClick={()=>navigate(`/events/conference-tournaments/${conf.slug}`)}><div className="ct-badge"><img src={conf.badge} alt={`${conf.label} badge`}/></div><div className="ct-card__copy"><span>{conf.size}-TEAM TOURNAMENT · WEEKS 15–18</span><h2>{conf.eventName}</h2><div className="ct-defending"><small>DEFENDING CHAMP</small>{champ?.logoUrl?<img src={champ.logoUrl} alt=""/>:null}<strong>{champ?.name||"TBD"}</strong></div></div><div className="ct-arrow">›</div></button>;})}</div>}</div>;}

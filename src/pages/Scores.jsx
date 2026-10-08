@@ -373,6 +373,20 @@ function isBracketEvent(game) {
     "mid major mayhem",
     "conference challenger",
     "conference tournament",
+    "acc tournament",
+    "aac tournament",
+    "big 12 tournament",
+    "big east tournament",
+    "big ten tournament",
+    "ivy league tournament",
+    "mac tournament",
+    "mountain west tournament",
+    "sec tournament",
+    "sun belt tournament",
+    "coastal tournament",
+    "conference usa tournament",
+    "ohio valley tournament",
+    "west coast tournament",
     "regional showdown",
     "march madness",
     "national tournament",
@@ -393,6 +407,20 @@ function eventBracketUrl(game) {
   const eventName = String(game?.eventName || "").toLowerCase();
   const eventId = String(game?.eventId || "").toLowerCase();
   const tournamentName = String(game?.tournamentName || "").trim();
+  const conferenceTournamentSlugs = {"ACC Tournament":"acc","AAC Tournament":"american","Big 12 Tournament":"big-12","Big East Tournament":"big-east","Big Ten Tournament":"big-ten","Ivy League Tournament":"ivy","MAC Tournament":"mac","Mountain West Tournament":"mountain-west","SEC Tournament":"sec","Sun Belt Tournament":"sun-belt","Coastal Tournament":"coastal","Conference USA Tournament":"c-usa","Ohio Valley Tournament":"ovc","West Coast Tournament":"west-coast"};
+  const conferenceEvent = Object.keys(conferenceTournamentSlugs).find(name => name.toLowerCase() === eventName);
+  if (conferenceEvent && (Number(game?.week) >= 15 && Number(game?.week) <= 18)) {
+    const season = Number(game?.season) || 2027;
+    return `/events/conference-tournaments/${conferenceTournamentSlugs[conferenceEvent]}?season=${season}`;
+  }
+  const isSkiChampions =
+    eventName.includes("ski champions bracket") ||
+    eventId.includes("ski-cb") ||
+    eventId.includes("ski_champions");
+  if (isSkiChampions) {
+    const season = Number(game?.season) || 2027;
+    return `/events/ski-champions/bracket?season=${season}`;
+  }
   const isSkiRegional =
     tournamentName &&
     (eventName.includes("season kickoff invitational regionals") ||
@@ -400,6 +428,34 @@ function eventBracketUrl(game) {
       eventId.includes("ski-r"));
   if (isSkiRegional) {
     return `/events/ski-regionals/${regionalSlug(tournamentName)}`;
+  }
+  const isInvitational =
+    tournamentName &&
+    (eventName.includes("invitational tournaments") ||
+      eventId.includes("invitational"));
+  if (isInvitational) {
+    return `/events/invitational-tournaments/${regionalSlug(tournamentName)}`;
+  }
+  const isRegionalShowdown =
+    tournamentName &&
+    (eventName.includes("regional showdown") ||
+      eventId.includes("-rs") ||
+      eventId.includes("regional-showdown"));
+  if (isRegionalShowdown) {
+    return `/events/regional-showdowns/${regionalSlug(tournamentName)}`;
+  }
+  const isMidMajorMayhem =
+    eventName.includes("mid major mayhem") ||
+    eventId.includes("mid-major-mayhem") ||
+    eventId.includes("mmm");
+  if (isMidMajorMayhem) {
+    const season = Number(game?.season) || 2027;
+    const bracket = String(game?.bracket || game?.tournamentName || "").trim();
+    const quadrantMatch = bracket.match(/quadrant\s*([1-4])/i);
+    if (quadrantMatch && Number(game?.week) <= 8) {
+      return `/events/mid-major-mayhem/quadrant-${quadrantMatch[1]}?season=${season}`;
+    }
+    return `/events/mid-major-mayhem/final-four?season=${season}`;
   }
   const params = new URLSearchParams();
   if (game?.eventId) params.set("event", game.eventId);

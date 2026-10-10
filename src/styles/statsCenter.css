@@ -1,0 +1,89 @@
+.msc-page{width:min(100%,1120px);margin:0 auto;padding:14px 14px 80px;color:#f1f4f9}.msc-page button{font:inherit;cursor:pointer}.msc-hero{padding:26px 22px;border:1px solid #343044;border-top:3px solid #f58220;border-radius:16px;background:radial-gradient(circle at 85% 0,rgba(245,130,32,.15),transparent 44%),linear-gradient(145deg,#182030,#0d1422)}.msc-hero>span,.msc-heading>span,.msc-intro>span,.msc-history-detail>span{font-size:10px;font-weight:900;letter-spacing:.13em;color:#f69a50}.msc-hero h1{font-family:Georgia,serif;font-size:clamp(26px,4vw,36px);margin:8px 0}.msc-hero p,.msc-heading p,.msc-intro p,.msc-history-detail p{font-size:13px;line-height:1.55;color:#a5b0c0;margin:0}.msc-intro{margin:24px 0 16px}.msc-intro h2,.msc-heading h2{font-family:Georgia,serif;font-size:24px;margin:5px 0}.msc-landing{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.msc-landing-card{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:9px;min-height:170px;text-align:left;padding:20px;border:1px solid #283447;border-radius:15px;background:linear-gradient(145deg,#182334,#0c1625);color:#fff}.msc-landing-card:hover,.msc-landing-card:focus-visible{border-color:#f58220;transform:translateY(-1px)}.msc-card-icon{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;color:#ff9a45;background:rgba(245,130,32,.12)}.msc-landing-card strong{font-size:17px}.msc-landing-card small{color:#8f9eb0;font-size:12px}.msc-card-chevron{position:absolute;right:18px;top:21px;color:#75859b}.msc-back{display:flex;align-items:center;gap:8px;margin:18px 0;border:0;background:transparent;color:#f4a15b;font-size:12px;font-weight:800}.msc-section{margin-top:20px}.msc-heading{margin-bottom:17px}.msc-toggle{display:flex;gap:8px;margin:14px 0}.msc-toggle button{flex:1;min-height:42px;border:1px solid #29364b;border-radius:10px;background:#111b2a;color:#98a8bb;font-size:12px;font-weight:900}.msc-toggle button.active{color:#fff;border-color:#f58220;background:rgba(245,130,32,.16)}.msc-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}.msc-select{display:flex;flex-direction:column;gap:6px}.msc-select span{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:#8a9bb0;font-weight:900}.msc-select select{width:100%;height:42px;background:#101a29;color:#f4f7fa;border:1px solid #334155;border-radius:9px;padding:0 10px;font-size:12px}.msc-table-head{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}.msc-table-head strong{display:block;font-size:15px}.msc-table-head small{display:block;color:#8799ad;font-size:11px;margin-top:4px}.msc-table-wrap{max-width:100%;overflow:auto;border:1px solid #293549;border-radius:12px;background:#0d1725}.msc-table{width:100%;min-width:790px;border-collapse:collapse}.msc-table th,.msc-table td{padding:13px 11px;border-bottom:1px solid #253043;text-align:right;white-space:nowrap;font-size:11px}.msc-table th{color:#95a7b9;background:#142135;font-weight:900}.msc-table th:nth-child(2),.msc-table td:nth-child(2){text-align:left}.msc-table th button{border:0;background:transparent;color:inherit;font-weight:900;padding:0}.msc-table th button.active{color:#f9a45c}.msc-table .msc-table-empty{text-align:center;white-space:normal;color:#92a2b5;padding:40px 18px;line-height:1.7}.msc-record-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:16px 0}.msc-record-card{min-height:160px;padding:16px;border:1px solid #293549;border-left:3px solid #f58220;border-radius:12px;background:#111c2c}.msc-record-icon{color:#f69b4b}.msc-record-card h3{font-size:12px;color:#acbbcb;margin:10px 0}.msc-record-card strong{font-size:25px;display:block}.msc-record-card small{font-size:10px;color:#8394a8}.msc-empty{margin:15px 0;padding:22px;border:1px dashed #3c475a;border-radius:12px;background:#101b2a;text-align:center}.msc-empty strong{font-size:13px}.msc-empty p{color:#9aabbd;font-size:12px;margin:9px 0}.msc-empty small{font-size:10px;color:#77899f}.msc-history-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.msc-history-nav button{display:flex;align-items:center;gap:8px;padding:13px;text-align:left;border:1px solid #29364b;border-radius:10px;background:#111c2b;color:#b7c4d1;font-size:11px;font-weight:800}.msc-history-nav button.active{border-color:#f58220;background:rgba(245,130,32,.13);color:#fff}.msc-history-detail{margin-top:17px;padding:20px;border:1px solid #2c394d;border-radius:14px;background:#101a29}.msc-history-detail h3{margin:7px 0;font-family:Georgia,serif;font-size:21px}.msc-footer{margin-top:32px;color:#65788e;font-size:10px;text-align:center}@media(max-width:720px){.msc-record-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.msc-landing-card{min-height:157px;padding:15px}.msc-landing-card strong{font-size:14px}.msc-landing-card small{font-size:11px}}@media(max-width:480px){.msc-page{padding:10px 10px 76px}.msc-hero{padding:21px 16px}.msc-landing{gap:9px}.msc-landing-card{min-height:165px}.msc-card-icon{width:40px;height:40px}.msc-record-grid{grid-template-columns:1fr}.msc-history-nav{grid-template-columns:1fr}.msc-filters{grid-template-columns:1fr 1fr}.msc-select select{font-size:11px}}
+
+/* v2: match Basketball bottom-nav hero treatment; unified league filters */
+.msc-hero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:146px;padding:23px 24px;overflow:hidden;border:1px solid rgba(255,255,255,.13);border-radius:16px;background:linear-gradient(115deg,#3b3e42,#35383d);isolation:isolate}
+.msc-hero::after{content:"";position:absolute;z-index:-1;right:17%;top:-45px;width:3px;height:260px;transform:rotate(26deg);background:linear-gradient(transparent,#db762e,transparent);opacity:.85}
+.msc-hero-copy{max-width:72%;position:relative;z-index:1}
+.msc-hero> .msc-hero-copy>span{display:block;color:#ff8b2b;font-size:10px;font-weight:950;letter-spacing:.12em}
+.msc-hero h1{font-family:Georgia,serif;font-size:clamp(26px,4vw,32px);font-weight:700;margin:5px 0 7px;color:white}
+.msc-hero p{font-size:12px;line-height:1.4;color:#f0f0f2;max-width:360px}
+.msc-hero-emblem{width:78px;height:78px;flex:0 0 78px;border:1px solid rgba(255,255,255,.15);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle,#464a4f,#2d3034);box-shadow:0 0 24px rgba(255,126,35,.15);position:relative;z-index:1}
+.msc-hero-ball{color:#ff842c;font-size:30px;line-height:26px;text-shadow:0 0 5px #fff}
+.msc-hero-emblem strong{font-size:13px;letter-spacing:.09em;color:#fff}
+.msc-filters-single{grid-template-columns:minmax(0,280px)}
+@media(max-width:480px){.msc-hero{min-height:146px;padding:18px 17px;gap:10px}.msc-hero-copy{max-width:74%}.msc-hero-emblem{width:66px;height:66px;flex-basis:66px}.msc-hero h1{font-size:27px}.msc-hero p{font-size:11px}.msc-filters-single{grid-template-columns:minmax(0,1fr)}}
+
+/* Match the outer spacing of the Events landing page exactly. */
+.msc-page{width:min(100%,1180px);margin:0 auto;padding:20px 18px 110px;color:#f7f7f8}
+@media(max-width:700px){.msc-page{padding:16px 14px 104px}}
+
+/* v4 — Basketball smoke-grey design system and Events-style stacked landing cards. */
+.msc-page{color:#f7f7f8}
+.msc-landing{grid-template-columns:minmax(0,1fr);gap:10px}
+.msc-landing-card{display:grid;grid-template-columns:48px minmax(0,1fr) 20px;grid-template-rows:auto auto;align-items:center;column-gap:13px;row-gap:3px;min-height:94px;padding:15px 18px 15px 20px;border:1px solid #3a3d43;border-radius:14px;background:#25272b;color:#f7f7f8;box-shadow:0 6px 18px rgba(0,0,0,.14);overflow:hidden}
+.msc-landing-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:#dfe3e8}
+.msc-landing-card:hover,.msc-landing-card:focus-visible{border-color:#c6ccd3;background:#2c2e33;transform:translateY(-1px)}
+.msc-card-icon{grid-column:1;grid-row:1/3;width:42px;height:42px;border-radius:10px;background:#33363b;color:#e5e8ec}
+.msc-landing-card strong{grid-column:2;grid-row:1;align-self:end;font-size:.92rem;line-height:1.2;font-weight:900;white-space:normal}
+.msc-landing-card small{grid-column:2;grid-row:2;align-self:start;color:#b7bac2;font-size:.69rem;line-height:1.4;white-space:normal}
+.msc-card-chevron{position:static;grid-column:3;grid-row:1/3;color:#c8cdd3}
+.msc-intro{margin:20px 0 13px}.msc-intro h2,.msc-heading h2{font-size:1.15rem;font-family:inherit;font-weight:900}.msc-intro p,.msc-heading p,.msc-history-detail p{color:#b7bac2}
+.msc-landing-card,.msc-toggle button,.msc-select select,.msc-table-wrap,.msc-table th,.msc-record-card,.msc-empty,.msc-history-nav button,.msc-history-detail{box-shadow:none}
+.msc-toggle button,.msc-history-nav button{border-color:#3a3d43;background:#25272b;color:#b7bac2}
+.msc-toggle button.active,.msc-history-nav button.active{background:#383a40;border-color:#d4d8de;color:#fff}
+.msc-select select{background:#25272b;border-color:#3a3d43;color:#f7f7f8}
+.msc-select span,.msc-table-head small,.msc-record-card h3,.msc-record-card small{color:#a8adb6}
+.msc-table-wrap{background:#25272b;border-color:#3a3d43}
+.msc-table th{background:#303238;color:#c4c7ce;border-bottom-color:#44474e}
+.msc-table td{border-bottom-color:#3a3d43}
+.msc-table th button.active{color:#f4f5f7}
+.msc-record-card{background:#25272b;border:1px solid #3a3d43;border-left:4px solid #dfe3e8}
+.msc-record-icon{color:#e5e8ec}
+.msc-empty{background:#25272b;border-color:#4b4e55}
+.msc-empty p,.msc-empty small{color:#b7bac2}
+.msc-history-detail{background:#25272b;border-color:#3a3d43}
+.msc-back{color:#e5e8ec}
+@media(max-width:720px){.msc-landing{grid-template-columns:minmax(0,1fr)}.msc-landing-card{min-height:92px;padding:14px 14px 14px 18px}.msc-landing-card strong{font-size:.85rem}.msc-landing-card small{font-size:.66rem}}
+@media(max-width:480px){.msc-landing{gap:10px}.msc-landing-card{grid-template-columns:40px minmax(0,1fr) 16px;column-gap:10px;min-height:90px}.msc-card-icon{width:38px;height:38px}.msc-card-icon svg{width:22px;height:22px}}
+
+/* v5 — Restore the MESH Basketball orange accent on the four landing cards. */
+.msc-landing-card::before{background:#ff8a2a}
+.msc-landing-card:hover,.msc-landing-card:focus-visible{border-color:#ff8a2a}
+.msc-card-icon{color:#ff8a2a}
+.msc-card-chevron{color:#ff8a2a}
+
+/* v6: four distinct destinations; full-width career table with expandable rows. */
+.msc-career-filters{grid-template-columns:minmax(140px,220px) minmax(180px,340px)}
+.msc-career-table{min-width:680px;width:100%}
+.msc-career-table th,.msc-career-table td{padding:13px 11px}
+.msc-career-table .msc-name-col{text-align:left;min-width:170px}
+.msc-career-table .msc-rank-col{min-width:35px;text-align:center}
+.msc-career-table .msc-expand-col{width:62px;text-align:center;color:#ff8a2a}
+.msc-career-table th button.active{color:#ff8a2a}
+.msc-preview-row{cursor:pointer}.msc-preview-row:hover,.msc-preview-row.is-expanded{background:#34363b}
+.msc-row-name{border:0;background:none;color:#f4f5f7;text-align:left;font-weight:800;font-size:12px;padding:0}
+.msc-expanded-row td{padding:0!important;white-space:normal!important;text-align:left!important;background:#303238}
+.msc-expanded-inner{padding:16px;border-left:4px solid #ff8a2a}
+.msc-expanded-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:13px}
+.msc-expanded-title strong{font-size:13px}.msc-expanded-title small{font-size:10px;color:#b7bac2}
+.msc-detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.msc-detail-cell{padding:11px;border:1px solid #4a4c52;border-radius:8px;background:#25272b}
+.msc-detail-cell span{display:block;color:#b7bac2;font-size:10px;font-weight:800}.msc-detail-cell strong{display:block;font-size:19px;margin-top:5px}
+.msc-expanded-inner p{font-size:11px;line-height:1.5;color:#b7bac2;margin:13px 0 0}
+.msc-preview-note{margin-top:12px;padding:13px 14px;background:#25272b;border:1px dashed #4a4c52;border-radius:10px;color:#b7bac2;font-size:11px;line-height:1.6}
+.msc-preview-note strong{color:#fff}
+@media(max-width:600px){.msc-career-filters{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}.msc-career-table{min-width:610px}.msc-career-table .msc-name-col{min-width:150px}.msc-career-table th,.msc-career-table td{padding:12px 8px}.msc-expanded-title{align-items:flex-start;flex-direction:column}}
+
+.msc-profile-link{display:inline-block;margin-top:12px;color:#ff8a2a;text-decoration:none;font-size:12px;font-weight:700}.msc-profile-link:hover{text-decoration:underline}
+
+/* v9: compact conference and season controls, full-width category, inline logos. */
+.msc-career-filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px;max-width:680px}
+.msc-career-filters .msc-category-filter{grid-column:1/-1}
+.msc-career-filters .msc-select select{height:40px}
+.msc-row-name{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.msc-team-logo{width:22px;height:22px;object-fit:contain;flex:none;vertical-align:middle}
+.msc-career-table .msc-name-col{min-width:185px}
+@media(max-width:600px){.msc-career-filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.msc-career-table .msc-name-col{min-width:174px}.msc-team-logo{width:20px;height:20px}}
+
+/* Requested orange dropdown titles */
+.msc-page .msc-select > span{color:#ff8a2a;font-weight:900}

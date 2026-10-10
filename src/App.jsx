@@ -22,7 +22,12 @@ import ConferenceTournamentBracket from './pages/ConferenceTournamentBracket'
 import MidMajorMayhem from './pages/MidMajorMayhem'
 import MidMajorMayhemBracket from './pages/MidMajorMayhemBracket'
 import Stats from './pages/Stats'
+import Prestige from './pages/Prestige'
+import DraftHQ from './pages/DraftHQ'
+import CoachCarousel from './pages/CoachCarousel'
 import More from './pages/More'
+import SleeperLeagues from './pages/SleeperLeagues'
+import RulesInfo from './pages/RulesInfo'
 import FranchiseProfile from './pages/FranchiseProfile'
 import FranchiseResume from './pages/FranchiseResume'
 import FranchiseRoster from './pages/FranchiseRoster'
@@ -56,6 +61,11 @@ function App() {
             <Route path="/events/mid-major-mayhem/:quadrantSlug" element={<MidMajorMayhemBracket />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/more" element={<More />} />
+            <Route path="/more/rules" element={<RulesInfo />} />
+            <Route path="/more/sleeper" element={<SleeperLeagues />} />
+            <Route path="/more/prestige" element={<Prestige />} />
+            <Route path="/more/draft" element={<DraftHQ />} />
+            <Route path="/more/coach-carousel" element={<CoachCarousel />} />
             <Route path="/franchise/:franchiseId" element={<FranchiseProfile />} />
             <Route path="/franchise/:franchiseId/resume" element={<FranchiseResume />} />
             <Route path="/franchise/:franchiseId/roster" element={<FranchiseRoster />} />

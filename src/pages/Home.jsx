@@ -2,6 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronRight, Clock3, Radio, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import "../styles/home.css";
+import "../styles/homeEvents.css";
+import "../styles/homeQuickLinks.css";
+import { basketballQuickLinks } from "../data/basketballQuickLinks";
+import { BookOpen, ExternalLink, Star, Users, ClipboardList, History } from "lucide-react";
+const quickLinkIcons={BookOpen,ExternalLink,Star,Users,ClipboardList,History};
 const SCORES_API_URL="https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
 function normalizeStatus(status){
 const value=String(status||"").trim().toLowerCase();
@@ -267,6 +272,21 @@ const payload=await response.json();
 if(!payload?.ok)throw new Error(payload?.error||"Unable to load MESH Basketball scores.");
 return payload;
 }
+const HOME_EVENTS=[
+{slug:"ski-regionals",name:"SKI Regionals",start:2,end:4,color:"#67c7ff",detail:"23 regional tournaments"},
+{slug:"ski-champions",name:"SKI Champions",start:5,end:9,color:"#428dff",detail:"Championship bracket"},
+{slug:"mid-major-mayhem",name:"Mid Major Mayhem",start:5,end:10,color:"#20b486",detail:"64-team tournament"},
+{slug:"invitational-tournaments",name:"Invitational Tournaments",start:6,end:8,color:"#a78bfa",detail:"23 invitational tournaments"},
+{slug:"conference-challenger",name:"Conference Challenger",start:10,end:13,color:"#ff7a1a",detail:"Conference competition",ready:false},
+{slug:"rivalry-week",name:"Rivalry Week",start:14,end:14,color:"#ef4444",detail:"Special rivalry matchups"},
+{slug:"conference-tournaments",name:"Conference Tournaments",start:15,end:18,color:"#14b8a6",detail:"Conference championship brackets"},
+{slug:"regional-showdowns",name:"Regional Showdowns",start:16,end:18,color:"#ec4899",detail:"23 regional tournaments"},
+{slug:"national-postseason",name:"National Postseason",start:19,end:24,color:"#d4af37",detail:"March Madness · NIT · CBC · CBI"}
+];
+function HomeEvents({week}){
+const active=HOME_EVENTS.filter(event=>week>=event.start&&week<=event.end);
+return <section className="home-events-section" aria-label={`Week ${week} MESH events`}><div className="home-section-heading home-events-heading"><div><span>AROUND THE LEAGUE · WEEK {week}</span><h1>MESH Events</h1></div><Link to="/events">All Events<ChevronRight size={13}/></Link></div>{active.length?<div className="home-events-grid">{active.map(event=><Link key={event.slug} to={event.ready===false?"/events":`/events/${event.slug}`} className="home-events-card" style={{"--home-event-color":event.color}}><div className="home-events-mark"><Trophy size={21} strokeWidth={1.8}/></div><div className="home-events-copy"><span>{event.start===event.end?`WEEK ${event.start}`:`WEEKS ${event.start}–${event.end}`}</span><strong>{event.name}</strong><small>{event.detail}{event.ready===false?" · Preview available":""}</small></div><ChevronRight size={17} className="home-events-arrow"/></Link>)}</div>:<div className="home-events-empty">No special events scheduled for Week {week}. <Link to="/events">Explore the season calendar <ChevronRight size={12}/></Link></div>}</section>;
+}
 export default function Home(){
 const[data,setData]=useState(null);
 const[recapData,setRecapData]=useState(null);
@@ -367,5 +387,7 @@ return <section className="home-page">
 {!loading&&headlines.length===0?<div className="home-gotw-message"><strong>Headlines are being written</strong><span>Stories will appear when Week {headlineMode==="recap"?Math.max(1,activeWeek-1):displayedWeek} matchups are available.</span></div>:null}
 <div className="home-section-heading home-spotlight-heading"><div><span>STANDOUT PERFORMANCES & RESULTS</span><h1>Week {spotlightWeek||displayedWeek} · MESH Spotlight</h1></div></div>
 {!loading?<div className="home-spotlight-grid">{spotlightItems.length?spotlightItems.map(item=><SpotlightCard key={item.id} item={item} week={spotlightWeek||displayedWeek}/>):spotlightLabels.map(label=><SpotlightEmptyCard key={label} label={label} week={displayedWeek}/>)}</div>:null}
+<HomeEvents week={displayedWeek}/>
+<section className="home-quicklinks"><div className="home-section-heading"><div><span>EXPLORE MESH</span><h1>Quick Links</h1></div><Link to="/more">View All<ChevronRight size={13}/></Link></div><div className="home-quicklinks-grid">{basketballQuickLinks.map(item=>{const Icon=quickLinkIcons[item.icon];return <Link key={item.id} to={item.id==="rules"?"/more/rules":item.id==="sleeper"?"/more/sleeper":item.id==="prestige"?"/more/prestige":item.id==="carousel"?"/more/coach-carousel":item.id==="draft"||item.id==="drafts"?"/more/draft":`/more#${item.id}`} className="home-quicklinks-card"><span className="home-quicklinks-icon"><Icon size={20}/></span><span className="home-quicklinks-copy"><strong>{item.name}</strong><small>{item.description}</small></span><ChevronRight size={16} className="home-quicklinks-arrow"/></Link>;})}</div></section>
 </section>;
 }

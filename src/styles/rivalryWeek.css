@@ -13,3 +13,20 @@
  .rw-team__identity span{font-size:8px}
 }
 @media(max-width:390px){.rw-card__teams{padding-inline:6px}.rw-team__identity img{width:25px;height:25px;flex-basis:25px}.rw-win-total{flex-basis:17px;font-size:19px}.rw-team__identity strong{font-size:9px}}
+
+/* Mobile audit: conference dropdown and vertically stacked rivalry franchises. */
+.rw-conference-filter{display:flex;flex-direction:column;gap:6px;margin:0 0 12px}
+.rw-conference-filter>span{font-size:10px;font-weight:900;letter-spacing:.1em;color:#a9b3bf}
+.rw-conference-filter select{width:100%;min-height:43px;padding:9px 12px;border:1px solid #484b4f;border-radius:10px;background:#292b2e;color:#fff;font:inherit;font-size:13px;font-weight:750}
+.rw-card__teams{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:3px 12px}
+.rw-team,.rw-team:nth-child(3){display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;padding:11px 0}
+.rw-team+.rw-team{border-top:1px solid rgba(255,255,255,.10)}
+.rw-team__identity,.rw-team:nth-child(3) .rw-team__identity{display:flex;flex:1;min-width:0;flex-direction:row;text-align:left;align-items:center;gap:10px}
+.rw-team__identity img{width:36px;height:36px;flex:0 0 36px}
+.rw-team__identity strong{font-size:12px;min-height:0;line-height:1.25}
+.rw-team__identity span{font-size:10px}
+.rw-team__score{display:flex;flex-direction:column;align-items:center;flex:0 0 38px;gap:3px}
+.rw-wins-label,.rw-team:nth-child(3) .rw-wins-label{margin:0;text-align:center;font-size:8px}
+.rw-win-total{flex:none;font-size:23px}
+@media(max-width:760px){.rw-card__teams{display:flex;flex-direction:column;gap:0;padding:3px 11px}.rw-team__identity img{width:33px;height:33px;flex-basis:33px}.rw-team__identity strong{font-size:11px;min-height:0}.rw-team__identity span{font-size:9px}.rw-win-total{font-size:22px}.rw-card__footer span{display:inline}}
+@media(max-width:390px){.rw-card__teams{padding:3px 9px}.rw-team__identity img{width:30px;height:30px;flex-basis:30px}.rw-team__identity strong{font-size:10px}.rw-win-total{font-size:21px}}

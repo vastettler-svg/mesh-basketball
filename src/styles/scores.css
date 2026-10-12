@@ -832,3 +832,18 @@
     height: 36px;
   }
 }
+
+/* Uniform conference filters, including Mid Major. */
+.scores-primary-tab-mid-major{color:#aeb5bc;border-color:rgba(255,255,255,.08);background:rgba(255,255,255,.035)}
+.scores-primary-tab-mid-major:hover{color:#fff;border-color:rgba(255,255,255,.08);background:rgba(255,255,255,.07)}
+.scores-primary-tab-mid-major.active{color:#fff;border-color:rgba(255,122,26,.5);background:linear-gradient(180deg,rgba(255,122,26,.25),rgba(255,106,0,.15));box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+
+/* v58: Conference dropdown options use the same dark palette for every conference. */
+.scores-dropdown-menu button.mid-major-option,
+.scores-dropdown-menu button.mid-major-option:hover,
+.scores-dropdown-menu button.mid-major-option:focus-visible {
+  margin:0; background:transparent; color:#e4e4e4; box-shadow:none;
+}
+.scores-dropdown-menu button.mid-major-option.active {
+  background:rgba(255,106,0,.16); color:#ff8a35; box-shadow:none;
+}

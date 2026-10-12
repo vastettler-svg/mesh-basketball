@@ -463,3 +463,25 @@ a.msc-postseason-champion-coach:hover{color:#ff8a2a;text-decoration:underline}
 .msc-archive-record-holder span{overflow-wrap:anywhere}
 .msc-archive-record-detail{font-size:10px;color:#aeb5c0}
 @media(max-width:380px){.msc-archive-record-grid{gap:6px;padding:7px}.msc-archive-record-card{padding:8px}.msc-archive-record-value{font-size:16px}}
+
+/* Mobile audit: two leaders cards per row, compact conference history toggles. */
+@media(max-width:600px){
+ .msc-record-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .msc-record-card{min-width:0;min-height:145px;padding:11px 9px}
+ .msc-record-card h3{font-size:10px;line-height:1.3;margin:8px 0}
+ .msc-record-card strong{font-size:clamp(16px,4.5vw,23px);overflow-wrap:anywhere}
+ .msc-record-card small{font-size:9px}
+ .msc-record-holder,.msc-record-holder-link{min-width:0;overflow-wrap:anywhere;font-size:10px}
+ .msc-record-holder img,.msc-record-holder-link img{max-width:23px;max-height:23px}
+ .msc-record-unit{font-size:10px}
+ .msc-conf-expand-trigger{padding:9px 10px;gap:8px;font-size:10px;line-height:1.25}
+ .msc-conf-expand-trigger>span:first-child{min-width:0;flex:1}
+ .msc-conf-expand-trigger>span:last-child{flex:0 0 auto;font-size:10px}
+}
+
+/* v58: compact Conference Champions history toggles on mobile and desktop. */
+.msc-conf-expand-trigger{padding:7px 9px;gap:8px;font-size:10px;line-height:1.2;min-height:34px}
+.msc-conf-expand-trigger>span:first-child{min-width:0;font-size:10px;font-weight:700;line-height:1.2}
+.msc-conf-expand-trigger>span:last-child{font-size:9px;flex:0 0 auto;gap:3px}
+.msc-conf-expand-trigger>span:last-child svg{width:12px;height:12px}
+@media(max-width:480px){.msc-conf-expand-trigger>span:first-child{font-size:9px}.msc-conf-expand-trigger>span:last-child{font-size:8px}}

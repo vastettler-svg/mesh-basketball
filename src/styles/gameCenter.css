@@ -274,3 +274,18 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+/* Pre-commit mobile fix: keep tournament round entirely inside matchup bar. */
+.gc-matchup-top{min-width:0;box-sizing:border-box}
+.gc-round-display{min-width:0;max-width:100%;justify-self:end;overflow-wrap:break-word}
+@media(max-width:760px){
+ .gc-matchup-top{grid-template-columns:minmax(0,1fr) minmax(0,1.55fr) minmax(65px,.8fr);gap:6px;padding-inline:10px}
+ .gc-conference-display{min-width:0;width:100%;max-width:100%;grid-column:2}
+ .gc-conference-badge{width:35px;height:35px}
+ .gc-round-display{grid-column:3;grid-row:1;min-width:0;max-width:100%;padding-right:2px;text-align:right}
+ .gc-round-display strong{font-size:8px;line-height:1.2;white-space:normal}
+ .gc-conference-display.same-conference{grid-template-columns:minmax(35px,45px) minmax(0,1fr)}
+ .gc-conference-display.same-conference .same-conference-copy{min-width:0}
+ .gc-header-matchup-type strong{overflow-wrap:anywhere}
+}
+@media(max-width:390px){.gc-matchup-top{grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr) minmax(58px,.8fr);gap:4px;padding-inline:7px}.gc-conference-badge{width:30px;height:30px}}

@@ -87,3 +87,379 @@
 
 /* Requested orange dropdown titles */
 .msc-page .msc-select > span{color:#ff8a2a;font-weight:900}
+
+/* v11 compact mobile career rankings and two-column competition controls */
+.msc-career-filters .msc-category-filter.msc-category-half{grid-column:auto;min-width:0}
+.msc-career-filters .msc-category-filter.msc-category-half select{width:100%;min-width:0;font-size:12px;padding-left:9px;padding-right:18px}
+.msc-career-table .msc-name-col{min-width:140px;max-width:190px}
+.msc-career-table .msc-row-name{white-space:normal;line-height:1.2;min-width:0;font-size:11px}
+.msc-career-table .msc-team-logo{width:20px;height:20px}
+@media(max-width:600px){.msc-career-table .msc-name-col{min-width:130px;max-width:160px}.msc-career-table{min-width:560px}.msc-career-table th,.msc-career-table td{padding:11px 7px}}
+
+/* v13: align every numeric statistic directly under its centered heading. */
+.msc-career-table th:not(.msc-name-col),.msc-career-table td:not(.msc-name-col){text-align:center}
+.msc-career-table th:not(.msc-name-col) button{display:inline-block;text-align:center;white-space:nowrap}
+.msc-career-table .msc-name-col{text-align:left}
+.msc-career-table .msc-expanded-row td{text-align:left}
+
+/* Coach-only career status presentation. Franchise rows remain unchanged. */
+.msc-career-table tr.msc-coach-inactive td,.msc-career-table tr.msc-coach-inactive td button{color:#f26b6b!important}
+.msc-career-table tr.msc-coach-former td,.msc-career-table tr.msc-coach-former td button{color:#92969f!important}
+.msc-conference-record-note{margin:0 0 12px;color:#ff8a2a;font-size:12px;font-weight:700;line-height:1.45}
+
+/* Leaders & Records: compact two-column selectors at all screen widths. */
+.msc-filters.msc-leaders-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.msc-leaders-filters .msc-select{min-width:0}
+.msc-leaders-filters .msc-select select{width:100%;min-width:0}
+
+/* v21: franchise-primary stripes on populated Leaders & Records cards. */
+.msc-record-card{border-left:5px solid var(--msc-record-stripe,#ff8a2a)}
+.msc-record-holder{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:13px;font-weight:700;color:#f7f7f8}
+.msc-record-holder img{width:24px;height:24px;object-fit:contain;flex-shrink:0}
+.msc-record-unit{font-size:12px;font-weight:700;color:#ff8a2a}
+
+/* Leaders & Records v22: clickable record holders */
+.msc-record-holder-link{text-decoration:none;color:inherit;cursor:pointer}.msc-record-holder-link:hover span{text-decoration:underline;color:#ff8a2a}.msc-record-holder-link:focus-visible{outline:2px solid #ff8a2a;outline-offset:3px;border-radius:4px}
+
+/* v25: compact postseason champions archive; no trophy imagery. */
+.msc-postseason-archive{margin-top:18px;display:grid;gap:14px}
+.msc-postseason-card{border:1px solid #414752;border-left:5px solid var(--msc-champ-color,#ff8a2a);border-radius:13px;padding:15px;background:#24262b;display:grid;gap:14px}
+.msc-postseason-card-head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}
+.msc-postseason-card-head span,.msc-postseason-champion small{color:#ff8a2a;font-size:11px;font-weight:900;letter-spacing:.07em}
+.msc-postseason-card-head strong{font-size:16px;color:#fff}
+.msc-postseason-champion{display:grid;gap:7px}
+.msc-postseason-team{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-size:16px}
+.msc-postseason-team img{height:42px;width:42px;object-fit:contain}
+.msc-postseason-team:hover,.msc-postseason-final a:hover{color:#ff8a2a;text-decoration:underline}
+.msc-postseason-champion>span,.msc-postseason-runner{color:#b7c0d1;font-size:12px}
+.msc-postseason-final{background:#171c25;border:1px solid #37404d;border-radius:9px;overflow:hidden}
+.msc-postseason-final>span{display:block;color:#ff8a2a;font-size:10px;font-weight:800;padding:9px 11px}
+.msc-postseason-final>div{display:flex;justify-content:space-between;gap:10px;padding:10px 11px;border-top:1px solid #37404d;font-size:13px}
+.msc-postseason-final a{color:#fff;text-decoration:none}
+.msc-postseason-final strong{color:#fff;white-space:nowrap}
+.msc-postseason-status{color:#b7c0d1;font-size:13px;padding:16px;border:1px dashed #4b5360;border-radius:10px}
+
+/* v26 compact history filters */
+.msc-history-filters{margin:14px 0 12px}
+.msc-postseason-tournament-filter{max-width:100%;margin:0 0 4px}
+
+/* v27: four postseason tournaments, latest champion + compact all-time history */
+.msc-history-category{margin:12px 0 16px;max-width:100%}
+.msc-postseason-group{display:grid;gap:10px;margin-bottom:16px}
+.msc-postseason-group-title{font-size:17px;font-weight:800;color:#fff;margin:4px 0}
+.msc-postseason-history{background:#1b2029;border:1px solid #3b4350;border-radius:10px;overflow:hidden}
+.msc-postseason-history-title{padding:11px 12px;font-size:10px;letter-spacing:.07em;font-weight:900;color:#ff8a2a}
+.msc-postseason-history-row{display:grid;grid-template-columns:36px minmax(0,1fr) auto minmax(0,1fr);gap:6px;align-items:center;padding:10px 8px;border-top:1px solid #363e4b;font-size:11px}
+.msc-postseason-history-year{color:#b6c0d0;font-weight:700}
+.msc-postseason-history-team{display:flex;align-items:center;gap:5px;min-width:0;text-decoration:none;color:#fff;font-weight:650}
+.msc-postseason-history-team span{overflow-wrap:anywhere}
+.msc-postseason-history-team img{width:23px;height:23px;object-fit:contain;flex-shrink:0}
+.msc-postseason-history-runner{justify-content:flex-end;text-align:right}
+.msc-postseason-history-score{color:#fff;white-space:nowrap;font-size:10px;text-align:center}
+.msc-postseason-history-team:hover{color:#ff8a2a;text-decoration:underline}
+@media(max-width:390px){.msc-postseason-history-row{grid-template-columns:30px minmax(0,1fr) auto minmax(0,1fr);gap:4px;padding:8px 5px;font-size:10px}.msc-postseason-history-team img{width:18px;height:18px}.msc-postseason-history-score{font-size:9px}}
+
+/* v28: winner always on left; runner-up subdued; coach below each franchise. */
+.msc-postseason-history-team-info{display:flex;flex-direction:column;gap:3px;min-width:0;line-height:1.25}
+.msc-postseason-history-team-name{overflow-wrap:anywhere}
+.msc-postseason-history-coach{font-size:10px;font-weight:500;color:#aeb8c8;overflow-wrap:anywhere}
+.msc-postseason-history-runner{color:#8d96a5}
+.msc-postseason-history-runner .msc-postseason-history-coach{color:#8d96a5}
+
+
+@media(max-width:390px){.msc-postseason-history-coach{font-size:9px}}
+
+/* v29: compact defending champion header and independent profile links. */
+.msc-postseason-card-head{justify-content:center}
+.msc-postseason-card-head strong{color:#ff8a2a;font-weight:900;font-size:15px}
+.msc-postseason-champion{justify-items:center;text-align:center;gap:6px}
+.msc-postseason-team{flex-direction:column;justify-content:center;gap:8px;text-align:center}
+.msc-postseason-team img{height:66px;width:66px}
+.msc-postseason-champion-coach{color:#d8e0eb;text-decoration:none;font-size:12px;font-weight:600;text-align:center}
+a.msc-postseason-champion-coach:hover{color:#ff8a2a;text-decoration:underline}
+.msc-postseason-history-team a{text-decoration:none;color:inherit}
+.msc-postseason-history-team a:hover{color:#ff8a2a;text-decoration:underline}
+.msc-postseason-history-team .msc-postseason-history-logo{display:flex;flex-shrink:0;align-items:center}
+.msc-postseason-history-team .msc-postseason-history-coach{font-size:10px;font-weight:500;color:#aeb8c8}
+.msc-postseason-history-runner .msc-postseason-history-coach{color:#8d96a5}
+
+
+/* v31: retain runner-up logo colors, but lower their visual intensity. */
+.msc-postseason-history-runner .msc-postseason-history-logo img{opacity:.48;filter:none}
+
+/* v32 Conference Champions: compact season and conference archive */
+.msc-conference-archive{display:grid;gap:12px;margin-top:16px}
+.msc-conf-card{border:1px solid #414752;border-left:4px solid var(--msc-champ-color,#ff8a2a);border-radius:12px;background:#24262b;padding:14px;display:grid;gap:12px}
+.msc-conf-card-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#fff;font-size:17px}
+.msc-conf-card-heading span{font-size:12px;color:#ff8a2a;font-weight:800}
+.msc-conf-champ-box{border:1px solid #414752;border-radius:9px;padding:11px;display:grid;gap:8px}
+.msc-conf-champ-box>small,.msc-conf-final>small{color:#ff8a2a;font-weight:800;font-size:10px;letter-spacing:.06em}
+.msc-conf-team{display:flex;align-items:center;gap:9px;min-width:0}
+.msc-conf-team>a img{width:40px;height:40px;object-fit:contain}
+.msc-conf-team-text{display:grid;gap:4px;min-width:0}
+.msc-conf-team-text>a:first-child{font-size:13px;color:#fff;font-weight:700;text-decoration:none}
+.msc-conf-team-text>a:hover{text-decoration:underline}
+.msc-conf-coach{color:#aebad0;font-size:11px;text-decoration:none}
+.msc-conf-team.is-runner .msc-conf-team-text>a,.msc-conf-team.is-runner .msc-conf-coach{color:#8c94a2}
+.msc-conf-team.is-runner img{opacity:.48}
+.msc-conf-final{background:#171c25;border:1px solid #37404d;border-radius:9px;overflow:hidden}
+.msc-conf-final>small{display:block;padding:10px}
+.msc-conf-final-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #37404d;padding:8px 10px}
+.msc-conf-final-row strong{font-size:13px;color:#fff;white-space:nowrap}
+.msc-conf-final-row .msc-conf-team img{width:32px;height:32px}
+
+/* v33: franchise-inspired soft champion glow, no vertical stripes */
+.msc-conf-section{position:relative;isolation:isolate;overflow:hidden;border:1px solid #414752;border-radius:15px;padding:14px;display:grid;gap:13px;background:radial-gradient(ellipse 95% 220px at 10% 0%,color-mix(in srgb,var(--msc-champ-color) 27%,transparent),transparent 83%),#24262b}
+.msc-conf-section-header{display:flex;align-items:center;gap:11px;padding:3px 0 7px}
+.msc-conf-section-header h3{font-size:18px;color:#fff;margin:0}
+.msc-conf-badge{width:43px;height:43px;object-fit:contain}
+.msc-conf-section .msc-conf-champ-box{background:rgba(23,28,37,.63)}
+.msc-conf-feature-line{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.msc-conf-record{font-size:12px;color:#e8edf5;white-space:nowrap;margin-left:auto}
+.msc-conf-history-heading{font-size:13px;color:#f3f5f9;margin:3px 0 0}
+.msc-conf-history-list{background:#191e27;border:1px solid #3c4552;border-radius:9px;overflow:hidden}
+.msc-conf-history-line{display:flex;align-items:center;gap:10px;padding:9px;border-bottom:1px solid #333d4a}
+.msc-conf-history-line:last-child,.msc-conf-history-match:last-child{border-bottom:0}
+.msc-conf-year{color:#ff8a2a;font-size:12px;min-width:35px}
+.msc-conf-history-line .msc-conf-team{flex:1}
+.msc-conf-history-line .msc-conf-team img{width:30px;height:30px}
+.msc-conf-tournament-area{background:#151b25;border:1px solid #37404d;border-radius:10px;padding:11px;display:grid;gap:11px}
+.msc-conf-tournament-area .msc-conf-champ-box{background:transparent}
+.msc-conf-history-match{display:flex;align-items:flex-start;gap:10px;padding:10px;border-bottom:1px solid #333d4a}
+.msc-conf-history-match-teams{flex:1;min-width:0;display:grid;gap:8px}
+.msc-conf-history-match-teams>div{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.msc-conf-history-match-teams .msc-conf-team img{width:27px;height:27px}
+.msc-conf-history-match-teams strong{font-size:12px;color:#fff}
+.msc-conf-section .msc-conf-final{border:0;background:transparent}
+
+/* v34: restore MBA smoke-grey hierarchy; glow only on champion franchise cards. */
+.msc-conf-section{background:#25272b!important;border:1px solid #46484c!important;box-shadow:none!important}
+.msc-conf-section-header{background:transparent!important}
+.msc-conf-section .msc-conf-champ-box{background:#2b2d31!important;border-color:#4a4d52!important}
+.msc-conf-section .msc-conf-champ-box.msc-conf-glow{background:radial-gradient(ellipse 85% 140px at 14% 25%,color-mix(in srgb,var(--msc-card-color,#ff8a2a) 22%,transparent),transparent 85%),#2b2d31!important;border-color:#51545a!important}
+.msc-conf-history-list{background:#303237!important;border-color:#4a4d52!important}
+.msc-conf-history-line,.msc-conf-history-match{border-color:#4b4d51!important}
+.msc-conf-tournament-area{background:#202226!important;border-color:#45484e!important}
+.msc-conf-final{background:#202226!important}
+.msc-conf-final-row{border-color:#46494e!important}
+
+/* v35: streamlined collapsed championship histories and authentic conference patches */
+.msc-conf-section{gap:10px!important;background:#292b2f!important}
+.msc-conf-section-header{padding:0 0 6px!important}
+.msc-conf-badge{width:37px;height:37px;object-fit:contain;flex-shrink:0}
+.msc-conf-expand-trigger{appearance:none;display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:9px 11px;background:#323439;border:1px solid #4a4c51;border-radius:8px;color:#f2f2f2;cursor:pointer;text-align:left;font:inherit;font-size:12px;font-weight:700}
+.msc-conf-expand-trigger>span:last-child{display:flex;align-items:center;gap:5px;color:#ff8a2a;font-size:11px;white-space:nowrap}
+.msc-conf-expand-trigger:hover{background:#3a3c41}
+.msc-conf-section .msc-conf-champ-box.msc-conf-glow{background:radial-gradient(ellipse 72% 125px at 18% 40%,color-mix(in srgb,var(--msc-card-color,#ff8a2a) 21%,transparent),transparent 90%),#303237!important}
+.msc-conf-final{border:1px solid #4a4c51!important;border-radius:9px;background:#24262a!important}
+.msc-conf-history-list{background:#303237!important}
+
+/* v38: one unified tournament champion + championship game card */
+.msc-conf-section .msc-conf-tourney-unified{overflow:hidden;border:1px solid #51545a;border-radius:9px;background:radial-gradient(ellipse 72% 150px at 18% 15%,color-mix(in srgb,var(--msc-card-color,#ff8a2a) 21%,transparent),transparent 90%),#303237;display:block}
+.msc-conf-section .msc-conf-tourney-unified>.msc-conf-champ-box{border:0!important;border-radius:0!important;background:transparent!important;padding:12px 12px 10px;gap:8px}
+.msc-conf-section .msc-conf-tourney-unified>.msc-conf-final{margin:0;border:0!important;border-top:1px solid #4a4c51!important;border-radius:0!important;background:rgba(24,26,29,.27)!important}
+.msc-conf-tourney-unified .msc-conf-final>small{font-size:9px;letter-spacing:.035em;padding:8px 12px 5px;color:#b5b7bb;font-weight:700}
+.msc-conf-tourney-unified .msc-conf-final-row{padding:6px 12px;border-top:0!important;gap:8px}
+.msc-conf-tourney-unified .msc-conf-final-row+.msc-conf-final-row{border-top:1px solid #44474c!important}
+.msc-conf-tourney-unified .msc-conf-final-row .msc-conf-team img{width:24px;height:24px}
+.msc-conf-tourney-unified .msc-conf-final-row .msc-conf-team-text>a:first-child{font-size:11px;font-weight:600}
+.msc-conf-tourney-unified .msc-conf-final-row .msc-conf-coach{font-size:10px}
+.msc-conf-tourney-unified .msc-conf-final-row strong{font-size:11px}
+
+/* v38: conference tournament seeds within compact unified final */
+.msc-conf-seeded-team{display:flex;align-items:center;gap:7px;min-width:0}
+.msc-conf-seed{color:#ff8a2a;font-size:10px;font-weight:800;min-width:18px;text-align:center;flex-shrink:0}
+
+/* v39: keep historical tournament seeds compact and aligned with defending final */
+.msc-conf-history-match-teams .msc-conf-seeded-team{min-width:0;gap:6px}
+.msc-conf-history-match-teams .msc-conf-seed{font-size:10px;min-width:18px}
+
+/* v42 Event Champions — smoke-grey, compact, optional history */
+.msc-event-archive{display:grid;gap:14px;margin-top:14px}
+.msc-event-description{font-size:12px;color:#abb0b8;margin:0}
+.msc-event-bracket{display:grid;gap:9px;background:#323437;border:1px solid #4b4d51;border-radius:12px;padding:12px}
+.msc-event-bracket h4,.msc-event-group-title{font-size:15px;color:#f5f5f5;margin:0}
+.msc-event-feature{display:grid;gap:10px;background:radial-gradient(ellipse at 20% 0%,color-mix(in srgb,var(--msc-card-color,#ff8a2a) 22%,transparent),transparent 68%),#37393c;border:1px solid #525459;border-radius:10px;padding:12px}
+.msc-event-feature>small,.msc-event-challenger>small{font-size:10px;color:#ff8a2a;font-weight:800;letter-spacing:.05em}
+.msc-event-team{display:flex;align-items:center;gap:9px;min-width:0;flex:1}
+.msc-event-team>a img{width:39px;height:39px;object-fit:contain}
+.msc-event-team-text{display:grid;gap:3px;min-width:0}
+.msc-event-team-text>a:first-child{font-size:13px;color:#fff;font-weight:700;text-decoration:none}
+.msc-event-coach{font-size:11px;color:#b9bdc5;text-decoration:none}
+.msc-event-team.is-runner img{opacity:.48}
+.msc-event-team.is-runner .msc-event-team-text>a{color:#9b9ea6}
+.msc-event-match{display:grid;gap:2px;background:#2b2d30;border:1px solid #494b50;border-radius:8px;overflow:hidden}
+.msc-event-match-row{display:flex;align-items:center;gap:7px;padding:7px 9px}
+.msc-event-match-row+.msc-event-match-row{border-top:1px solid #494b50}
+.msc-event-match-row .msc-event-team img{width:28px;height:28px}
+.msc-event-match-row .msc-event-team-text>a:first-child{font-size:12px}
+.msc-event-match-row strong{font-size:12px;color:#fff}
+.msc-event-seed{color:#ff8a2a;font-size:11px;font-weight:800;min-width:19px}
+.msc-event-history{display:grid;gap:7px}
+.msc-event-history-item{display:grid;grid-template-columns:40px minmax(0,1fr);gap:7px;align-items:start;background:#292b2e;padding:8px;border-radius:8px}
+.msc-event-history-item>strong{font-size:12px;color:#ff8a2a}
+.msc-event-regional-list{display:grid;gap:7px}
+.msc-event-regional-row{display:flex;align-items:center;gap:10px;justify-content:space-between;background:#343639;border:1px solid #505258;border-radius:9px;padding:9px}
+.msc-event-regional-label{font-size:10px;color:#ff8a2a;font-weight:700;text-align:right}
+.msc-event-challenger{display:grid;gap:12px;background:#323437;border:1px solid #4b4d51;border-radius:12px;padding:14px}
+.msc-event-challenger-winner{display:grid;justify-items:center;gap:8px;text-align:center}
+.msc-event-challenger-winner img{height:95px;width:110px;object-fit:contain}
+.msc-event-challenger-winner strong{color:#fff}
+.msc-event-conference-match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.msc-event-conference-match>div{display:grid;justify-items:center;gap:5px;background:#292b2e;border-radius:9px;padding:12px;text-align:center}
+.msc-event-conference-match img{height:60px;width:75px;object-fit:contain}
+.msc-event-conference-match strong{font-size:12px;color:#fff}
+.msc-event-conference-match span,.msc-event-challenger p{font-size:11px;color:#b8bdc5;margin:0}
+
+/* v43: prestige-ranked invitational headers and compact championship histories */
+.msc-event-bracket-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.msc-event-bracket-heading h4{flex:1;min-width:0}
+.msc-event-prestige-rank{font-size:10px;font-weight:800;color:#ff8a2a;white-space:nowrap;text-align:right;padding-top:2px}
+.msc-event-history-compact{grid-template-columns:38px minmax(0,1fr);align-items:center;padding:8px 9px}
+.msc-event-history-competitors{display:flex;align-items:center;gap:5px;min-width:0}
+.msc-event-history-competitors>div{display:flex;align-items:center;min-width:0;flex:1;gap:4px}
+.msc-event-history-competitors .msc-event-team{gap:5px;min-width:0}
+.msc-event-history-competitors .msc-event-team>a img{width:23px;height:23px}
+.msc-event-history-competitors .msc-event-team-text>a:first-child{font-size:10px;line-height:1.2}
+.msc-event-history-competitors .msc-event-coach{font-size:9px}
+.msc-event-history-competitors b{font-size:10px;white-space:nowrap;color:#fff}
+.msc-event-history-dash{color:#9ca2aa;font-size:10px}
+.msc-event-single .msc-event-feature-title{text-align:center;font-size:15px;color:#ff8a2a;text-transform:none;letter-spacing:0}
+.msc-event-feature-champion{display:flex;justify-content:center;padding:8px 0 10px}
+.msc-event-feature-champion .msc-event-team{display:grid;justify-items:center;flex:initial;text-align:center}
+.msc-event-feature-champion .msc-event-team>a img{width:66px;height:66px}
+.msc-event-feature-champion .msc-event-team-text{justify-items:center}
+.msc-event-feature-champion .msc-event-team-text>a:first-child{font-size:15px}
+.msc-event-feature-final{display:grid;gap:7px}
+.msc-event-feature-final>small{font-size:10px;color:#ff8a2a;font-weight:800}
+@media(max-width:480px){.msc-event-history-competitors .msc-event-team-text>a:first-child{font-size:9px}.msc-event-history-competitors .msc-event-team>a img{width:20px;height:20px}.msc-event-history-competitors b{font-size:9px}}
+
+/* v44: historical championship matchups stack vertically on all screen sizes.
+   Keep the season at left and a compact, readable two-row final at right. */
+.msc-event-history-compact{grid-template-columns:38px minmax(0,1fr);align-items:start;gap:6px}
+.msc-event-history-compact>.msc-event-match{width:100%;min-width:0;border:0;background:transparent;border-radius:0;gap:0}
+.msc-event-history-compact .msc-event-match-row{padding:5px 3px;gap:5px;min-width:0}
+.msc-event-history-compact .msc-event-match-row+.msc-event-match-row{border-top:1px solid #44474c}
+.msc-event-history-compact .msc-event-match-row .msc-event-team img{width:25px;height:25px}
+.msc-event-history-compact .msc-event-match-row .msc-event-team-text>a:first-child{font-size:11px;line-height:1.2}
+.msc-event-history-compact .msc-event-match-row .msc-event-coach{font-size:10px}
+.msc-event-history-compact .msc-event-match-row strong{font-size:11px;margin-left:auto;white-space:nowrap}
+@media(max-width:480px){
+ .msc-event-history-compact .msc-event-match-row .msc-event-team img{width:23px;height:23px}
+ .msc-event-history-compact .msc-event-match-row .msc-event-team-text>a:first-child{font-size:10px}
+}
+
+/* v45: compact expandable postseason history and archive-year links */
+.msc-postseason-expand{margin-top:10px;width:100%}
+.msc-postseason-history-expanded{margin-top:8px;border:0;background:transparent}
+.msc-postseason-history-compact{display:grid;grid-template-columns:42px minmax(0,1fr);gap:8px;align-items:start;padding:10px;background:#2b2e34;border:1px solid #454a54;border-radius:9px;margin-bottom:7px}
+.msc-postseason-history-year{font-size:12px;color:#ff8a2a;padding-top:8px}
+.msc-postseason-history-match{min-width:0}
+.msc-postseason-history-match-team{display:flex;align-items:center;gap:8px;min-width:0;padding:4px 0}
+.msc-postseason-history-match-team+ .msc-postseason-history-match-team{border-top:1px solid #414651}
+.msc-postseason-history-match-team>a{flex:none;display:flex;align-items:center}
+.msc-postseason-history-match-team img{width:25px;height:25px;object-fit:contain}
+.msc-postseason-history-match-team span{display:flex;flex-direction:column;min-width:0;flex:1;font-size:12px;line-height:1.25}
+.msc-postseason-history-match-team span>a{font-weight:700;color:#fff;overflow-wrap:anywhere}
+.msc-postseason-history-match-team span>a.msc-postseason-history-coach,.msc-postseason-history-match-team small{font-size:11px;font-weight:400;color:#b8c8e4}
+.msc-postseason-history-match-team b{margin-left:auto;font-size:12px;color:#fff}
+.msc-postseason-history-match-team.is-runner span>a:first-child{color:#8e9fb9}
+.msc-postseason-history-match-team.is-runner img{opacity:.48;filter:none}
+.msc-championship-year-link{color:#ff8a2a;font-weight:800;text-decoration:none}
+.msc-championship-year-link:hover,.msc-championship-year-link:focus-visible{text-decoration:underline}
+
+/* v46: compact historical year links and direct SKI Regional bracket links */
+.msc-event-history-compact .msc-championship-year-link{
+ font-size:12px;line-height:1.2;white-space:nowrap;
+}
+.msc-event-regional-link{
+ display:inline-flex;align-items:center;justify-content:flex-end;gap:4px;
+ text-decoration:none;color:#ff8a2a;white-space:nowrap;
+}
+.msc-event-regional-link:hover,.msc-event-regional-link:focus-visible{text-decoration:underline}
+
+/* v47 Conference Achievement Rankings */
+.msc-achievements{display:grid;gap:14px;margin-top:12px}
+.msc-achievement-note{font-size:12px;color:#aeb5c1;line-height:1.55;margin:0}
+.msc-achievement-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.msc-achievement-filters>:last-child{grid-column:1/-1}
+.msc-achievement-list{display:grid;gap:8px}
+.msc-achievement-row{display:flex;align-items:center;gap:10px;background:#303237;border:1px solid #4c5056;border-radius:10px;padding:11px}
+.msc-achievement-rank{font-size:17px;color:#ff8a2a;min-width:25px;text-align:center}
+.msc-achievement-patch{width:39px;height:39px;object-fit:contain;flex:none}
+.msc-achievement-info{display:grid;gap:4px;flex:1;min-width:0}
+.msc-achievement-info>strong{font-size:13px;color:#f7f7f8}
+.msc-achievement-info>small{font-size:10px;color:#b6bdc7;line-height:1.4}
+.msc-achievement-value{font-size:20px;color:#ff8a2a;font-variant-numeric:tabular-nums}
+@media(max-width:480px){.msc-achievement-row{gap:7px;padding:9px}.msc-achievement-patch{width:31px;height:31px}.msc-achievement-info>small{font-size:9px}}
+
+/* v53 Season Archives */
+.msc-season-archive{display:grid;gap:12px;margin-top:14px}
+.msc-archive-summary{padding:15px;background:#303237;border:1px solid #4c5056;border-radius:12px}
+.msc-archive-summary small{font-size:10px;font-weight:800;color:#ff8a2a;letter-spacing:.06em}
+.msc-archive-summary h4{font-size:19px;margin:7px 0;color:#fff}
+.msc-archive-summary p,.msc-archive-section-content p{font-size:12px;color:#bbc0c8;line-height:1.5;margin:6px 0}
+.msc-archive-section{background:#303237;border:1px solid #4b4e53;border-radius:11px;overflow:hidden}
+.msc-archive-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:13px;background:transparent;border:0;color:#fff;cursor:pointer}
+.msc-archive-toggle>span{display:grid;gap:4px}
+.msc-archive-toggle strong{font-size:14px}
+.msc-archive-toggle small{font-size:11px;color:#adb3bd}
+.msc-archive-toggle svg{color:#ff8a2a;flex:none}
+.msc-archive-section-content{display:grid;gap:10px;padding:12px;border-top:1px solid #4b4e53}
+.msc-archive-overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.msc-archive-overview-grid>div{display:grid;gap:5px;background:#26282b;border:1px solid #464950;border-radius:8px;padding:12px}
+.msc-archive-overview-grid strong{color:#ff8a2a;font-size:24px}
+.msc-archive-overview-grid small{font-size:10px;color:#bec4cc}
+.msc-archive-entry{display:grid;gap:9px;background:#37393c;border:1px solid #50535a;border-radius:10px;padding:11px}
+.msc-archive-entry h5{font-size:14px;color:#fff;margin:0}
+.msc-archive-entry h5 span{color:#ff8a2a;font-size:11px}
+.msc-archive-entry>small{font-size:10px;color:#ff8a2a;font-weight:800;text-transform:uppercase}
+.msc-archive-team{display:flex;align-items:center;gap:8px;min-width:0}
+.msc-archive-team img{width:34px;height:34px;object-fit:contain}
+.msc-archive-team>span{display:grid;gap:3px;min-width:0}
+.msc-archive-team>span>a:first-child{font-size:12px;color:#fff;font-weight:700;text-decoration:none}
+.msc-archive-team .msc-archive-coach,.msc-archive-team small{font-size:10px;color:#b8bdc7;text-decoration:none}
+.msc-archive-final{background:#292b2f;border:1px solid #4c5056;border-radius:8px}
+.msc-archive-final>div{display:flex;align-items:center;gap:8px;padding:8px}
+.msc-archive-final>div+div{border-top:1px solid #484b51}
+.msc-archive-final>div>strong{margin-left:auto;font-size:12px;color:#fff}
+.msc-archive-final .msc-archive-runner img{opacity:.48}
+.msc-archive-final .msc-archive-runner .msc-archive-team>span>a:first-child{color:#a9afba}
+.msc-archive-event-row{display:grid;gap:5px;padding:8px 0;border-top:1px solid #4c5056}
+.msc-archive-event-row>span:first-child{font-size:11px;color:#ff8a2a}
+.msc-archive-challenger{display:flex;align-items:center;gap:10px}
+.msc-archive-challenger img{height:45px;width:50px;object-fit:contain}
+.msc-archive-conference{background:#292b2f;border:1px solid #4b4e53;border-radius:8px;overflow:hidden}
+.msc-archive-conference summary{display:flex;align-items:center;gap:9px;padding:10px;cursor:pointer;font-size:13px;font-weight:700;color:#fff}
+.msc-archive-conference summary img{height:29px;width:29px;object-fit:contain}
+.msc-archive-conference summary span{margin-left:auto;font-size:10px;color:#aeb5c0;font-weight:400}
+.msc-archive-standings-head,.msc-archive-standings-row{display:grid;grid-template-columns:minmax(0,1fr) 62px 62px;gap:5px;align-items:center;padding:8px;border-top:1px solid #464950}
+.msc-archive-standings-head{font-size:10px;color:#ff8a2a;font-weight:800}
+.msc-archive-standings-row{font-size:11px;color:#fff}
+.msc-archive-standings-row>span:first-child{display:flex;align-items:center;gap:5px;min-width:0}
+.msc-archive-standings-row>span:first-child>b{color:#ff8a2a}
+.msc-archive-standings-row .msc-archive-team img{width:23px;height:23px}
+.msc-archive-standings-row .msc-archive-team .msc-archive-coach{display:none}
+.msc-archive-standings-row .msc-archive-team>span>a:first-child{font-size:10px}
+
+/* v54: nested expandable groups for the three 23-champion events */
+.msc-archive-event-group{background:#292b2f;border:1px solid #4b4e53;border-radius:9px;overflow:hidden}
+.msc-archive-event-group>summary{display:flex;align-items:center;gap:10px;padding:12px;cursor:pointer;color:#fff;font-size:13px;font-weight:700;list-style:none}
+.msc-archive-event-group>summary::-webkit-details-marker{display:none}
+.msc-archive-event-group>summary:before{content:'▸';color:#ff8a2a;font-size:15px;line-height:1}
+.msc-archive-event-group[open]>summary:before{content:'▾'}
+.msc-archive-event-group>summary>small{margin-left:auto;color:#aeb5c0;font-size:10px;font-weight:500;white-space:nowrap}
+.msc-archive-event-group-content{padding:0 11px 10px;border-top:1px solid #484b51}
+
+/* v57: season-specific Leaders & Records rollup, reusing locked API. */
+.msc-archive-records{display:grid;gap:10px}
+.msc-archive-record-group summary svg{color:#ff8a2a;flex:none}
+.msc-archive-record-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:10px;border-top:1px solid #464950}
+.msc-archive-record-card{display:flex;flex-direction:column;align-items:flex-start;gap:7px;min-width:0;padding:10px;border:1px solid #50535a;border-radius:8px;background:#34363a}
+.msc-archive-record-card>small{font-size:10px;font-weight:700;line-height:1.4;color:#cbd0d7;min-height:28px}
+.msc-archive-record-value{font-size:18px;color:#ff8a2a;line-height:1.2}
+.msc-archive-record-holder{display:flex;align-items:center;gap:6px;color:#fff;font-weight:700;font-size:11px;line-height:1.3;text-decoration:none;min-width:0}
+.msc-archive-record-holder img{width:27px;height:27px;object-fit:contain;flex:none}
+.msc-archive-record-holder span{overflow-wrap:anywhere}
+.msc-archive-record-detail{font-size:10px;color:#aeb5c0}
+@media(max-width:380px){.msc-archive-record-grid{gap:6px;padding:7px}.msc-archive-record-card{padding:8px}.msc-archive-record-value{font-size:16px}}

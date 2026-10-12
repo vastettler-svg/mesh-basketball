@@ -3,3 +3,55 @@
 .mba-draft-team .mba-draft-traded-from,.mba-draft-pick-franchise .mba-draft-traded-from{display:block;margin-top:3px;color:#f6ae69;font-size:10px;font-weight:800;line-height:1.35}.mba-draft-pick-franchise .mba-draft-traded-from{font-size:9px}@media(max-width:440px){.mba-draft-team .mba-draft-traded-from,.mba-draft-pick-franchise .mba-draft-traded-from{font-size:9px}}
 
 .mba-draft-tabs{margin:13px 0 10px;gap:8px}.mba-draft-tabs button{min-height:38px;padding:7px 9px;font-size:12px;gap:6px}.mba-draft-team-list{display:flex;flex-direction:column;gap:12px}.mba-draft-franchise-head{background:radial-gradient(circle at 10% 50%,color-mix(in srgb,var(--mba-draft-team-glow,#ff7a1a) 23%,transparent),transparent 55%),linear-gradient(115deg,color-mix(in srgb,var(--mba-draft-team-secondary,var(--mba-draft-team-glow,#ff7a1a)) 10%,transparent),transparent 78%)}@media(max-width:440px){.mba-draft-tabs button{min-height:36px;padding:6px 7px;font-size:12px}.mba-draft-team-list{gap:10px}}
+
+
+/* MORE SECTION — Sleeper Leagues matching header (October 2026) */
+.mba-draft-hero{
+  position:relative;
+  overflow:hidden;
+  box-sizing:border-box;
+  width:100%;
+  margin-bottom:18px;
+  padding:25px 18px 24px;
+  border:1px solid rgba(255,137,48,.35);
+  border-radius:18px;
+  background:radial-gradient(circle at 88% 30%,rgba(255,113,31,.25),transparent 40%),radial-gradient(circle at 64% 32%,rgba(240,115,40,.08),transparent 50%),linear-gradient(135deg,#25262b,#1a1c22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 12px 32px rgba(0,0,0,.18);
+  text-align:center;
+}
+.mba-draft-hero::after{
+  content:"";
+  position:static;
+  display:block;
+  width:46px;
+  height:3px;
+  margin:14px auto 0;
+  border-radius:20px;
+  background:#ff842d;
+  box-shadow:0 0 14px rgba(255,132,45,.48);
+}
+.mba-draft-hero>span{
+  display:block;
+  color:#ff8a32;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.11em;
+  text-align:center;
+}
+.mba-draft-hero h1{
+  margin:5px 0 6px;
+  color:#fff;
+  font-family:Georgia,serif;
+  font-size:27px;
+  font-weight:700;
+  line-height:1.2;
+  text-align:center;
+}
+.mba-draft-hero p{
+  max-width:none;
+  margin:0;
+  color:#a9b5c4;
+  font-size:12px;
+  line-height:1.5;
+  text-align:center;
+}

@@ -1,0 +1,141 @@
+.cc-page{width:min(100%,1180px);margin:auto;padding:16px 16px 110px;color:#f7f7f8}.cc-back{border:0;background:none;color:#bfc3cc;font-size:.76rem;font-weight:800;padding:6px 0 16px;cursor:pointer}.cc-filters{display:flex;margin:20px 0}.cc-filters label{display:flex;flex-direction:column;gap:7px;color:#ff8a2a;font-size:.67rem;font-weight:900;letter-spacing:.09em}.cc-filters select{background:#27292e;border:1px solid #484a50;border-radius:9px;padding:10px 28px 10px 12px;color:#fff}.cc-section{margin:22px 0}.cc-section h2{font-size:1.08rem;margin:0 0 7px;font-family:Georgia,serif}.cc-muted{color:#a8adb7;font-size:.76rem;line-height:1.55;margin:5px 0 14px}.cc-error{color:#ffb0a2}.cc-week-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:15px 0}.cc-week-tabs button{background:#26282e;border:1px solid #44464c;border-radius:9px;color:#c6c8cf;padding:11px 4px;font-size:.75rem;font-weight:800;cursor:pointer}.cc-week-tabs button.is-active{border-color:#ff8a2a;color:#ff8a2a;background:#302922}.cc-series-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.cc-series{border:1px solid #42454d;background:#25272c;border-radius:13px;overflow:hidden}.cc-series__top{display:flex;justify-content:space-between;padding:12px 13px;color:#ff8a2a;font-size:.62rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em}.cc-status{color:#aeb3bd}.cc-side{display:flex;align-items:center;gap:10px;margin:0 10px 5px;padding:10px;background:#303238;border:1px solid #44474e;border-radius:7px;font-size:.82rem}.cc-side strong{flex:1;min-width:0}.cc-side b{font-size:1rem}.cc-side--winner{border-color:#258961;background:#263b34}.cc-seed{background:#3877cf;color:white;border-radius:4px;min-width:26px;padding:4px;text-align:center;font-weight:900}.cc-expand{width:100%;background:transparent;border:0;border-top:1px solid #41434a;color:#ff8a2a;padding:12px;font-weight:800;font-size:.7rem;cursor:pointer}.cc-expand span{float:right}.cc-games{padding:0 9px 10px}.cc-game{display:block;text-decoration:none;color:#eee;background:#1c1e22;border:1px solid #383b42;border-radius:8px;margin:6px 0;padding:8px}.cc-game>div{display:flex;align-items:center;gap:6px;min-height:28px}.cc-game>div>b{margin-left:auto}.cc-team{display:flex;align-items:center;gap:7px;min-width:0;font-size:.68rem}.cc-team a{color:inherit;text-decoration:none}.cc-logo{width:23px;height:23px;object-fit:contain}.cc-logo--empty{display:grid;place-items:center;font-size:.6rem;color:#aeb4c0}.cc-rank{min-width:22px;color:#a3a9b3;font-size:.6rem}.cc-seeding{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.cc-seeding>div,.cc-placements>div{display:flex;gap:12px;align-items:center;padding:10px;background:#27292e;border:1px solid #41444b;border-radius:7px;font-size:.77rem}.cc-seeding b{color:#ff8a2a}.cc-placements{display:grid;gap:7px}.cc-placements>div{justify-content:space-between}.cc-placements span{color:#ff8a2a}@media(max-width:650px){.cc-series-grid{grid-template-columns:1fr}.cc-page{padding:14px 13px 110px}.cc-week-tabs button{font-size:.68rem}.cc-seeding{grid-template-columns:1fr 1fr}}
+
+/* Match other Events pages: back navigation and season selector share one row. */
+.cc-filters{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0 22px}.cc-filters .cc-back{padding:8px 0;color:#f4f4f6;font-size:.8rem;font-weight:800;white-space:nowrap}.cc-filters label{color:#9fc7e4;align-items:flex-start}.cc-filters select{min-width:110px;border-color:#31536b;background:#18232d;color:#fff}.cc-filters .cc-back:hover{color:#ff8a2a}
+
+/* Challenger bracket / view controls */
+.cc-view-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0 12px}.cc-view-tabs button{border:1px solid #464850;background:#282a30;color:#cbd0da;border-radius:9px;padding:11px 8px;font-size:.76rem;font-weight:800;cursor:pointer}.cc-view-tabs button.is-active{border-color:#ff8a2a;background:#302920;color:#ff8a2a}.cc-bracket-scroll{overflow-x:auto;overscroll-behavior-x:contain;padding:4px 0 16px;scrollbar-color:#666 #222}.cc-bracket-columns{display:grid;grid-template-columns:repeat(4,minmax(230px,1fr));gap:13px;min-width:970px;align-items:start}.cc-bracket-column{display:flex;flex-direction:column;gap:10px}.cc-bracket-heading{position:sticky;top:0;z-index:1;background:#303238;border:1px solid #484b53;border-radius:9px;padding:11px;color:#ff8a2a;font-size:.85rem;font-weight:900}.cc-bracket-heading small{display:block;color:#c0c3cc;font-size:.65rem;font-weight:500;margin-top:4px}.cc-series--compact .cc-series__top{padding:10px}.cc-series--compact .cc-side{padding:8px;margin:0 7px 5px;font-size:.74rem}.cc-series--compact .cc-side b{font-size:.85rem}.cc-series--compact .cc-seed{min-width:23px}.cc-bracket .cc-muted{margin-bottom:10px}@media(max-width:650px){.cc-bracket-columns{grid-template-columns:repeat(4,235px);min-width:980px}}
+
+/* Gold, unboxed seeds and conference badges throughout */
+.cc-seed{background:transparent;color:#e5b95c;border-radius:0;min-width:28px;padding:0;font-size:.76rem}.cc-conference-patch{width:29px;height:29px;object-fit:contain;flex-shrink:0}.cc-side strong{overflow:hidden;text-overflow:ellipsis}.cc-seeding b{color:#e5b95c}.cc-seeding .cc-conference-patch{width:25px;height:25px}
+/* Actual mirrored championship-tree presentation */
+.cc-tree{min-width:1510px;padding:15px 12px 20px;background:#1d1f24;border:1px solid #41434b;border-radius:12px}.cc-tree-title{text-align:center;color:#fff;font-family:Georgia,serif;font-weight:bold;font-size:1.13rem;margin-bottom:14px}.cc-tree-main{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:16px;min-height:520px}.cc-tree-lane{display:flex;flex-direction:column;justify-content:space-around;gap:15px;position:relative}.cc-tree-heading{position:absolute;top:0;left:0;right:0;text-align:center;background:#376fbf;color:white;padding:8px 3px;font-weight:800;font-size:.78rem;border-radius:4px}.cc-tree-node{position:relative;border:1px solid #77736b;background:#33353a;border-radius:5px;padding:6px;min-height:92px;z-index:1}.cc-tree-round{font-size:.61rem;text-transform:uppercase;letter-spacing:.04em;color:#bec4d0;margin:0 0 5px;text-align:center}.cc-tree-side{display:flex;align-items:center;gap:5px;min-height:29px;font-size:.7rem}.cc-tree-side.is-winner{color:#fff;background:#35453d;border-radius:3px}.cc-tree-side .cc-conference-patch{width:23px;height:23px}.cc-tree-seed{color:#e5b95c;font-size:.67rem;font-weight:800;min-width:24px}.cc-tree-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cc-tree-side b{color:#e8e9ed}.cc-tree-placeholder{color:#aeb4c0;text-align:center;padding:26px 4px;font-size:.72rem}.cc-tree-opening{padding-top:40px}.cc-tree-quarters{padding-top:40px}.cc-tree-semis,.cc-tree-final{padding-top:40px}.cc-tree-lane:not(.cc-tree-final):not(.cc-tree-mirror) .cc-tree-node:after{content:"";position:absolute;left:100%;top:50%;width:16px;border-top:1px solid #999}.cc-tree-mirror .cc-tree-node:before{content:"";position:absolute;right:100%;top:50%;width:16px;border-top:1px solid #999}.cc-tree-note{text-align:center;color:#aab0bc;font-size:.7rem;margin:8px 0 0}.cc-placement-section{margin-top:24px}.cc-placement-section h3{font-family:Georgia,serif;font-size:1rem;margin:0 0 7px}.cc-placement-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.cc-placement-item{border:1px solid #42454d;background:#24262b;border-radius:9px;padding:9px}.cc-placement-week{color:#ff8a2a;font-size:.67rem;font-weight:800;margin-bottom:6px}@media(max-width:650px){.cc-placement-grid{grid-template-columns:1fr}.cc-tree{min-width:1510px}}
+
+/* Challenger navigation refinements */
+.cc-filters{margin:11px 0 15px}.cc-filters label{font-size:.57rem;gap:4px}.cc-filters select{min-width:78px;width:85px;padding:6px 19px 6px 7px;font-size:.72rem;border-radius:7px}.cc-view-tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:15px 0}.cc-view-tabs button{padding:9px 3px;font-size:clamp(.57rem,2.1vw,.73rem);white-space:nowrap;border-radius:8px}.cc-explainer{display:flex;gap:13px;align-items:flex-start;border:1px solid #704b29;border-left:4px solid #ff8a2a;background:linear-gradient(135deg,#30251f,#201d24 65%,#181a20);border-radius:12px;padding:15px 13px;margin:12px 0 17px}.cc-explainer-icon{display:grid;place-items:center;flex:0 0 35px;height:35px;border-radius:50%;background:#56331c;font-size:18px}.cc-explainer strong{font-size:.66rem;letter-spacing:.09em;color:#ff8a2a}.cc-explainer p{font-size:.76rem;line-height:1.55;margin:6px 0 0;color:#f0edf0}.cc-week-select{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin:0 0 14px}.cc-week-select label{font-size:.67rem;color:#9fc7e4;font-weight:900;letter-spacing:.06em}.cc-week-select select{background:#25272d;border:1px solid #4c4e56;color:#fff;border-radius:7px;padding:8px 12px;font-size:.76rem}.cc-final h2{font-family:Georgia,serif;font-size:1.05rem;margin:4px 0 12px}.cc-final-list{display:grid;gap:7px}.cc-final-row{display:flex;align-items:center;gap:11px;padding:10px;background:#27292e;border:1px solid #43464e;border-radius:8px;font-size:.81rem}.cc-final-row>strong{color:#e5b95c;width:29px}.cc-final-row>span{flex:1;font-weight:700}.cc-final-row>small{color:#aab0b9}.cc-final-row .cc-conference-patch{width:31px;height:31px}@media(max-width:390px){.cc-view-tabs button{font-size:.56rem}.cc-explainer{gap:9px;padding:12px 10px}.cc-explainer p{font-size:.71rem}}
+
+/* v4: clear win/loss hierarchy, white round headings, orange event selectors */
+.cc-side--winner{background:#303238;border-color:#44474e}
+.cc-side--loser{background:#292b30;border-color:#3b3e45;color:#9297a1}
+.cc-side--loser .cc-conference-patch,.cc-tree-side.is-loser .cc-conference-patch{opacity:.38;filter:grayscale(1)}
+.cc-side--loser strong,.cc-side--loser b,.cc-tree-side.is-loser .cc-tree-name,.cc-tree-side.is-loser b{color:#9297a1}
+.cc-tree-side.is-winner{background:transparent}
+.cc-tree-side.is-loser{color:#9297a1}
+.cc-series__top{color:#f7f7f8}
+.cc-status{color:#f7f7f8}
+.cc-expand{color:#ff8a2a}
+.cc-game-loser{color:#9297a1;opacity:.58}
+.cc-game-loser .cc-logo{filter:grayscale(1)}
+.cc-game--static{cursor:default}
+.cc-explainer{align-items:flex-start}
+.cc-filters label,.cc-week-select label{color:#ff8a2a}
+.cc-filters select,.cc-week-select select{border-color:#ff8a2a;background:#30251f;color:#ff9a41}
+
+/* v5: preserve color in muted logos; high-contrast selectors and tiebreak PF */
+.cc-filters select,.cc-week-select select{color:#fff!important;color-scheme:dark}
+.cc-filters select option,.cc-week-select select option{color:#fff;background:#29231f}
+.cc-side--loser .cc-conference-patch,.cc-tree-side.is-loser .cc-conference-patch{filter:none!important;opacity:.48}
+.cc-game-loser .cc-logo{filter:none!important;opacity:.65}
+.cc-game-loser{opacity:.66}
+.cc-pf{color:#c4c5c9;font-size:.64rem;white-space:nowrap;margin-left:auto}
+.cc-side--loser .cc-pf{color:#969aa4}
+.cc-side .cc-pf+b{margin-left:0}
+
+/* Final Standings: featured champion and larger placement rows */
+.cc-final-champion{min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:24px 14px;margin-bottom:16px;border:1px solid rgba(255,138,42,.55);border-radius:15px;background:linear-gradient(145deg,rgba(255,138,42,.17),#292b31 65%);text-align:center;box-shadow:inset 0 0 26px rgba(255,138,42,.045)}
+.cc-final-champion-label{font-size:.65rem;letter-spacing:.12em;font-weight:800;color:#ff8a2a}
+.cc-final-champion-rank{font-family:Georgia,serif;font-weight:800;font-size:1.65rem;color:#fff}
+.cc-final-champion .cc-conference-patch{width:94px;height:94px;object-fit:contain}
+.cc-final-champion-name{font-family:Georgia,serif;font-size:1.45rem;font-weight:800;color:#fff}
+.cc-final-champion-seed{font-size:.73rem;color:#c3c5cc}
+.cc-final-list{gap:10px}
+.cc-final-row{min-height:72px;padding:12px 14px;gap:14px;font-size:.95rem}
+.cc-final-row>strong{font-size:1.02rem;width:34px;flex-shrink:0}
+.cc-final-row .cc-conference-patch{width:46px;height:46px;object-fit:contain;flex-shrink:0}
+.cc-final-row>small{font-size:.7rem;white-space:nowrap}
+@media(max-width:390px){.cc-final-row{gap:10px;padding:10px}.cc-final-row .cc-conference-patch{width:40px;height:40px}.cc-final-row>small{font-size:.65rem}}
+
+/* Main Bracket: accurately positioned round feeders, plain white week labels */
+.cc-tree--aligned{min-width:1562px}
+.cc-tree-board{position:relative;width:1536px;height:620px;margin:auto}
+.cc-tree-week-labels>div{position:absolute;top:8px;text-align:center;color:#fff;font-size:.84rem;font-weight:800;background:none;border:0;padding:0}
+.cc-tree-connectors{position:absolute;inset:0;width:1536px;height:620px;pointer-events:none;overflow:visible}
+.cc-tree-connectors path{fill:none;stroke:#b7bac2;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cc-tree-position{position:absolute;z-index:1}
+.cc-tree-position .cc-tree-node{min-height:92px;height:92px;box-sizing:border-box}
+.cc-tree-position .cc-tree-round{color:#fff}
+.cc-tree-position .cc-tree-side.is-loser .cc-conference-patch{opacity:.48;filter:none}
+
+/* Main bracket refinement: two-line round headings, taller matchup blocks and badges */
+.cc-tree-week-labels>div{display:flex;flex-direction:column;gap:5px;line-height:1.2}
+.cc-tree-week-labels>div strong{font-size:.86rem;color:#fff}
+.cc-tree-week-labels>div span{font-size:.71rem;color:#e1e2e6;font-weight:600}
+.cc-tree-position .cc-tree-node{min-height:112px;height:112px;padding:13px 8px;display:flex;flex-direction:column;justify-content:center}
+.cc-tree-position .cc-tree-side{min-height:40px;font-size:.78rem;gap:7px}
+.cc-tree-position .cc-tree-side .cc-conference-patch{width:31px;height:31px}
+.cc-tree-position .cc-tree-seed{font-size:.72rem;min-width:26px}
+
+/* v3: #1 seed quarterfinal waits above its Week 10 feeder; placements intentionally hidden until consolation brackets are designed. */
+
+/* Main bracket: inward-facing scores on the right, championship display and bronze matchup */
+.cc-tree-node--mirror .cc-tree-side{flex-direction:row-reverse}
+.cc-tree-node--mirror .cc-tree-side b{margin-right:auto;margin-left:0}
+.cc-tree-node--mirror .cc-tree-side .cc-tree-name{text-align:right}
+.cc-tree-node--mirror .cc-tree-side .cc-tree-seed{min-width:26px;text-align:right}
+.cc-tree-champion{position:absolute;top:88px;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;color:#fff;z-index:2}
+.cc-tree-champion span{font-size:.72rem;font-weight:900;letter-spacing:.1em;color:#ff8a2a}
+.cc-tree-champion .cc-conference-patch{width:61px;height:61px;object-fit:contain}
+.cc-tree-champion strong{font-size:.76rem}
+.cc-tree-third .cc-tree-third-label{text-align:center;color:#fff;font-size:.73rem;font-weight:800;margin-bottom:9px}
+.cc-tree-third .cc-tree-node{height:112px}
+
+/* v8: inward-facing, left-aligned scores on the right half */
+.cc-tree-node--mirror .cc-tree-side{flex-direction:row;justify-content:flex-start}
+.cc-tree-node--mirror .cc-tree-side b{flex:0 0 24px;margin:0;text-align:left;order:0}
+.cc-tree-node--mirror .cc-tree-side .cc-tree-name{flex:1;text-align:right;order:1}
+.cc-tree-node--mirror .cc-tree-side .cc-conference-patch{flex:0 0 31px;order:2}
+.cc-tree-node--mirror .cc-tree-side .cc-tree-seed{flex:0 0 27px;min-width:27px;text-align:right;order:3}
+.cc-tree-champion{top:79px}
+.cc-tree-champion .cc-conference-patch{width:88px;height:88px}
+.cc-tree-champion strong{font-size:.82rem}
+
+/* Conference Challenger: 5th–8th place placement bracket */
+.cc-placement-bracket{margin-top:25px}
+.cc-placement-bracket h3{font-family:Georgia,serif;font-size:1.12rem;color:#fff;margin:0 0 7px}
+.cc-placement-bracket>.cc-muted{margin:0 0 12px}
+.cc-placement-board{position:relative;width:590px;height:475px;margin:0 auto;background:#1d1f24;border:1px solid #41434b;border-radius:10px}
+.cc-placement-heading{position:absolute;top:19px;width:205px;text-align:center;font-weight:800;color:#fff;font-size:.85rem}
+.cc-placement-heading span{display:block;font-size:.72rem;margin-top:5px;font-weight:600;color:#e1e2e6}
+.cc-placement-lines{position:absolute;inset:0;width:590px;height:475px;pointer-events:none}
+.cc-placement-lines path{fill:none;stroke:#b7bac2;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cc-placement-position{position:absolute;z-index:1}
+.cc-placement-position .cc-tree-node{height:112px;min-height:112px;box-sizing:border-box;padding:13px 8px;display:flex;flex-direction:column;justify-content:center}
+.cc-placement-position .cc-tree-side{min-height:40px;font-size:.78rem;gap:7px}
+.cc-placement-position .cc-tree-side .cc-conference-patch{width:31px;height:31px}
+.cc-placement-label{position:absolute;z-index:2;text-align:center;color:#fff;font-size:.7rem;font-weight:800}
+
+/* Mirrored 5th–8th placement bracket, matching the locked championship layout */
+.cc-placement-board--mirrored{width:817px;height:620px;margin:0 auto}
+.cc-placement-board--mirrored .cc-placement-heading{width:205px}
+.cc-placement-board--mirrored .cc-placement-lines{width:817px;height:620px}
+.cc-placement-board--mirrored .cc-placement-winner{position:absolute;top:96px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;color:#fff;font-size:.82rem}
+.cc-placement-board--mirrored .cc-placement-winner .cc-conference-patch{width:83px;height:83px;object-fit:contain}
+
+/* v13: frame the 5th–8th heading inside the bracket panel, like the Main Bracket */
+.cc-placement-frame{background:#1d1f24;border:1px solid #41434b;border-radius:12px;padding:16px 12px 20px;overflow:hidden}
+.cc-placement-frame-header{text-align:center;margin:0 auto 14px;max-width:750px}
+.cc-placement-frame-header h3{font-family:Georgia,serif;font-size:1.13rem;color:#fff;margin:0 0 7px}
+.cc-placement-frame-header p{color:#aeb4c0;font-size:.76rem;line-height:1.5;margin:0}
+.cc-placement-frame .cc-placement-board--mirrored{background:transparent;border:0;border-radius:0}
+
+/* 9th–12th placement bracket: mirrored Week 11 to Week 13 progression */
+.cc-ninth-board{position:relative;width:1118px;height:620px;margin:0 auto;background:transparent}
+.cc-ninth-heading{position:absolute;top:19px;text-align:center;font-size:.85rem;font-weight:800;color:#fff}
+.cc-ninth-heading span{display:block;font-size:.72rem;font-weight:600;color:#e1e2e6;margin-top:5px}
+.cc-ninth-lines{position:absolute;inset:0;width:1118px;height:620px;pointer-events:none}
+.cc-ninth-lines path{fill:none;stroke:#b7bac2;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cc-ninth-board .cc-placement-position .cc-tree-node{height:112px;min-height:112px}
+
+/* v15: stepped 9th–14th placement bracket, matching Main Bracket progression */
+.cc-ninth-board{height:830px}
+.cc-ninth-lines{height:830px}

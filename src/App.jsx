@@ -8,6 +8,7 @@ import GameCenter from './pages/GameCenter'
 import Standings from './pages/Standings'
 import Events from './pages/Events'
 import NationalPostseason from './pages/NationalPostseason'
+import ConferenceChallenger from './pages/ConferenceChallenger'
 import SKIRegionals from './pages/SKIRegionals'
 import SKIRegionalBracket from './pages/SKIRegionalBracket'
 import SKIChampions from './pages/SKIChampions'
@@ -45,6 +46,7 @@ function App() {
             <Route path="/scores/:gameId" element={<GameCenter />} />
             <Route path="/standings" element={<Standings />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/events/conference-challenger" element={<ConferenceChallenger />} />
             <Route path="/events/national-postseason" element={<NationalPostseason />} />
             <Route path="/events/ski-regionals" element={<SKIRegionals />} />
 <Route path="/events/ski-regionals/:regionalSlug" element={<SKIRegionalBracket />} />

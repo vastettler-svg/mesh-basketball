@@ -262,16 +262,30 @@ return gameId?<Link className="home-spotlight-card" to={`/scores/${encodeURIComp
 function SpotlightEmptyCard({label,week}){
 return <article className="home-spotlight-card home-spotlight-card-empty"><div className="home-spotlight-accent"/><div className="home-spotlight-body"><div className="home-spotlight-top"><span>{label}</span><strong>—</strong></div><div className="home-spotlight-empty-copy"><div className="home-spotlight-placeholder-logo">M</div><div><h3>Available after Week {week}</h3><p>This spotlight will populate when the week's games are final.</p></div></div></div></article>;
 }
-async function fetchScores(week,signal){
-const url=new URL(SCORES_API_URL);
-url.searchParams.set("action","scores");
-if(week)url.searchParams.set("week",String(week));
-const response=await fetch(url.toString(),{signal});
-if(!response.ok)throw new Error(`API request failed with HTTP ${response.status}.`);
-const payload=await response.json();
-if(!payload?.ok)throw new Error(payload?.error||"Unable to load MESH Basketball scores.");
-return payload;
+// Home-only short-lived response cache. Keep successful results; never cache failures.
+const HOME_SCORES_TTL_MS=2*60*1000;
+const homeScoresCache=new Map();
+const homeScoresPending=new Map();
+async function fetchScores(week){
+ const key=week==null?'current':String(week);
+ const cached=homeScoresCache.get(key);
+ if(cached&&Date.now()-cached.time<HOME_SCORES_TTL_MS)return cached.payload;
+ if(homeScoresPending.has(key))return homeScoresPending.get(key);
+ const url=new URL(SCORES_API_URL);
+ url.searchParams.set('action','scores');
+ if(week!=null)url.searchParams.set('week',String(week));
+ const request=(async()=>{
+  const response=await fetch(url.toString());
+  if(!response.ok)throw new Error(`API request failed with HTTP ${response.status}.`);
+  const payload=await response.json();
+  if(!payload?.ok)throw new Error(payload?.error||'Unable to load MESH Basketball scores.');
+  homeScoresCache.set(key,{time:Date.now(),payload});
+  return payload;
+ })();
+ homeScoresPending.set(key,request);
+ try{return await request;}finally{if(homeScoresPending.get(key)===request)homeScoresPending.delete(key);}
 }
+
 const HOME_EVENTS=[
 {slug:"ski-regionals",name:"SKI Regionals",start:2,end:4,color:"#67c7ff",detail:"23 regional tournaments"},
 {slug:"ski-champions",name:"SKI Champions",start:5,end:9,color:"#428dff",detail:"Championship bracket"},
@@ -295,40 +309,41 @@ const[error,setError]=useState("");
 const[selectedWeek,setSelectedWeek]=useState(null);
 const[weekMenuOpen,setWeekMenuOpen]=useState(false);
 useEffect(()=>{
-const controller=new AbortController();
-async function load(){
-setLoading(true);setError("");
-try{
-const payload=await fetchScores(null,controller.signal);
-setData(payload);
-setSelectedWeek(current=>current??Number(payload.activeWeek||payload.week||1));
-const active=Number(payload.activeWeek||payload.week||1);
-if(active>1){
-try{setRecapData(await fetchScores(active-1,controller.signal));}catch(recapError){if(recapError?.name!=="AbortError")setRecapData(null);}
-}
-}catch(err){
-if(err?.name==="AbortError")return;
-setData(null);setError(err?.message||"Unable to load the MESH Basketball home page.");
-}finally{if(!controller.signal.aborted)setLoading(false);}
-}
-load();
-return()=>controller.abort();
-},[]);
-const activeWeek=Number(data?.activeWeek||data?.week||1);
-const displayedWeek=Number(selectedWeek||activeWeek);
-const isCurrentWeek=displayedWeek===activeWeek;
-useEffect(()=>{
-if(!data||isCurrentWeek)return;
-const controller=new AbortController();
-async function loadSelected(){
-setLoading(true);setError("");
-try{const selectedPayload=await fetchScores(displayedWeek,controller.signal);setData(current=>({...current,...selectedPayload,activeWeek:current.activeWeek,lastCompletedWeek:current.lastCompletedWeek}));}
-catch(err){if(err?.name!=="AbortError")setError(err?.message||`Unable to load Week ${displayedWeek}.`);}
-finally{if(!controller.signal.aborted)setLoading(false);}
-}
-loadSelected();
-return()=>controller.abort();
-},[displayedWeek,isCurrentWeek]);
+ let cancelled=false;
+ setLoading(true);setError('');
+ fetchScores(null).then(payload=>{
+  if(cancelled)return;
+  setData(payload);
+  setSelectedWeek(current=>current??Number(payload.activeWeek||payload.week||1));
+  setLoading(false);
+  const active=Number(payload.activeWeek||payload.week||1);
+  if(active>1){
+   fetchScores(active-1).then(recap=>{if(!cancelled)setRecapData(recap);})
+    .catch(()=>{if(!cancelled)setRecapData(null);});
+  }else setRecapData(null);
+ }).catch(err=>{if(!cancelled){setData(null);setError(err?.message||'Unable to load the MESH Basketball home page.');setLoading(false);}});
+ return()=>{cancelled=true;};
+ },[]);
+ const activeWeek=Number(data?.activeWeek||data?.week||1);
+ const displayedWeek=Number(selectedWeek||activeWeek);
+ const isCurrentWeek=displayedWeek===activeWeek;
+ useEffect(()=>{
+  if(!data)return;
+  let cancelled=false;
+  // Current-week data is already in the first response; historical weeks use the cache.
+  if(isCurrentWeek){
+   const cached=homeScoresCache.get('current');
+   if(cached&&data.week!==cached.payload.week)setData(cached.payload);
+   return;
+  }
+  setLoading(true);setError('');
+  fetchScores(displayedWeek).then(selectedPayload=>{
+   if(cancelled)return;
+   setData(current=>({...current,...selectedPayload,activeWeek:current.activeWeek,lastCompletedWeek:current.lastCompletedWeek}));
+   setLoading(false);
+  }).catch(err=>{if(!cancelled){setError(err?.message||`Unable to load Week ${displayedWeek}.`);setLoading(false);}});
+  return()=>{cancelled=true;};
+ },[displayedWeek,isCurrentWeek]);
 const gameOfTheWeek=useMemo(()=>data?.games?.find(game=>Number(game.featuredRank)===1)||null,[data]);
 const day=new Date().getDay();
 const currentMode=activeWeek<=1?"preview":day===1||day===2?"recap":"preview";

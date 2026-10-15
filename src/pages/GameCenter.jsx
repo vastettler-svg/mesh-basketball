@@ -17,12 +17,32 @@ function apiUrl(action, params = {}) {
   });
   return url.toString();
 }
-async function fetchJson(url, signal) {
-  const response = await fetch(url, { signal });
-  if (!response.ok) throw new Error(`API request failed with HTTP ${response.status}.`);
-  const data = await response.json();
-  if (!data?.ok) throw new Error(data?.error || "MESH Basketball API returned an error.");
-  return data;
+// Shared in-memory cache across Game Center mounts. Successful responses only.
+// Do not abort shared requests when navigating away: a quick return can reuse them.
+const gameCenterCache = new Map();
+const gameCenterPending = new Map();
+const LIVE_TTL_MS = 60 * 1000;
+const HISTORY_TTL_MS = 10 * 60 * 1000;
+const MAX_CACHE_ENTRIES = 100;
+async function fetchJson(url, ttlMs = LIVE_TTL_MS) {
+  const cached = gameCenterCache.get(url);
+  if (cached && cached.expiresAt > Date.now()) return cached.data;
+  if (cached) gameCenterCache.delete(url);
+  if (gameCenterPending.has(url)) return gameCenterPending.get(url);
+  const request = (async () => {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`API request failed with HTTP ${response.status}.`);
+    const data = await response.json();
+    if (!data?.ok) throw new Error(data?.error || "MESH Basketball API returned an error.");
+    if (gameCenterCache.size >= MAX_CACHE_ENTRIES) {
+      gameCenterCache.delete(gameCenterCache.keys().next().value);
+    }
+    gameCenterCache.set(url, { data, expiresAt: Date.now() + ttlMs });
+    return data;
+  })();
+  gameCenterPending.set(url, request);
+  try { return await request; }
+  finally { gameCenterPending.delete(url); }
 }
 function num(value) {
   if (value === null || value === undefined || value === "") return null;
@@ -377,41 +397,33 @@ export default function GameCenter() {
   const [loading,setLoading]=useState(true);
   const [error,setError]=useState("");
   useEffect(()=>{
-    const controller=new AbortController();
+    let active = true;
     async function load(){
+      setLoading(true);
+      setError("");
+      setGame(null);
+      setHistory([]);
+      setRosters({team1:[],team2:[],locked:false});
       try{
-        setLoading(true);
-        setError("");
-        setGame(null);
-        setHistory([]);
-        setRosters({team1:[],team2:[],locked:false});
         const id=decodeURIComponent(gameId||"");
-        const gp=await fetchJson(apiUrl("game",{gameId:id}),controller.signal);
+        const gp=await fetchJson(apiUrl("game",{gameId:id}),LIVE_TTL_MS);
+        if(!active)return;
         const next=normalizeGame(gp);
-        // The matchup itself is now enough to render Game Center.
+        // Render the matchup immediately; secondary requests are independent.
         setGame(next);
         setLoading(false);
-        // Roster/live scoring and series history are secondary data. Load them
-        // independently so neither can hold the entire Game Center screen hostage.
-        fetchJson(apiUrl("gameRoster",{gameId:id}),controller.signal)
-          .then((rp)=>setRosters(normalizeRoster(rp)))
-          .catch((err)=>{
-            if(err?.name!=="AbortError") console.error("Unable to load Game Center roster:",err);
-          });
-        fetchJson(
-          apiUrl("history",{
-            team1:next.team1?.franchiseId,
-            team2:next.team2?.franchiseId,
-            excludeGameId:id
-          }),
-          controller.signal
-        )
-          .then((hp)=>setHistory(Array.isArray(hp?.meetings)?hp.meetings:[]))
-          .catch((err)=>{
-            if(err?.name!=="AbortError") console.error("Unable to load Game Center history:",err);
-          });
+        fetchJson(apiUrl("gameRoster",{gameId:id}),LIVE_TTL_MS)
+          .then((rp)=>{if(active)setRosters(normalizeRoster(rp));})
+          .catch((err)=>{if(active)console.error("Unable to load Game Center roster:",err);});
+        fetchJson(apiUrl("history",{
+          team1:next.team1?.franchiseId,
+          team2:next.team2?.franchiseId,
+          excludeGameId:id
+        }),HISTORY_TTL_MS)
+          .then((hp)=>{if(active)setHistory(Array.isArray(hp?.meetings)?hp.meetings:[]);})
+          .catch((err)=>{if(active)console.error("Unable to load Game Center history:",err);});
       }catch(err){
-        if(err?.name!=="AbortError"){
+        if(active){
           console.error(err);
           setError(err?.message||"Unable to load this matchup.");
           setLoading(false);
@@ -419,7 +431,7 @@ export default function GameCenter() {
       }
     }
     load();
-    return()=>controller.abort();
+    return()=>{active=false;};
   },[gameId]);
   if(loading)return <main className="game-center-page"><div className="gc-message"><Activity size={28}/><h2>Loading Game Center</h2></div></main>;
   if(error||!game)return <main className="game-center-page"><button className="gc-back" onClick={()=>navigate("/scores")}><ArrowLeft size={16}/> Back</button><div className="gc-message"><h2>Game unavailable</h2><p>{error}</p></div></main>;

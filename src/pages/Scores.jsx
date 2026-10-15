@@ -8,6 +8,39 @@ import "../styles/scores.css";
 const MAX_WEEK = 24;
 const SCORES_API_URL =
   "https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
+// v64: Per-week scores cache. In-flight requests are shared without aborting
+// other consumers when a page unmounts or the selected week changes.
+const scoresWeekCache = new Map();
+const scoresWeekPending = new Map();
+const SCORES_ACTIVE_TTL_MS = 60 * 1000;
+const SCORES_ARCHIVE_TTL_MS = 10 * 60 * 1000;
+function getCachedScoresWeek(week) {
+  const item = scoresWeekCache.get(Number(week));
+  if (!item) return null;
+  const activeWeek = Number(item.data?.activeWeek);
+  const ttl = Number(week) === activeWeek ? SCORES_ACTIVE_TTL_MS : SCORES_ARCHIVE_TTL_MS;
+  return Date.now() - item.loadedAt < ttl ? item.data : null;
+}
+async function requestScoresWeek(week) {
+  const key = Number(week);
+  const cached = getCachedScoresWeek(key);
+  if (cached) return cached;
+  if (scoresWeekPending.has(key)) return scoresWeekPending.get(key);
+  const request = (async () => {
+    const url = new URL(SCORES_API_URL);
+    url.searchParams.set("action", "scores");
+    url.searchParams.set("week", String(key));
+    const response = await fetch(url.toString());
+    if (!response.ok) throw new Error(`API request failed with HTTP ${response.status}.`);
+    const data = await response.json();
+    if (!data?.ok) throw new Error(data?.error || "The MESH Basketball API returned an error.");
+    scoresWeekCache.set(key, { data, loadedAt: Date.now() });
+    return data;
+  })();
+  scoresWeekPending.set(key, request);
+  try { return await request; }
+  finally { if (scoresWeekPending.get(key) === request) scoresWeekPending.delete(key); }
+}
 const CONFERENCES = [
   { id: "acc", label: "ACC" },
   { id: "american", label: "American" },
@@ -724,8 +757,8 @@ export default function Scores() {
   const [selectedSecondaryFilter, setSelectedSecondaryFilter] = useState(
     () => restoredScoresState?.secondaryFilter || "conference",
   );
-  const [scoresData, setScoresData] = useState(null);
-  const [scoresLoading, setScoresLoading] = useState(true);
+  const [scoresData, setScoresData] = useState(() => getCachedScoresWeek(selectedWeek));
+  const [scoresLoading, setScoresLoading] = useState(() => !getCachedScoresWeek(selectedWeek));
   const [scoresError, setScoresError] = useState("");
   useEffect(() => {
     const scoresState = {
@@ -735,52 +768,31 @@ export default function Scores() {
     };
     navigate(location.pathname, {
       replace: true,
-      state: {
-        ...(location.state || {}),
-        scoresState,
-      },
+      state: { ...(location.state || {}), scoresState },
     });
-  }, [
-    selectedWeek,
-    selectedPrimaryFilter,
-    selectedSecondaryFilter,
-    navigate,
-    location.pathname,
-  ]);
+  }, [selectedWeek, selectedPrimaryFilter, selectedSecondaryFilter, navigate, location.pathname]);
   useEffect(() => {
-    const controller = new AbortController();
-    async function loadScores() {
-      setScoresLoading(true);
-      setScoresError("");
-      try {
-        const url = new URL(SCORES_API_URL);
-        url.searchParams.set("action", "scores");
-        url.searchParams.set("week", String(selectedWeek));
-        const response = await fetch(url.toString(), {
-          signal: controller.signal,
-        });
-        if (!response.ok) {
-          throw new Error(`API request failed with HTTP ${response.status}.`);
-        }
-        const data = await response.json();
-        if (!data?.ok) {
-          throw new Error(data?.error || "The MESH Basketball API returned an error.");
-        }
-        setScoresData(data);
-      } catch (error) {
-        if (error?.name === "AbortError") return;
-        setScoresData(null);
-        setScoresError(
-          error?.message || "Unable to load MESH Basketball scores.",
-        );
-      } finally {
-        if (!controller.signal.aborted) {
+    let cancelled = false;
+    const cached = getCachedScoresWeek(selectedWeek);
+    setScoresData(cached);
+    setScoresLoading(!cached);
+    setScoresError("");
+    if (!cached) {
+      requestScoresWeek(selectedWeek).then(
+        (data) => {
+          if (cancelled) return;
+          setScoresData(data);
           setScoresLoading(false);
-        }
-      }
+        },
+        (error) => {
+          if (cancelled) return;
+          setScoresData(null);
+          setScoresError(error?.message || "Unable to load MESH Basketball scores.");
+          setScoresLoading(false);
+        },
+      );
     }
-    loadScores();
-    return () => controller.abort();
+    return () => { cancelled = true; };
   }, [selectedWeek]);
   const primaryLabel =
     PRIMARY_FILTERS.find((item) => item.id === selectedPrimaryFilter)?.label ??

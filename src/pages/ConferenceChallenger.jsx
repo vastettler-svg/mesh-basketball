@@ -3,6 +3,7 @@ import {Link,useNavigate} from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 import mbaLogo from "../assets/mba-logo.png";
 import "../styles/conferenceChallenger.css";
+import {cachedEventRequest} from "../lib/eventRequestCache";
 const API_URL="https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
 const WEEKS=[10,11,12,13];
 const PATCH_FILES=import.meta.glob('../assets/conference-badges/*',{eager:true,query:'?url',import:'default'});
@@ -165,7 +166,7 @@ function FinalStandings({series,seeding}){
 }
 export default function ConferenceChallenger(){
  const navigate=useNavigate();const [season,setSeason]=useState(2027),[data,setData]=useState(null),[loading,setLoading]=useState(true),[error,setError]=useState('');const [week,setWeek]=useState(10);const [view,setView]=useState('bracket');
- useEffect(()=>{let cancelled=false;setLoading(true);setError('');fetch(`${API_URL}?action=conferenceChallenger&season=${season}`).then(r=>r.json()).then(d=>{if(cancelled)return;if(!d.ok)throw Error(d.error||'Could not load Challenger data');setData(d);setLoading(false)}).catch(e=>{if(!cancelled){setError(e.message);setLoading(false)}});return()=>{cancelled=true}},[season]);
+ useEffect(()=>{let cancelled=false;setLoading(true);setError('');cachedEventRequest(`${API_URL}?action=conferenceChallenger&season=${season}`).then(d=>{if(cancelled)return;if(!d.ok)throw Error(d.error||'Could not load Challenger data');setData(d);setLoading(false)}).catch(e=>{if(!cancelled){setError(e.message);setLoading(false)}});return()=>{cancelled=true}},[season]);
  const allSeries=data?.series||[];const selectedSeries=allSeries.filter(x=>Number(x.week)===week);const seeding=[...(data?.seeding||[])].filter(x=>x.seed).sort((a,b)=>a.seed-b.seed);
  return <div className="cc-page"><PageHeader eyebrow="Events · Weeks 10–13" title="Conference Challenger Series" description="14 conferences · 12 head-to-head games per matchup · Weeks 10–13" imageSrc={mbaLogo} imageAlt="MBA logo" accent="events" size="compact"/>
  <div className="cc-filters"><button type="button" className="cc-back" onClick={()=>navigate('/events')}>← Events</button><label>SEASON<select value={season} onChange={e=>{setSeason(Number(e.target.value));setWeek(10)}}><option value={2027}>2027</option><option value={2026}>2026</option></select></label></div>

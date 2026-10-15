@@ -7,6 +7,47 @@ import mbaLogo from "../assets/mba-logo.png";
 import "../styles/standings.css";
 const STANDINGS_API_URL =
   "https://script.google.com/macros/s/AKfycbwoKZvZRLo7POCjuaD56mvYKaL_AZdfbG04xkoF0XZKqiGYZjD3TmEFuNK8tDwr_K4B/exec";
+// v65: cache successful standings responses and share simultaneous requests.
+// The active season refreshes more often than completed historical seasons.
+const standingsCache = new Map();
+const standingsPending = new Map();
+const STANDINGS_LIVE_TTL = 60 * 1000;
+const STANDINGS_HISTORY_TTL = 10 * 60 * 1000;
+const standingsKey = (season) => season == null ? "default" : String(season);
+function cachedStandings(season) {
+  const entry = standingsCache.get(standingsKey(season));
+  if (!entry || entry.expiresAt <= Date.now()) return null;
+  return entry.payload;
+}
+async function requestStandings(season) {
+  const key = standingsKey(season);
+  const cached = cachedStandings(season);
+  if (cached) return cached;
+  if (standingsPending.has(key)) return standingsPending.get(key);
+  const task = (async () => {
+    const url = new URL(STANDINGS_API_URL);
+    url.searchParams.set("action", "standings");
+    if (season != null) url.searchParams.set("season", String(season));
+    const response = await fetch(url.toString());
+    if (!response.ok) throw new Error(`API request failed with HTTP ${response.status}.`);
+    const payload = await response.json();
+    if (!payload?.ok) throw new Error(payload?.error || "Unable to load standings.");
+    const active = Number(payload.activeSeason);
+    const resolved = season == null ? active : Number(season);
+    const ttl = Number.isFinite(active) && Number.isFinite(resolved) && resolved !== active
+      ? STANDINGS_HISTORY_TTL : STANDINGS_LIVE_TTL;
+    const entry = { payload, expiresAt: Date.now() + ttl };
+    standingsCache.set(key, entry);
+    // Default-season results also satisfy the immediate active-season request.
+    if (season == null && Number.isFinite(active) && active > 0) {
+      standingsCache.set(String(active), entry);
+    }
+    return payload;
+  })();
+  standingsPending.set(key, task);
+  try { return await task; }
+  finally { if (standingsPending.get(key) === task) standingsPending.delete(key); }
+}
 const VIEWS = [
   { value: "pulse", label: "Pulse" },
   { value: "top-25", label: "Top 25" },
@@ -269,12 +310,12 @@ export default function Standings() {
   const location = useLocation();
   const navigate = useNavigate();
   const restoredStandings = location.state?.standingsState || {};
-  const [data, setData] = useState(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
   const [season, setSeason] = useState(
     restoredStandings.season != null ? Number(restoredStandings.season) : null,
   );
+  const [data, setData] = useState(() => cachedStandings(restoredStandings.season != null ? Number(restoredStandings.season) : null));
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(() => !cachedStandings(restoredStandings.season != null ? Number(restoredStandings.season) : null));
   const [view, setView] = useState(restoredStandings.view || "pulse");
   const [conference, setConference] = useState(restoredStandings.conference || "ACC");
   useEffect(() => {
@@ -296,30 +337,33 @@ export default function Standings() {
     });
   }, [season, view, conference, location.pathname, location.search, location.state, navigate]);
   useEffect(() => {
-    const controller = new AbortController();
-    async function load() {
-      setLoading(true);
+    let cancelled = false;
+    const cached = cachedStandings(season);
+    if (cached) {
+      setData(cached);
       setError("");
+      setLoading(false);
+      if (season == null && cached.activeSeason) setSeason(Number(cached.activeSeason));
+      return () => { cancelled = true; };
+    }
+    setLoading(true);
+    setError("");
+    async function load() {
       try {
-        const url = new URL(STANDINGS_API_URL);
-        url.searchParams.set("action", "standings");
-        if (season != null) url.searchParams.set("season", String(season));
-        const response = await fetch(url.toString(), { signal: controller.signal });
-        if (!response.ok) throw new Error(`API request failed with HTTP ${response.status}.`);
-        const payload = await response.json();
-        if (!payload?.ok) throw new Error(payload?.error || "Unable to load standings.");
+        const payload = await requestStandings(season);
+        if (cancelled) return;
         setData(payload);
-        if (season == null && payload.activeSeason) {
-          setSeason(Number(payload.activeSeason));
-        }
+        if (season == null && payload.activeSeason) setSeason(Number(payload.activeSeason));
       } catch (err) {
-        if (err?.name !== "AbortError") setError(err?.message || "Unable to load standings.");
+        if (cancelled) return;
+        setError(err?.message || "Unable to load standings.");
       } finally {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
     load();
-    return () => controller.abort();
+    // Do not abort shared requests: a quick return can reuse the same response.
+    return () => { cancelled = true; };
   }, [season]);
   const teams = data?.teams ?? [];
   const ranked = useMemo(

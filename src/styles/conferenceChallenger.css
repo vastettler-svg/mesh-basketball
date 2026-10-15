@@ -139,3 +139,18 @@
 /* v15: stepped 9th–14th placement bracket, matching Main Bracket progression */
 .cc-ninth-board{height:830px}
 .cc-ninth-lines{height:830px}
+
+/* v20: Unified, touch-friendly bracket viewer; existing card geometry is unchanged. */
+.cc-zoom-section-title{text-align:center;color:#fff;font:700 1.13rem Georgia,serif;margin:20px 0 10px}
+.cc-zoom-widget{width:100%;min-width:0}
+.cc-zoom-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px;color:#aeb4c0;font-size:.72rem}
+.cc-zoom-actions{display:flex;gap:5px;flex-shrink:0}
+.cc-zoom-actions button{border:1px solid #555960;background:#292b31;color:#fff;border-radius:6px;min-width:34px;min-height:32px;padding:4px 9px;font-weight:800;cursor:pointer}
+.cc-zoom-actions button:active{border-color:#ff8a2a;color:#ff8a2a}
+.cc-zoom-viewport{position:relative;width:100%;overflow:hidden;user-select:none;-webkit-user-select:none;cursor:grab;border-radius:12px;border:1px solid #41434b;background:#1d1f24;box-sizing:border-box}
+.cc-zoom-viewport:active{cursor:grabbing}
+.cc-zoom-surface{position:absolute;top:0;left:0;transform-origin:top left;will-change:transform}
+.cc-zoom-surface .cc-tree{box-sizing:border-box;width:1562px;min-width:1562px}
+.cc-zoom-surface .cc-placement-board--mirrored,.cc-zoom-surface .cc-ninth-board{margin:0}
+.cc-placement-frame .cc-zoom-viewport{border:0}
+@media(max-width:650px){.cc-zoom-toolbar{font-size:.64rem}.cc-zoom-actions button{min-height:30px;min-width:30px}.cc-zoom-section-title{font-size:1rem}}

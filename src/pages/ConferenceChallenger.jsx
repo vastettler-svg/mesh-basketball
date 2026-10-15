@@ -1,4 +1,4 @@
-import {useEffect,useMemo,useState} from "react";
+import {useEffect,useMemo,useRef,useState} from "react";
 import {Link,useNavigate} from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 import mbaLogo from "../assets/mba-logo.png";
@@ -32,6 +32,31 @@ function weeklyRoundTitle(item){
 function SeriesCard({item,games,reps,season,compact=false}){const [expanded,setExpanded]=useState(false);const matching=useMemo(()=>{const a=reps.filter(x=>x.conference===item.conference1).sort((x,y)=>x.rank-y.rank),b=reps.filter(x=>x.conference===item.conference2).sort((x,y)=>x.rank-y.rank);const first=games.findIndex(g=>g.gameId===item.firstGameId);if(first>=0)return games.slice(first,first+12).filter(g=>g.week===item.week);if(a.length&&b.length)return games.filter(g=>g.week===item.week&&a.some(x=>x.franchiseId===g.team1.id||x.franchiseId===g.team2.id)&&b.some(x=>x.franchiseId===g.team1.id||x.franchiseId===g.team2.id));return[]},[item,games,reps]);return <article className={`cc-series${compact?" cc-series--compact":""}`}><div className="cc-series__top"><span>{weeklyRoundTitle(item)}</span><span className="cc-status">{item.status}</span></div><div className={`cc-side${item.winner&&item.winner!==item.conference1?" cc-side--loser":""}`}><span className="cc-seed">{item.seed1?`#${item.seed1}`:"–"}</span><ConferencePatch name={item.conference1}/><strong>{item.conference1||"TBD"}</strong>{item.wins1!=null&&item.wins2!=null&&item.wins1===item.wins2&&item.points1!=null&&<small className="cc-pf">PF: {Number(item.points1).toLocaleString()}</small>}<b>{item.wins1??"–"}</b></div><div className={`cc-side${item.winner&&item.winner!==item.conference2?" cc-side--loser":""}`}><span className="cc-seed">{item.seed2?`#${item.seed2}`:"–"}</span><ConferencePatch name={item.conference2}/><strong>{item.conference2||"TBD"}</strong>{item.wins1!=null&&item.wins2!=null&&item.wins1===item.wins2&&item.points2!=null&&<small className="cc-pf">PF: {Number(item.points2).toLocaleString()}</small>}<b>{item.wins2??"–"}</b></div>{!compact&&<button className="cc-expand" onClick={()=>setExpanded(x=>!x)} aria-expanded={expanded}>{expanded?"Hide":"View"} 12 matchups <span>{expanded?"⌃":"⌄"}</span></button>}{expanded&&!compact&&<div className="cc-games">{matching.length?matching.map((g,i)=>{const gameContent=<><div><span className="cc-rank">#{i+1}</span><span className={Number(g.team1.score)<Number(g.team2.score)?"cc-game-loser":""}><Team team={g.team1}/></span><b className={Number(g.team1.score)<Number(g.team2.score)?"cc-game-loser":""}>{g.team1.score??"–"}</b></div><div><span className="cc-rank"/><span className={Number(g.team2.score)<Number(g.team1.score)?"cc-game-loser":""}><Team team={g.team2}/></span><b className={Number(g.team2.score)<Number(g.team1.score)?"cc-game-loser":""}>{g.team2.score??"–"}</b></div></>;return season===2027&&g.gameId?<Link key={g.gameId||i} to={`/scores/${encodeURIComponent(g.gameId)}`} className="cc-game">{gameContent}</Link>:<div key={g.gameId||i} className="cc-game cc-game--static">{gameContent}</div>}):<p className="cc-muted">Individual games will appear when the matchup is assigned in Sheets.</p>}</div>}</article>}
 
 function BracketNode({item,placeholder,mirror=false,flip=false}){return <div className={`cc-tree-node${mirror?" cc-tree-node--mirror":""}`}>{item?<>{(flip?[[item.conference2,item.seed2,item.wins2],[item.conference1,item.seed1,item.wins1]]:[[item.conference1,item.seed1,item.wins1],[item.conference2,item.seed2,item.wins2]]).map(([name,seed,wins],i)=><div key={i} className={`cc-tree-side${item.winner&&item.winner!==name?' is-loser':''}`}>{mirror?<><b>{wins??'–'}</b><span className="cc-tree-name">{name||'TBD'}</span><ConferencePatch name={name}/><span className="cc-tree-seed">{seed?`#${seed}`:'–'}</span></>:<><span className="cc-tree-seed">{seed?`#${seed}`:'–'}</span><ConferencePatch name={name}/><span className="cc-tree-name">{name||'TBD'}</span><b>{wins??'–'}</b></>}</div>)}</>:<div className="cc-tree-placeholder">{placeholder||'Awaiting matchup'}</div>}</div>}
+
+// Reusable fit-to-screen bracket viewer. The original bracket DOM and connector
+// coordinates are unchanged; only the presentation scale/translation changes.
+function ZoomBracket({width,height,label,children}){
+ const viewport=useRef(null),pointers=useRef(new Map()),gesture=useRef(null);
+ const [view,setView]=useState({scale:1,x:0,y:0,fit:1});
+ const state=useRef(view);state.current=view;
+ const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+ const limits=(scale,x,y,box)=>({scale,x:clamp(x,Math.min(0,box.width-width*scale),Math.max(0,box.width-width*scale)),y:clamp(y,Math.min(0,box.height-height*scale),Math.max(0,box.height-height*scale))});
+ useEffect(()=>{
+  const el=viewport.current;if(!el)return;
+  const resize=()=>{const box=el.getBoundingClientRect();if(!box.width)return;const fit=Math.min(1,box.width/width);setView(v=>{const initial=v.fit===1&&v.scale===1;const scale=initial?fit:clamp(v.scale,fit,3);return {...limits(scale,initial?0:v.x,initial?0:v.y,box),fit};});};
+  resize();const obs=new ResizeObserver(resize);obs.observe(el);return ()=>obs.disconnect();
+ },[width,height]);
+ const setZoom=(scale,center)=>{const el=viewport.current;if(!el)return;const box=el.getBoundingClientRect();const v=state.current;const next=clamp(scale,v.fit,3);const cx=center?.x??box.width/2,cy=center?.y??Math.min(box.height/2,180);const x=cx-(cx-v.x)*next/v.scale,y=cy-(cy-v.y)*next/v.scale;setView({...limits(next,x,y,box),fit:v.fit});};
+ const fit=()=>{const el=viewport.current;if(!el)return;const box=el.getBoundingClientRect();const scale=Math.min(1,box.width/width);setView({scale,x:0,y:0,fit:scale});};
+ const point=e=>{const box=viewport.current.getBoundingClientRect();return {x:e.clientX-box.left,y:e.clientY-box.top};};
+ const onDown=e=>{if(e.pointerType==='mouse'&&e.button!==0)return;viewport.current.setPointerCapture(e.pointerId);pointers.current.set(e.pointerId,point(e));gesture.current=null;};
+ const onMove=e=>{if(!pointers.current.has(e.pointerId))return;const p=point(e),old=pointers.current.get(e.pointerId);pointers.current.set(e.pointerId,p);const ps=[...pointers.current.values()];const el=viewport.current,box=el.getBoundingClientRect(),v=state.current;
+  if(ps.length===1){setView({...limits(v.scale,v.x+p.x-old.x,v.y+p.y-old.y,box),fit:v.fit});}
+  else if(ps.length===2){const mid={x:(ps[0].x+ps[1].x)/2,y:(ps[0].y+ps[1].y)/2},dist=Math.hypot(ps[0].x-ps[1].x,ps[0].y-ps[1].y);if(gesture.current){const g=gesture.current,scale=clamp(g.scale*dist/g.dist,v.fit,3);setView({...limits(scale,mid.x-(g.mid.x-g.x)*scale/g.scale,mid.y-(g.mid.y-g.y)*scale/g.scale,box),fit:v.fit});}else gesture.current={dist:Math.max(dist,1),mid,scale:v.scale,x:v.x,y:v.y};}
+ };
+ const onUp=e=>{pointers.current.delete(e.pointerId);gesture.current=null;};
+ return <div className="cc-zoom-widget"><div className="cc-zoom-toolbar"><span>Pinch to zoom · drag to explore</span><div className="cc-zoom-actions"><button type="button" aria-label="Zoom out" onClick={()=>setZoom(state.current.scale/1.35)}>−</button><button type="button" onClick={fit}>Fit</button><button type="button" aria-label="Zoom in" onClick={()=>setZoom(state.current.scale*1.35)}>+</button></div></div><div ref={viewport} className="cc-zoom-viewport" role="region" aria-label={label} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onDoubleClick={e=>{const p=point(e);if(state.current.scale>state.current.fit*1.5)fit();else setZoom(state.current.scale*2,p);}} style={{height:Math.max(150,height*view.fit),touchAction:'none'}}><div className="cc-zoom-surface" style={{width,height,transform:`translate(${view.x}px,${view.y}px) scale(${view.scale})`}}>{children}</div></div></div>;
+}
 function FullBracket({series}){
  const opening=series.filter(s=>Number(s.week)===10&&/^round 1$/i.test(String(s.round||''))).sort((a,b)=>(Number(a.seed1)||99)-(Number(b.seed1)||99));
  const quarters=[1,2,3,4].map(n=>series.find(s=>Number(s.week)===11&&String(s.round||'').toLowerCase()===`quarterfinal ${n}`));
@@ -54,7 +79,7 @@ function FullBracket({series}){
  const byId=Object.fromEntries(nodes.map(n=>[n.id,n]));
  const connections=[['l1','q1'],['l2','q2'],['l3','q2'],['q1','s1'],['q2','s1'],['s1','final'],['r1','q4'],['r2','q3'],['r3','q3'],['q3','s2'],['q4','s2'],['s2','final']];
  function connector(from,to){const a=byId[from],b=byId[to];const forward=a.c<b.c;const x1=columns[a.c]+(forward?w:0),x2=columns[b.c]+(forward?0:w),y1=a.y+h/2,y2=b.y+h/2,mid=(x1+x2)/2;return `M ${x1} ${y1} H ${mid} V ${y2} H ${x2}`;}
- return <div className="cc-bracket"><p className="cc-muted">The Main Bracket advances from the outside toward the Week 13 championship. Swipe horizontally to view the full bracket.</p><div className="cc-bracket-scroll" role="region" aria-label="Conference Challenger main bracket" tabIndex={0}><div className="cc-tree cc-tree--aligned"><div className="cc-tree-title">Conference Challenger · Main Bracket</div><div className="cc-tree-board"><div className="cc-tree-week-labels">{[10,11,12,13,12,11,10].map((week,i)=><div key={i} style={{left:columns[i],width:w}}><strong>Week {week}</strong><span>{({10:"Round 1",11:"Quarterfinals",12:"Semifinals",13:"Championship"})[week]}</span></div>)}</div><svg className="cc-tree-connectors" viewBox="0 0 1536 620" preserveAspectRatio="none" aria-hidden="true">{connections.map(([from,to])=><path key={`${from}-${to}`} d={connector(from,to)}/>)}</svg>{final?.winner&&<div className="cc-tree-champion" style={{left:columns[3],width:w}}><ConferencePatch name={final.winner}/><strong>{final.winner}</strong></div>}{nodes.map(n=><div key={n.id} className="cc-tree-position" style={{left:columns[n.c],top:n.y,width:w}}><BracketNode item={n.item} mirror={n.c>3} flip={n.id==='q3'} placeholder={n.id==='final'?'Championship':n.id.startsWith('s')?'Semifinal':n.id.startsWith('q')?'Quarterfinal':'Opening round'}/></div>)}<div className="cc-tree-position cc-tree-third" style={{left:columns[3],top:440,width:w}}><div className="cc-tree-third-label">3RD PLACE</div><BracketNode item={third} placeholder="3rd Place"/></div></div><p className="cc-tree-note">Seeds #1 and #2 receive Week 10 byes and enter in Week 11. Bracket connectors follow each matchup's advancement path.</p></div></div><FifthPlaceBracket series={series}/><NinthPlaceBracket series={series}/></div>
+ return <div className="cc-bracket"><p className="cc-muted">The Main Bracket advances from the outside toward the Week 13 championship. Pinch to zoom into any section, or use the Fit control to see the entire bracket.</p><h3 className="cc-zoom-section-title">Conference Challenger · Main Bracket</h3><ZoomBracket width={1562} height={730} label="Conference Challenger main bracket"><div className="cc-tree cc-tree--aligned"><div className="cc-tree-board"><div className="cc-tree-week-labels">{[10,11,12,13,12,11,10].map((week,i)=><div key={i} style={{left:columns[i],width:w}}><strong>Week {week}</strong><span>{({10:"Round 1",11:"Quarterfinals",12:"Semifinals",13:"Championship"})[week]}</span></div>)}</div><svg className="cc-tree-connectors" viewBox="0 0 1536 620" preserveAspectRatio="none" aria-hidden="true">{connections.map(([from,to])=><path key={`${from}-${to}`} d={connector(from,to)}/>)}</svg>{final?.winner&&<div className="cc-tree-champion" style={{left:columns[3],width:w}}><ConferencePatch name={final.winner}/><strong>{final.winner}</strong></div>}{nodes.map(n=><div key={n.id} className="cc-tree-position" style={{left:columns[n.c],top:n.y,width:w}}><BracketNode item={n.item} mirror={n.c>3} flip={n.id==='q3'} placeholder={n.id==='final'?'Championship':n.id.startsWith('s')?'Semifinal':n.id.startsWith('q')?'Quarterfinal':'Opening round'}/></div>)}<div className="cc-tree-position cc-tree-third" style={{left:columns[3],top:440,width:w}}><div className="cc-tree-third-label">3RD PLACE</div><BracketNode item={third} placeholder="3rd Place"/></div></div><p className="cc-tree-note">Seeds #1 and #2 receive Week 10 byes and enter in Week 11. Bracket connectors follow each matchup's advancement path.</p></div></ZoomBracket><FifthPlaceBracket series={series}/><NinthPlaceBracket series={series}/></div>
 }
 
 
@@ -71,7 +96,7 @@ function FifthPlaceBracket({series}){
     <h3>Conference Challenger · 5th–8th Place Bracket</h3>
     <p>Conferences eliminated in the Main Bracket quarterfinals enter the Week 12 placement semifinals. Winners play for 5th place and losers play for 7th place in Week 13.</p>
    </header>
-   <div className="cc-bracket-scroll" role="region" aria-label="5th through 8th place bracket" tabIndex={0}>
+   <ZoomBracket width={817} height={620} label="5th through 8th place bracket">
     <div className="cc-placement-board cc-placement-board--mirrored">
     <div className="cc-placement-heading" style={{left:38}}>Week 12<span>Semifinals</span></div>
     <div className="cc-placement-heading" style={{left:306}}>Week 13<span>5th Place</span></div>
@@ -83,7 +108,7 @@ function FifthPlaceBracket({series}){
     {nodes.map(n=><div key={n.id} className="cc-placement-position" style={{left:n.x,top:n.y,width:w}}><BracketNode item={n.item} mirror={n.id==='right'} placeholder={n.id==='fifth'?'5th Place':n.id==='seventh'?'7th Place':'Awaiting semifinal'}/></div>)}
     <span className="cc-placement-label" style={{left:306,top:422,width:w}}>7TH PLACE</span>
     </div>
-   </div>
+   </ZoomBracket>
   </div>
  </section>;
 }
@@ -111,7 +136,7 @@ function NinthPlaceBracket({series}){
     <h3>Conference Challenger · 9th–14th Place Bracket</h3>
     <p>The two highest-seeded conferences eliminated in the opening round receive Week 11 byes in this consolation bracket. The other four opening-round losers play in Week 11; the losers of those matchups meet for 13th place in Week 12. The remaining conferences compete for 9th through 12th place, with the 9th- and 11th-place games in Week 13.</p>
    </header>
-   <div className="cc-bracket-scroll" role="region" aria-label="9th through 14th place bracket" tabIndex={0}>
+   <ZoomBracket width={1118} height={830} label="9th through 14th place bracket">
     <div className="cc-ninth-board">
      {[{x:24,week:11,round:'Consolation'},{x:244,week:12,round:'Semifinals'},{x:464,week:13,round:'9th Place'},{x:684,week:12,round:'Semifinals'},{x:904,week:11,round:'Consolation'}].map((h,i)=><div key={i} className="cc-ninth-heading" style={{left:h.x,width:w}}>Week {h.week}<span>{h.round}</span></div>)}
      <svg viewBox="0 0 1118 830" preserveAspectRatio="none" aria-hidden="true" className="cc-ninth-lines">
@@ -125,7 +150,7 @@ function NinthPlaceBracket({series}){
      <span className="cc-placement-label" style={{left:464,top:495,width:w}}>11TH PLACE</span>
      <span className="cc-placement-label" style={{left:244,top:495,width:w}}>13TH PLACE · WEEK 12</span>
     </div>
-   </div>
+   </ZoomBracket>
   </div>
  </section>;
 }

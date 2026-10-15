@@ -154,3 +154,9 @@
 .cc-zoom-surface .cc-placement-board--mirrored,.cc-zoom-surface .cc-ninth-board{margin:0}
 .cc-placement-frame .cc-zoom-viewport{border:0}
 @media(max-width:650px){.cc-zoom-toolbar{font-size:.64rem}.cc-zoom-actions button{min-height:30px;min-width:30px}.cc-zoom-section-title{font-size:1rem}}
+
+/* Consistent panel framing and roomier mobile pan/zoom windows. */
+.cc-main-bracket-frame{margin:0 0 24px}
+.cc-main-bracket-frame .cc-zoom-viewport{border:0}
+.cc-main-bracket-frame .cc-placement-frame-header{margin-bottom:16px}
+@media(max-width:600px){.cc-zoom-viewport{min-height:520px}.cc-placement-frame{padding:18px 12px 22px}}

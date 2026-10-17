@@ -8,3 +8,26 @@
 .national-postseason-season-picker{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0 16px}.national-postseason-season-picker>span{font-size:11px;font-weight:800;letter-spacing:.08em;color:#9fb4ca}.national-postseason-season-picker>div{display:flex;gap:5px;padding:4px;border:1px solid #354558;border-radius:9px;background:#101924}.national-postseason-season-picker button{border:0;border-radius:6px;background:transparent;color:#b5c5d6;font-weight:800;padding:8px 11px;cursor:pointer}.national-postseason-season-picker button.is-active{background:#e87821;color:#10151d}
 /* Compact team lookup: keep existing tournament cards untouched */
 .national-postseason-finder{padding:12px 14px;margin-bottom:16px;border-color:rgba(212,175,55,.28)}.national-postseason-finder-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.national-postseason-finder-head h3{margin:0;font-size:15px;line-height:1.2;font-weight:800}.national-postseason-season-picker{margin:0;gap:0;flex-shrink:0}.national-postseason-season-picker>div{gap:2px;padding:2px;border-radius:7px}.national-postseason-season-picker button{font-size:11px;padding:6px 8px;border-radius:5px}.national-postseason-finder input{padding:9px 11px;font-size:13px;border-radius:7px}.national-postseason-finder-note{font-size:11px;margin:8px 0 0}.national-postseason-finder-result{margin-top:9px;padding:9px}.national-postseason-finder-options{margin-top:6px}@media(max-width:420px){.national-postseason-finder{padding:11px}.national-postseason-finder-head h3{font-size:14px}.national-postseason-season-picker button{padding:6px 7px;font-size:10px}}
+
+.national-postseason-card{cursor:pointer}.national-postseason-card:hover{border-color:var(--post-accent);transform:translateY(-2px)}.national-postseason-card:focus-visible{outline:2px solid #e87821;outline-offset:3px}.national-postseason-jump{border:0;border-radius:6px;background:#e87821;color:#111b24;font-weight:800;font-size:11px;padding:7px 10px;cursor:pointer;align-self:flex-start;margin-top:5px}
+
+/* v3: Events-consistent navigation and gold postseason summary */
+.national-postseason-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:11px 0 15px}
+.national-postseason-nav .national-postseason-back{margin:0;padding:8px 0;border:0;border-radius:0;background:transparent;color:#f4f4f6;font-size:.8rem;font-weight:800;white-space:nowrap}
+.national-postseason-nav .national-postseason-back:hover{color:#d4af37}
+.national-postseason-year{display:flex;flex-direction:column;align-items:flex-start;gap:4px;color:#d4af37;font-size:.57rem;font-weight:900;letter-spacing:.09em}
+.national-postseason-year select{min-width:85px;width:85px;border:1px solid #b38d2f;border-radius:7px;background:#1d2027;color:#fff;padding:6px 19px 6px 7px;font-size:.72rem;font-weight:800;cursor:pointer}
+.national-postseason-summary{margin:0 0 16px;padding:15px 16px;border:1px solid rgba(212,175,55,.58);border-left:4px solid #d4af37;border-radius:12px;background:linear-gradient(125deg,#2a241c,#1a1b20)}
+.national-postseason-summary span{display:block;color:#d4af37;font-size:11px;letter-spacing:.08em;font-weight:900;margin-bottom:9px}
+.national-postseason-summary p{margin:0;color:#f1f2f5;font-size:12px;line-height:1.65}
+@media(max-width:420px){.national-postseason-summary{padding:12px}.national-postseason-summary p{font-size:11px}}
+
+/* v35 — previous-season defending champion on each tournament card */
+.national-postseason-card-footer .national-postseason-defending{display:flex;flex-direction:column;gap:7px;min-width:0;flex:1;color:#96a6ba;font-size:9px;letter-spacing:.7px}
+.national-postseason-defending-detail{display:flex;align-items:center;gap:9px;min-width:0}
+.national-postseason-defending-detail>img{width:36px;height:36px;object-fit:contain;flex-shrink:0}
+.national-postseason-defending-names{display:flex;flex-direction:column;gap:4px;min-width:0;letter-spacing:0}
+.national-postseason-defending-names>a{font-size:12px;font-weight:800;color:#f1f4f8;text-decoration:none}
+.national-postseason-defending-names small{font-size:10px;color:#aebdd0;line-height:1.4}
+.national-postseason-defending-names small a{color:inherit;text-decoration:none}
+.national-postseason-defending-names a:hover{text-decoration:underline;color:var(--post-accent)}

@@ -1,0 +1,161 @@
+.pb-page{margin:18px 0 30px;color:#eef3f9}.pb-header{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}.pb-back{display:flex;gap:6px;align-items:center;border:1px solid #526072;background:#1a2330;border-radius:8px;padding:9px 12px;color:#e9f0f7;cursor:pointer}.pb-header span{color:#e99a54;font-size:10px;font-weight:800;letter-spacing:1px}.pb-header h2{margin:4px 0;font-size:24px}.pb-header p{font-size:12px;color:#aebacc;margin:0}.pb-toolbar{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px}.pb-toolbar button{white-space:nowrap;display:flex;gap:5px;align-items:center;border:1px solid #4b596c;background:#1d2734;color:#d9e2ef;padding:9px 11px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}.pb-toolbar button.active{background:#e87821;color:#111b24;border-color:#e87821}.pb-viewport{height:520px;position:relative;background:radial-gradient(ellipse at center,#1b2530,#080c12 75%);border:1px solid #39475a;border-radius:13px;overflow:hidden}.pb-canvas{width:1480px;height:1040px;position:absolute;top:0;left:0;transform-origin:0 0;transition:transform .5s cubic-bezier(.2,.8,.2,1)}.pb-canvas-title{position:absolute;left:535px;top:12px;width:410px;text-align:center;font-size:19px;letter-spacing:2px;font-weight:900;color:#e9a66c}.pb-region-title{position:absolute;width:116px;text-align:center;color:#e4a46a;font-weight:800;font-size:10px;letter-spacing:1px}.pb-lines{position:absolute;inset:0;pointer-events:none;overflow:visible}.pb-lines path{stroke:#647589;stroke-width:1.5;fill:none}.pb-match{position:absolute;width:116px;height:40px;border:1px solid #526073;border-radius:5px;background:#242c36;color:#edf3f9;padding:2px 5px;text-align:left;cursor:pointer;overflow:hidden}.pb-match:hover{border-color:#ed8c39;background:#344050}.pb-match-top{position:absolute;right:4px;top:1px;font-size:6px;color:#8b9aac}.pb-team{height:17px;display:flex;align-items:center;gap:5px;font-size:9px;white-space:nowrap}.pb-team+.pb-team{border-top:1px solid #3c4855}.pb-team b{color:#eaa258;min-width:12px}.pb-team em{margin-left:auto;color:#9eabb8;font-style:normal}.pb-final{position:absolute;left:620px;top:390px;width:240px;display:flex;flex-direction:column;gap:10px;text-align:center}.pb-final>span{font-size:15px;color:#e8aa70;font-weight:900}.pb-final button{border:1px solid #67758a;border-radius:7px;background:#252e3b;color:#eaf0f8;padding:10px;cursor:pointer}.pb-final strong{color:#eaa15c;font-size:13px}.pb-minimap{position:absolute;right:10px;top:10px;width:132px;background:rgba(21,29,39,.87);border:1px solid #6c7b8a;border-radius:9px;padding:8px;z-index:3;backdrop-filter:blur(4px)}.pb-map-title{font-size:9px;color:#c2cedc;text-align:center;letter-spacing:1px;margin-bottom:5px}.pb-map-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;position:relative}.pb-map-grid button{height:32px;border:1px solid #778393;border-radius:4px;background:#505c6b;color:#fff;opacity:.45;font-size:8px;cursor:pointer}.pb-map-grid button.selected{background:#e87821;opacity:1;border-color:#f9b17c}.pb-map-grid button:disabled{opacity:.15;cursor:default}.pb-map-grid .pb-map-center{position:absolute;top:28px;left:36px;width:44px;height:18px;font-size:7px;opacity:.85;background:#313d4c}.pb-map-grid .pb-map-center.selected{background:#e87821}.pb-map-reset{margin-top:6px;width:100%;border:0;border-radius:5px;padding:5px;background:#2f3e50;color:#e8eef5;cursor:pointer;font-size:10px}.pb-zoom{position:absolute;right:10px;bottom:10px;display:flex;gap:5px}.pb-zoom button{background:#263648;border:1px solid #53687d;color:#fff;border-radius:6px;padding:8px;cursor:pointer}.pb-detail{margin-top:10px;padding:12px;border:1px solid #a66b36;border-radius:9px;background:#202a35;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:12px}.pb-detail span{color:#b9c6d4;flex:1}.pb-detail button{border:0;border-radius:6px;background:#df7d30;color:#10151d;padding:7px 12px;cursor:pointer}.pb-footnote{color:#9aabba;font-size:11px;margin:10px 0}@media(max-width:680px){.pb-viewport{height:460px}.pb-header h2{font-size:20px}.pb-minimap{width:112px}.pb-map-grid button{height:27px}.pb-map-grid .pb-map-center{top:23px;left:30px;width:38px}}
+
+/* v4: tournament-specific map layouts */
+.pb-map-grid--32{grid-template-columns:1fr 1fr;min-height:70px;align-items:center}
+.pb-map-grid--32>button:not(.pb-map-center){height:60px}
+.pb-map-grid--32 .pb-map-center{top:26px;left:calc(50% - 22px);z-index:1}
+.pb-final--32{top:410px}
+.pb-final--cbi{left:865px;top:380px;width:215px}
+@media(max-width:680px){.pb-map-grid--32>button:not(.pb-map-center){height:52px}.pb-map-grid--32 .pb-map-center{top:23px;left:calc(50% - 19px)}}
+
+.pb-header{justify-content:flex-start}.pb-header>div{text-align:left}.pb-final--cbi{left:820px;top:480px}.pb-final--cbi>span{font-size:13px}
+
+/* v7: real game details in approved match cards */
+.pb-team img{width:12px;height:12px;object-fit:contain;flex-shrink:0}.pb-team-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}.pb-team-winner{color:#fff;font-weight:800;background:rgba(212,175,55,.11)}.pb-team-winner b{color:#f3c34d}.pb-team em{flex-shrink:0}.pb-match{padding:2px 4px}.pb-team{gap:3px;font-size:8px}
+
+/* v8: readable school-only matchup labels, scores anchored on right */
+.pb-match{width:140px;padding:2px 5px}
+.pb-team{font-size:9px;gap:4px}
+.pb-team-name{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb-team img{width:13px;height:13px}
+.pb-team em{min-width:23px;text-align:right;font-size:9px;font-weight:800}
+.pb-team b{min-width:13px}
+.pb-match-top{font-size:6px}
+
+/* v9 — legible, mirrored brackets and redesigned national finals */
+.pb-match{width:184px;height:44px;padding:2px 6px;border-radius:6px}
+.pb-match:disabled,.pb-national-match:disabled{cursor:default;opacity:1}
+.pb-match:disabled:hover{background:#242c36;border-color:#526073}
+.pb-team{height:19px;gap:5px;font-size:11px}
+.pb-team b{min-width:17px;color:#e9ac63}
+.pb-team img,.pb-logo-spacer{width:17px;height:17px;object-fit:contain;flex-shrink:0}
+.pb-team-name{font-size:10px;font-weight:650;min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pb-team em{min-width:27px;font-size:10px;text-align:right;font-weight:800;font-style:normal}
+.pb-team--right .pb-team-name{text-align:right}
+.pb-team--right em{text-align:left}
+.pb-team--right b{text-align:right}
+.pb-match-top{display:none}
+.pb-region-title{width:184px;text-align:left;font-size:12px}
+.pb-column-title{position:absolute;width:184px;text-align:center;font-size:10px;font-weight:800;letter-spacing:.2px;color:#e0e8f3;white-space:nowrap}
+.pb-final--real{left:505px;top:415px;width:470px;gap:12px;align-items:center}
+.pb-final--real>span{font-size:17px}
+.pb-semifinal-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+.pb-national-match{width:100%;min-width:0;border:1px solid #647387;border-radius:9px;background:#252e3b;color:#eaf0f8;padding:8px;display:flex;flex-direction:column;gap:3px;text-align:left}
+.pb-national-match:disabled:hover{background:#252e3b}
+.pb-national-team{display:flex;align-items:center;gap:6px;min-height:26px;padding:2px 3px;font-size:12px;color:#c0cbd8}
+.pb-national-team+.pb-national-team{border-top:1px solid #455366}
+.pb-national-team img,.pb-national-logo{width:24px;height:24px;object-fit:contain;flex-shrink:0}
+.pb-national-team>span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb-national-team strong{font-size:12px;font-variant-numeric:tabular-nums;color:#f0f3f7}
+.pb-national-team--winner{color:#fff;font-weight:800;background:rgba(212,175,55,.12)}
+.pb-national-team--winner strong{color:#f3c34d}
+.pb-final--real>strong{font-size:13px;color:#e2b94c}
+.pb-championship-card{width:62%;border:1px solid #d4af37;border-radius:10px;padding:3px;background:rgba(212,175,55,.08)}
+.pb-viewport{touch-action:none;cursor:grab}
+.pb-viewport:active{cursor:grabbing}
+.pb-canvas{transition:transform .16s ease-out}
+.pb-minimap,.pb-zoom{cursor:auto}
+@media(max-width:680px){.pb-final--real{top:415px}.pb-national-team{font-size:11px}}
+
+/* v10: March Madness only — separated regional quadrants and championship spotlight */
+.pb-canvas--64{width:1840px;height:1440px}
+.pb-canvas--64 .pb-canvas-title{left:715px}
+.pb-canvas--64 .pb-final--real{left:685px;top:440px;width:470px;gap:15px}
+.pb-canvas--64 .pb-final--real .pb-semifinal-row{gap:16px}
+.pb-canvas--64 .pb-final--real .pb-championship-card{width:72%}
+.pb-championship-logos{display:flex;align-items:flex-start;justify-content:center;gap:42px;width:100%;margin-top:6px}
+.pb-championship-logo{width:140px;display:flex;align-items:center;flex-direction:column;gap:7px;color:#c9d3df;font-size:12px;font-weight:700;text-align:center}
+.pb-championship-logo img{height:78px;width:92px;object-fit:contain;filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
+.pb-championship-logo--winner{color:#f4c34e}
+.pb-championship-logo--winner img{filter:drop-shadow(0 0 13px rgba(212,175,55,.65))}
+.pb-championship-logo-placeholder{height:78px;display:flex;align-items:center;justify-content:center}
+
+/* v11 — original seeds in national rounds, winners beside semifinals, single champion */
+.pb-national-seed{width:18px;min-width:18px;text-align:center;font-size:11px;color:#eab85b;font-weight:800}
+.pb-semifinal-row{grid-template-columns:1fr 1fr;gap:12px}
+.pb-semifinal-with-winner{display:flex;align-items:center;min-width:0;gap:7px}
+.pb-semifinal-with-winner .pb-national-match{flex:1;min-width:0}
+.pb-semifinal-winner-logo{width:50px;min-width:50px;display:flex;justify-content:center;align-items:center}
+.pb-semifinal-winner-logo img{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(212,175,55,.35))}
+.pb-semifinal-winner-logo--empty{visibility:hidden}
+.pb-canvas--64 .pb-final--real{width:560px;left:640px}
+.pb-champion-spotlight{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;margin-top:4px;text-align:center}
+.pb-champion-spotlight img{height:76px;width:95px;object-fit:contain;filter:drop-shadow(0 0 12px rgba(212,175,55,.6))}
+.pb-champion-spotlight strong{font-size:15px;color:#f4c34e}
+.pb-champion-spotlight span{font-size:12px;color:#d3dce7}
+.pb-champion-placeholder{font-size:32px}
+
+/* v12 — mirrored right semifinal, consistent score alignment and regional champion emblems */
+.pb-national-team .pb-national-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb-national-team .pb-national-score{min-width:30px;text-align:right;margin-left:auto;font-size:12px;font-variant-numeric:tabular-nums}
+.pb-semifinal-with-winner--right .pb-national-team .pb-national-score{order:0;margin-left:0;margin-right:auto;text-align:left}
+.pb-semifinal-with-winner--right .pb-national-team .pb-national-name{order:1;text-align:right}
+.pb-semifinal-with-winner--right .pb-national-team img,.pb-semifinal-with-winner--right .pb-national-team .pb-national-logo{order:2}
+.pb-semifinal-with-winner--right .pb-national-team .pb-national-seed{order:3;text-align:right}
+.pb-regional-winner{position:absolute;z-index:2;width:76px;height:76px;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.pb-regional-winner img{width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 0 9px rgba(212,175,55,.32))}
+.pb-regional-winner span{color:#e8b95c;font-size:19px;font-weight:800}
+
+/* v14 — title clearance, national finals spacing, simplified semifinal cards */
+.pb-canvas--64 .pb-canvas-title{top:-36px}
+.pb-canvas--64 .pb-final--real .pb-semifinal-row{margin-bottom:20px}
+.pb-canvas--64 .pb-final--real .pb-semifinal-with-winner{width:100%}
+
+/* v17 — compact NIT: semifinals finish each side; one center championship */
+.pb-canvas--nit{width:1880px;height:1040px}
+.pb-canvas--nit .pb-canvas-title{left:690px;top:65px;width:500px}
+.pb-canvas--nit .pb-final--real{left:830px;top:505px;width:260px;gap:11px}
+.pb-canvas--nit .pb-final--real>strong{font-size:12px;white-space:nowrap}
+.pb-canvas--nit .pb-final--real .pb-championship-card{width:100%;box-sizing:border-box}
+.pb-canvas--nit .pb-final--real .pb-champion-spotlight{margin-top:8px}
+.pb-canvas--nit .pb-final--real .pb-champion-spotlight img{height:64px;width:80px}
+.pb-canvas--nit .pb-region-title{width:184px}
+
+/* v18: NIT-only championship separation; preserve all other tournament layouts */
+
+/* CBI: 16-team two-half bracket, single championship center */
+.pb-canvas--cbi{width:1660px;height:1040px}
+.pb-canvas--cbi .pb-canvas-title{left:520px;top:110px;width:500px}
+.pb-canvas--cbi .pb-region-title{width:184px}
+.pb-canvas--cbi .pb-final--real{left:640px;top:505px;width:260px;gap:11px}
+.pb-canvas--cbi .pb-final--real>span{display:none}
+.pb-canvas--cbi .pb-final--real>strong{font-size:12px;white-space:nowrap}
+.pb-canvas--cbi .pb-final--real .pb-championship-card{width:100%;box-sizing:border-box}
+.pb-canvas--cbi .pb-final--real .pb-champion-spotlight{margin-top:8px}
+.pb-canvas--cbi .pb-final--real .pb-champion-spotlight img{height:64px;width:80px}
+
+.pb-subtitle{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;column-gap:12px}
+.pb-field-link{margin-left:auto;background:none;border:0;color:#f3a153;font:inherit;font-weight:800;cursor:pointer;padding:0;white-space:nowrap}
+.pb-field-link:hover{text-decoration:underline}
+.pb-field-page{border:1px solid #3b4d63;border-radius:12px;padding:14px;background:#111b29}
+.pb-field-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.pb-field-heading strong{font-size:12px;letter-spacing:1px;color:#f3a153}
+.pb-field-heading span,.pb-field-disclaimer{font-size:11px;color:#9aabba}
+.pb-field-group{margin:16px 0}.pb-field-group h3{font-size:14px;color:#f3a153;margin:0 0 8px}
+.pb-field-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:6px}
+.pb-field-team{display:flex;align-items:center;gap:9px;padding:9px;background:#1d2a3b;border:1px solid #35455a;border-radius:7px;min-width:0}
+.pb-field-seed{color:#f3a153;width:24px;text-align:center;font-size:13px;flex-shrink:0}
+.pb-field-team img,.pb-field-logo-fallback{width:28px;height:28px;object-fit:contain;flex-shrink:0}
+.pb-field-team-name{font-size:12px;font-weight:700;min-width:0;flex:1}
+.pb-field-record{font-size:10px;color:#9aabba;white-space:nowrap}
+
+/* v34: compact conference identities and field representation */
+.pb-field-conference{display:inline-flex;align-items:center;gap:4px;max-width:92px;min-width:0;color:#bac8d9;font-size:10px;white-space:nowrap;flex-shrink:0}
+.pb-field-conference img{width:19px;height:19px;object-fit:contain;flex-shrink:0}
+.pb-field-conference span{overflow:hidden;text-overflow:ellipsis}
+.pb-field-representation{margin-top:17px;border-top:1px solid #35455a;padding-top:13px}
+.pb-field-representation h3{font-size:12px;letter-spacing:.8px;color:#f3a153;margin:0 0 10px}
+.pb-field-representation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,155px),1fr));gap:6px}
+.pb-field-representation-item{display:flex;align-items:center;gap:7px;border:1px solid #35455a;background:#1d2a3b;border-radius:7px;padding:7px 9px;font-size:11px;min-width:0}
+.pb-field-representation-item img{width:22px;height:22px;object-fit:contain;flex-shrink:0}
+.pb-field-representation-item span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.pb-field-representation-item strong{font-size:13px;color:#f3a153}
+@media(max-width:520px){.pb-field-team{gap:6px;padding:8px 6px}.pb-field-team-name{font-size:11px}.pb-field-conference{max-width:42px}.pb-field-conference span{display:none}.pb-field-record{font-size:10px}}
+
+/* v34b: historical tournament coach and franchise links */
+.pb-field-team-identity{display:flex;flex-direction:column;justify-content:center;gap:3px;flex:1;min-width:0}
+.pb-field-team-identity .pb-field-team-name{flex:none;display:block;color:#f0f5fb;text-decoration:none}
+.pb-field-profile-link:hover{text-decoration:underline;color:#f3a153}
+.pb-field-coach{font-size:10px;color:#aebed0;line-height:1.2;min-width:0}
+.pb-field-coach a{color:inherit;text-decoration:none}
+@media(max-width:520px){.pb-field-coach{font-size:9px}}

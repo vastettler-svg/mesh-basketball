@@ -159,3 +159,8 @@
 .pb-field-coach{font-size:10px;color:#aebed0;line-height:1.2;min-width:0}
 .pb-field-coach a{color:inherit;text-decoration:none}
 @media(max-width:520px){.pb-field-coach{font-size:9px}}
+
+/* Mobile bracket audit: map-only navigation, pinch-zoom without transform animation */
+.pb-canvas{transition:none}
+.pb-viewport{touch-action:none;overscroll-behavior:contain}
+.pb-minimap{z-index:5}

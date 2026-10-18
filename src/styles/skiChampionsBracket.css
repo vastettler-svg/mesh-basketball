@@ -13,3 +13,63 @@
 .ski-cbb-controls .ski-cbb-control-actions .ski-cbb-fit{padding:0 12px;font-size:13px;font-weight:750;letter-spacing:0}
 .ski-cbb-viewport{height:clamp(520px,72vh,900px);min-height:520px;touch-action:pan-x pan-y}
 @media(max-width:600px){.ski-cbb-panel-header{padding:17px 12px 8px}.ski-cbb-controls{padding:8px 10px 12px}.ski-cbb-gesture-help{font-size:10px!important}.ski-cbb-viewport{height:clamp(520px,70vh,800px);min-height:520px}.ski-cbb-controls .ski-cbb-control-actions button{height:34px;min-width:34px}.ski-cbb-controls .ski-cbb-control-actions .ski-cbb-fit{padding:0 9px;font-size:12px}}
+
+/* v37: mirrored right-hand matchup cards and postseason-style field */
+.ski-cbb-team--mirrored{grid-template-columns:42px 27px minmax(0,1fr) 27px 20px}
+.ski-cbb-team--mirrored .ski-cbb-score{text-align:left}
+.ski-cbb-team--mirrored .ski-cbb-team-copy{text-align:right}
+.ski-cbb-rank{font-size:9px;font-weight:900;color:#d4af37;text-align:center}
+.ski-cbb-view-link{display:flex;justify-content:flex-end;margin:8px 0 12px}
+.ski-cbb-view-link button{border:0;background:transparent;color:#ef9b42;font-size:13px;font-weight:800;cursor:pointer;padding:5px 0}
+.ski-cbb-field-page{border:1px solid #40516a;border-radius:14px;background:#121c2b;padding:14px;margin-bottom:18px}
+.ski-cbb-field-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.ski-cbb-field-heading strong,.ski-cbb-representation h3{color:#f1a04a;font-size:12px;letter-spacing:.06em}
+.ski-cbb-field-heading span{font-size:10px;color:#a9b9cb}
+.ski-cbb-field-list{display:flex;flex-direction:column;gap:6px}
+.ski-cbb-field-row{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid #37475d;border-radius:8px;background:#1e2b3d;min-height:48px}
+.ski-cbb-field-seed{width:25px;text-align:center;color:#f4a04a;font-size:12px;flex-shrink:0}
+.ski-cbb-field-logo{width:30px;height:30px;display:grid;place-items:center;flex-shrink:0}
+.ski-cbb-field-logo img{width:29px;height:29px;object-fit:contain}
+.ski-cbb-field-identity{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.ski-cbb-field-identity button{border:0;background:transparent;text-align:left;color:#f3f5fa;font-weight:800;font-size:11px;padding:0;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ski-cbb-field-identity button:hover{text-decoration:underline}
+.ski-cbb-field-identity .ski-cbb-field-coach,.ski-cbb-field-identity small{color:#aebcd0;font-size:9px;font-weight:500}
+.ski-cbb-field-conference{display:flex;align-items:center;gap:4px;flex-shrink:0;font-size:10px;color:#b9c8d8}
+.ski-cbb-field-conference img{width:21px;height:21px;object-fit:contain}
+.ski-cbb-field-record{flex-shrink:0;color:#e5edf5;font-size:10px}
+.ski-cbb-representation{border-top:1px solid #40516a;margin-top:16px;padding-top:12px}
+.ski-cbb-representation h3{margin:0 0 10px}
+.ski-cbb-representation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,145px),1fr));gap:6px}
+.ski-cbb-representation-item{display:flex;align-items:center;gap:7px;border:1px solid #37475d;background:#1e2b3d;border-radius:7px;padding:7px;font-size:11px}
+.ski-cbb-representation-item img{width:22px;height:22px;object-fit:contain}
+.ski-cbb-representation-item span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.ski-cbb-representation-item strong{color:#f1a04a}
+.ski-cbb-field-note{font-size:10px;color:#aebcd0;margin:12px 0 0}
+@media(max-width:520px){.ski-cbb-field-row{gap:5px;padding:7px 5px}.ski-cbb-field-conference span{display:none}.ski-cbb-field-identity button{font-size:10px}.ski-cbb-field-record{font-size:9px}}
+
+/* v38: match national rank typography on both sides of the bracket */
+.ski-cbb-team--mirrored{grid-template-columns:42px minmax(0,1fr) 27px 20px}
+.ski-cbb-team--mirrored .ski-cbb-team-copy strong{color:#f1f5f8;font-size:9px}
+.ski-cbb-team--mirrored .ski-cbb-team-copy{text-align:right}
+
+/* v39: right-side rank and team read together, as in March Madness */
+.ski-cbb-team--mirrored .ski-cbb-team-copy{text-align:left}
+.ski-cbb-team--mirrored .ski-cbb-team-copy strong{color:#f1f5f8;font-weight:800}
+/* Touch gestures are handled explicitly so pinch and one-finger pan don't fight page scrolling. */
+.ski-cbb-viewport{touch-action:none;overscroll-behavior:contain}
+
+/* v40: compact, historical defending champion display */
+.ski-cbb-defending{margin:0 16px 15px;padding:12px 15px;border:1px solid rgba(32,180,134,.36);border-left:4px solid #21bd91;border-radius:12px;background:#142521;color:#f1f5f8}
+.ski-cbb-defending-title{font-size:10px;font-weight:900;letter-spacing:.08em;color:#68d9b7;margin-bottom:8px}
+.ski-cbb-defending-content{display:flex;align-items:center;gap:12px;min-width:0}
+.ski-cbb-defending-content>img{width:47px;height:47px;object-fit:contain;flex-shrink:0}
+.ski-cbb-defending-content>div{min-width:0;display:flex;flex-direction:column;gap:5px}
+.ski-cbb-defending-name{border:0;background:none;padding:0;text-align:left;color:#fff;font-size:13px;font-weight:900;cursor:pointer}
+.ski-cbb-defending-content small{color:#b6c8c2;font-size:10px}
+.ski-cbb-defending-content small button{border:0;background:none;color:inherit;padding:0;font:inherit;cursor:pointer}
+.ski-cbb-defending-content button:hover{text-decoration:underline}
+.ski-cbb-defending-placeholder{font-size:12px;color:#bdc9c5;font-weight:700}
+
+/* v41: SKI defending champion matches the dark-blue Events identity */
+.ski-cbb-defending{background:#111f34;border-color:#244a7b;border-left-color:#2876d6;color:#f1f5ff}
+.ski-cbb-defending-title{color:#62a5ff}

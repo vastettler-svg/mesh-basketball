@@ -7,3 +7,20 @@
 .mmm-season select{min-width:88px;max-width:104px;background:#102820;border:1px solid #1dbb89;border-radius:8px;color:#fff;font-size:12px;font-weight:800}
 .mmm-season svg{color:#36d6a2}
 .mmm-intro{align-items:flex-start}
+
+/* v40: compact defending champion, preserving March Madness bracket styling */
+.mmm-unified-page .pb-page{margin:0 12px 24px}
+.mmm-defending{margin:0 16px 16px;padding:13px 16px;border:1px solid rgba(32,180,134,.3);border-left:3px solid #20b486;border-radius:12px;background:#19252a}
+.mmm-defending-eyebrow{color:#7fe0be;font-size:10px;letter-spacing:.09em;font-weight:900;margin-bottom:9px}
+.mmm-defending-content{display:flex;align-items:center;gap:11px}
+.mmm-defending-content>img{width:48px;height:48px;object-fit:contain;flex-shrink:0}
+.mmm-defending-content>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.mmm-defending-content a{color:#fff;font-weight:800;text-decoration:none;font-size:13px}
+.mmm-defending-content a:hover{text-decoration:underline}
+.mmm-defending-content small,.mmm-defending-empty{color:#b4c6c5;font-size:11px}
+.mmm-defending-content small a{font-size:inherit;color:inherit;font-weight:600}
+
+/* v41: compact overview above the defending champion and unified bracket */
+.mmm-event-summary{margin:0 16px 14px;padding:14px 16px;border:1px solid rgba(32,180,134,.32);border-left:4px solid #20b486;border-radius:13px;background:linear-gradient(120deg,#102b27,#111b20);color:#eafaf4}
+.mmm-event-summary>span{display:block;color:#69d9b5;font-size:11px;font-weight:900;letter-spacing:.08em}
+.mmm-event-summary p{margin:6px 0 0;font-size:13px;line-height:1.5;color:#c4d4d0}

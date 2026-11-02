@@ -41,13 +41,13 @@ const normalized=normalizeStatus(status);
 const Icon=normalized.id==="live"?Radio:normalized.id==="final"?Trophy:Clock3;
 return <span className={`home-gotw-status home-gotw-status-${normalized.id}`}><Icon size={11}/>{normalized.label}</span>;
 }
-function TeamSide({team,side}){
+function TeamSide({team,side,isLosing=false}){
 if(!team)return <div className={`home-gotw-team home-gotw-team-${side}`}><div className="home-gotw-logo home-gotw-logo-empty">TBD</div><strong>TBD</strong></div>;
 const rank=Number(team.rank);
 const showRank=Number.isFinite(rank)&&rank>0&&rank<=25;
 return <div className={`home-gotw-team home-gotw-team-${side}`}>
 {team.franchiseId?<Link className="home-gotw-logo-link" to={`/franchise/${encodeURIComponent(team.franchiseId)}`} aria-label={`Open ${team.name||"team"} franchise profile`}><div className="home-gotw-logo">{team.logoUrl?<img src={team.logoUrl} alt={`${team.name||"Team"} logo`} onError={(event)=>{event.currentTarget.style.display="none";event.currentTarget.nextElementSibling?.removeAttribute("hidden");}}/>:null}<span hidden={Boolean(team.logoUrl)}>{teamInitial(team)}</span>{showRank?<b className="home-gotw-logo-rank">#{rank}</b>:null}</div></Link>:<div className="home-gotw-logo">{team.logoUrl?<img src={team.logoUrl} alt={`${team.name||"Team"} logo`}/>:<span>{teamInitial(team)}</span>}{showRank?<b className="home-gotw-logo-rank">#{rank}</b>:null}</div>}
-<div className="home-gotw-team-copy">
+<div className="home-gotw-team-copy" style={isLosing?{opacity:0.68}:undefined}>
 <strong>{team.franchiseId?<Link className="home-gotw-team-link" to={`/franchise/${encodeURIComponent(team.franchiseId)}`}>{team.name||"TBD"}</Link>:<>{team.name||"TBD"}</>}</strong>
 {team.coachName?(team.coachId?<Link className="home-gotw-coach-link" to={`/coach/${encodeURIComponent(team.coachId)}`}>{team.coachName}</Link>:<span className="home-gotw-coach">{team.coachName}</span>):null}
 <span className="home-gotw-record">OVR: {team.overallRecord||"0-0"} · CONF: {team.conferenceRecord||"0-0"}</span>
@@ -57,17 +57,20 @@ return <div className={`home-gotw-team home-gotw-team-${side}`}>
 function GameOfTheWeekCard({game}){
 const status=normalizeStatus(game.status);
 const probability=projectedWinProbability(game.team1?.projectedScore,game.team2?.projectedScore);
+const finalScores=status.id==="final"?{a:Number(game.team1?.score),b:Number(game.team2?.score)}:null;
+const hasFinalScores=finalScores&&Number.isFinite(finalScores.a)&&Number.isFinite(finalScores.b);
+const losingSide=hasFinalScores&&finalScores.a!==finalScores.b?(finalScores.a<finalScores.b?"left":"right"):null;
 return <article className="home-gotw-card">
 <div className="home-gotw-card-top"><StatusPill status={game.status}/><span className="home-gotw-week">Week {game.week}</span></div>
 <div className="home-gotw-title">MESH GAME OF THE WEEK</div>
 <div className="home-gotw-matchup">
-<TeamSide team={game.team1} side="left"/>
+<TeamSide team={game.team1} side="left" isLosing={losingSide==="left"}/>
 <div className="home-gotw-center">
-<div className="home-gotw-score"><strong>{formatScore(game.team1?.score)}</strong><span>–</span><strong>{formatScore(game.team2?.score)}</strong></div>
+<div className="home-gotw-score"><strong style={losingSide==="left"?{opacity:0.68}:undefined}>{formatScore(game.team1?.score)}</strong><span>–</span><strong style={losingSide==="right"?{opacity:0.68}:undefined}>{formatScore(game.team2?.score)}</strong></div>
 {status.id!=="final"?<div className="home-gotw-projections"><span>Proj: {formatScore(game.team1?.projectedScore)}</span><span>Proj: {formatScore(game.team2?.projectedScore)}</span></div>:null}
 <span className={`home-gotw-center-status home-gotw-center-status-${status.id}`}>{status.id==="live"?"● LIVE":status.label.toUpperCase()}</span>
 </div>
-<TeamSide team={game.team2} side="right"/>
+<TeamSide team={game.team2} side="right" isLosing={losingSide==="right"}/>
 </div>
 {status.id!=="final"&&probability?<div className="home-gotw-win"><div className="home-gotw-win-heading">WIN PROBABILITY</div><div className="home-gotw-win-values"><strong>{probability.team1}%</strong><strong>{probability.team2}%</strong></div><div className={`home-gotw-win-track home-gotw-win-track-${probability.favored}`}><span className="home-gotw-win-left" style={{width:`${probability.team1}%`,backgroundColor:probability.favored==="team1"?safeTeamColor(game.team1?.primaryColor):undefined}}/><i className="home-gotw-win-right" style={{width:`${probability.team2}%`,backgroundColor:probability.favored==="team2"?safeTeamColor(game.team2?.primaryColor):undefined}}/></div></div>:null}
 <Link className="home-gotw-game-center" to={`/scores/${encodeURIComponent(game.gameId)}`}>VIEW GAME CENTER<ChevronRight size={14}/></Link>
@@ -301,6 +304,19 @@ function HomeEvents({week}){
 const active=HOME_EVENTS.filter(event=>week>=event.start&&week<=event.end);
 return <section className="home-events-section" aria-label={`Week ${week} MESH events`}><div className="home-section-heading home-events-heading"><div><span>AROUND THE LEAGUE · WEEK {week}</span><h1>MESH Events</h1></div><Link to="/events">All Events<ChevronRight size={13}/></Link></div>{active.length?<div className="home-events-grid">{active.map(event=><Link key={event.slug} to={event.ready===false?"/events":`/events/${event.slug}`} className="home-events-card" style={{"--home-event-color":event.color}}><div className="home-events-mark"><Trophy size={21} strokeWidth={1.8}/></div><div className="home-events-copy"><span>{event.start===event.end?`WEEK ${event.start}`:`WEEKS ${event.start}–${event.end}`}</span><strong>{event.name}</strong><small>{event.detail}{event.ready===false?" · Preview available":""}</small></div><ChevronRight size={17} className="home-events-arrow"/></Link>)}</div>:<div className="home-events-empty">No special events scheduled for Week {week}. <Link to="/events">Explore the season calendar <ChevronRight size={12}/></Link></div>}</section>;
 }
+// MESH Basketball uses Mountain Time for its Sunday-night rollover / Wednesday switch.
+const MESH_TIME_ZONE="America/Denver";
+function meshLeagueClock(){
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:MESH_TIME_ZONE,weekday:"short",hour:"numeric",hourCycle:"h23"}).formatToParts(new Date());
+ const weekday=parts.find(part=>part.type==="weekday")?.value||"";
+ const hour=Number(parts.find(part=>part.type==="hour")?.value||0);
+ return{weekday,hour};
+}
+function shouldShowPreviousWeekRecap(clock){
+ // The league rolls over Sunday evening. Show the completed-week recap then,
+ // throughout Monday and Tuesday; switch to new-week previews on Wednesday.
+ return clock.weekday==="Mon"||clock.weekday==="Tue"||(clock.weekday==="Sun"&&clock.hour>=18);
+}
 export default function Home(){
 const[data,setData]=useState(null);
 const[recapData,setRecapData]=useState(null);
@@ -308,6 +324,13 @@ const[loading,setLoading]=useState(true);
 const[error,setError]=useState("");
 const[selectedWeek,setSelectedWeek]=useState(null);
 const[weekMenuOpen,setWeekMenuOpen]=useState(false);
+const[leagueClock,setLeagueClock]=useState(meshLeagueClock);
+useEffect(()=>{
+ const refreshClock=()=>setLeagueClock(meshLeagueClock());
+ const timer=setInterval(refreshClock,60*1000);
+ window.addEventListener("focus",refreshClock);
+ return()=>{clearInterval(timer);window.removeEventListener("focus",refreshClock);};
+},[]);
 useEffect(()=>{
  let cancelled=false;
  setLoading(true);setError('');
@@ -324,7 +347,40 @@ useEffect(()=>{
  }).catch(err=>{if(!cancelled){setData(null);setError(err?.message||'Unable to load the MESH Basketball home page.');setLoading(false);}});
  return()=>{cancelled=true;};
  },[]);
+ // Reload the current-week pointer when returning to the app, including after a rollover.
+ useEffect(()=>{
+  let cancelled=false;
+  const refresh=()=>{
+   homeScoresCache.delete("current");
+   fetchScores(null).then(payload=>{
+    if(cancelled)return;
+    setData(previous=>{
+     const previousActive=Number(previous?.activeWeek||previous?.week||1);
+     const nextActive=Number(payload.activeWeek||payload.week||1);
+     if(nextActive!==previousActive){
+      setSelectedWeek(selected=>selected===null||Number(selected)===previousActive?nextActive:selected);
+      return payload;
+     }
+     return previous;
+    });
+    setLeagueClock(meshLeagueClock());
+   }).catch(()=>{});
+  };
+  window.addEventListener("focus",refresh);
+  const timer=setInterval(refresh,2*60*1000);
+  return()=>{cancelled=true;clearInterval(timer);window.removeEventListener("focus",refresh);};
+ },[]);
  const activeWeek=Number(data?.activeWeek||data?.week||1);
+ // Keep the previous week's results in a separate response: never replace current scores.
+ useEffect(()=>{
+  let cancelled=false;
+  setRecapData(null);
+  if(activeWeek>1){
+   fetchScores(activeWeek-1).then(payload=>{if(!cancelled)setRecapData(payload);})
+    .catch(()=>{if(!cancelled)setRecapData(null);});
+  }
+  return()=>{cancelled=true;};
+ },[activeWeek]);
  const displayedWeek=Number(selectedWeek||activeWeek);
  const isCurrentWeek=displayedWeek===activeWeek;
  useEffect(()=>{
@@ -344,9 +400,17 @@ useEffect(()=>{
   }).catch(err=>{if(!cancelled){setError(err?.message||`Unable to load Week ${displayedWeek}.`);setLoading(false);}});
   return()=>{cancelled=true;};
  },[displayedWeek,isCurrentWeek]);
-const gameOfTheWeek=useMemo(()=>data?.games?.find(game=>Number(game.featuredRank)===1)||null,[data]);
-const day=new Date().getDay();
-const currentMode=activeWeek<=1?"preview":day===1||day===2?"recap":"preview";
+const currentMode=activeWeek<=1?"preview":shouldShowPreviousWeekRecap(leagueClock)?"recap":"preview";
+// Match the Headlines transition: retain the prior week's featured FINAL through Tuesday.
+// Historical week selections always show the featured game for the selected week.
+const showPreviousGameOfTheWeek=isCurrentWeek&&currentMode==="recap";
+const gameOfTheWeek=useMemo(()=>{
+ const source=showPreviousGameOfTheWeek?recapData?.games:data?.games;
+ const featured=source?.find(game=>Number(game.featuredRank)===1)||null;
+ // Never present an unfinished historical matchup as a completed result.
+ return showPreviousGameOfTheWeek&&featured&&!completedGame(featured)?null:featured;
+},[data,recapData,showPreviousGameOfTheWeek]);
+const gameOfTheWeekWeek=showPreviousGameOfTheWeek?Math.max(1,activeWeek-1):displayedWeek;
 const headlineMode=isCurrentWeek?currentMode:"preview";
 const headlineGames=headlineMode==="recap"?(recapData?.games||[]):(data?.games||[]);
 const headlines=useMemo(()=>{
@@ -392,14 +456,14 @@ const spotlightItems=useMemo(()=>buildSpotlight(spotlightGames),[spotlightGames]
 const spotlightLabels=["HIGHEST SCORE","BIGGEST UPSET","BIGGEST WIN","CLOSEST GAME"];
 return <section className="home-page">
 <div className="home-week-menu"><button type="button" className="home-week-pill home-week-selector" onClick={()=>setWeekMenuOpen(open=>!open)} aria-expanded={weekMenuOpen}><strong>Week {displayedWeek}</strong><span>•</span><span>MESH Basketball</span><span className="home-week-caret">⌄</span></button>{weekMenuOpen?<div className="home-week-options">{weekOptions.map(week=><button type="button" key={week} className={week===displayedWeek?"home-week-option home-week-option-active":"home-week-option"} onClick={()=>{setSelectedWeek(week);setWeekMenuOpen(false);}}><span>Week {week}</span>{week===activeWeek?<small>Current</small>:null}</button>)}</div>:null}</div>
-<div className="home-section-heading"><div><span>THIS WEEK IN MESH</span><h1>Game of the Week</h1></div><Link to="/scores">All Scores<ChevronRight size={13}/></Link></div>
+<div className="home-section-heading"><div><span>{showPreviousGameOfTheWeek?`WEEK ${gameOfTheWeekWeek} · FINAL`:"THIS WEEK IN MESH"}</span><h1>Game of the Week</h1></div><Link to="/scores">All Scores<ChevronRight size={13}/></Link></div>
 {loading?<div className="home-gotw-loading"><div/><div/><div/></div>:null}
 {!loading&&error?<div className="home-gotw-message"><strong>Home page unavailable</strong><span>{error}</span></div>:null}
 {!loading&&!error&&gameOfTheWeek?<GameOfTheWeekCard game={gameOfTheWeek}/>:null}
-{!loading&&!error&&!gameOfTheWeek?<div className="home-gotw-message"><strong>Game of the Week not selected yet</strong><span>Featured_Rank 1 has not been assigned for Week {displayedWeek}.</span></div>:null}
+{!loading&&!error&&!gameOfTheWeek?<div className="home-gotw-message"><strong>{showPreviousGameOfTheWeek?(recapData?"Previous Game of the Week final unavailable":"Loading previous Game of the Week"):"Game of the Week not selected yet"}</strong><span>{showPreviousGameOfTheWeek?(recapData?`A completed Featured_Rank 1 matchup was not found for Week ${gameOfTheWeekWeek}.`:`Retrieving Week ${gameOfTheWeekWeek} results.`):`Featured_Rank 1 has not been assigned for Week ${displayedWeek}.`}</span></div>:null}
 <div className="home-section-heading home-headlines-heading"><div><span>{headlineMode==="recap"?`BIGGEST STORIES FROM WEEK ${Math.max(1,activeWeek-1)}`:isCurrentWeek?`LOOKING AHEAD TO WEEK ${displayedWeek}`:`WEEK ${displayedWeek} ARCHIVE`}</span><h1>MESH Headlines</h1></div></div>
 {!loading&&headlines.length>0?<div className="home-headlines-grid">{headlines.map(story=><HeadlineCard key={story.id} story={story}/>)}</div>:null}
-{!loading&&headlines.length===0?<div className="home-gotw-message"><strong>Headlines are being written</strong><span>Stories will appear when Week {headlineMode==="recap"?Math.max(1,activeWeek-1):displayedWeek} matchups are available.</span></div>:null}
+{!loading&&headlines.length===0?<div className="home-gotw-message"><strong>{headlineMode==="recap"&&!recapData?"Loading last week's headlines":"Headlines are being written"}</strong><span>{headlineMode==="recap"&&!recapData?`Retrieving Week ${Math.max(1,activeWeek-1)} results.`:`Stories will appear when Week ${headlineMode==="recap"?Math.max(1,activeWeek-1):displayedWeek} matchups are available.`}</span></div>:null}
 <div className="home-section-heading home-spotlight-heading"><div><span>STANDOUT PERFORMANCES & RESULTS</span><h1>Week {spotlightWeek||displayedWeek} · MESH Spotlight</h1></div></div>
 {!loading?<div className="home-spotlight-grid">{spotlightItems.length?spotlightItems.map(item=><SpotlightCard key={item.id} item={item} week={spotlightWeek||displayedWeek}/>):spotlightLabels.map(label=><SpotlightEmptyCard key={label} label={label} week={displayedWeek}/>)}</div>:null}
 <HomeEvents week={displayedWeek}/>

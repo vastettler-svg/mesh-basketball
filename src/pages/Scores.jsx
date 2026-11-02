@@ -750,7 +750,11 @@ export default function Scores() {
   const location = useLocation();
   const navigate = useNavigate();
   const restoredScoresState = location.state?.scoresState;
-  const [selectedWeek, setSelectedWeek] = useState(() => Number(restoredScoresState?.week) || 1);
+  const restoredWeek = Number(restoredScoresState?.week);
+  const hasRestoredWeek = Number.isInteger(restoredWeek) && restoredWeek >= 1 && restoredWeek <= MAX_WEEK;
+  const [selectedWeek, setSelectedWeek] = useState(() => hasRestoredWeek ? restoredWeek : 1);
+  const [weekInitialized, setWeekInitialized] = useState(hasRestoredWeek);
+  const manualWeekSelectionRef = useRef(false);
   const [selectedPrimaryFilter, setSelectedPrimaryFilter] = useState(
     () => restoredScoresState?.primaryFilter || "featured",
   );
@@ -761,6 +765,7 @@ export default function Scores() {
   const [scoresLoading, setScoresLoading] = useState(() => !getCachedScoresWeek(selectedWeek));
   const [scoresError, setScoresError] = useState("");
   useEffect(() => {
+    if (!weekInitialized) return;
     const scoresState = {
       week: selectedWeek,
       primaryFilter: selectedPrimaryFilter,
@@ -770,8 +775,34 @@ export default function Scores() {
       replace: true,
       state: { ...(location.state || {}), scoresState },
     });
-  }, [selectedWeek, selectedPrimaryFilter, selectedSecondaryFilter, navigate, location.pathname]);
+  }, [selectedWeek, selectedPrimaryFilter, selectedSecondaryFilter, navigate, location.pathname, weekInitialized]);
+  // Resolve the authoritative active week before displaying the default scoreboard.
+  // The Week 1 request is only a metadata bootstrap, not the initial selection.
   useEffect(() => {
+    if (hasRestoredWeek) return;
+    let cancelled = false;
+    const cachedActive = [...scoresWeekCache.values()]
+      .map((item) => Number(item?.data?.activeWeek))
+      .find((week) => Number.isInteger(week) && week >= 1 && week <= MAX_WEEK);
+    const resolveWeek = (week) => {
+      if (cancelled || manualWeekSelectionRef.current) return;
+      const nextWeek = Number.isInteger(week) && week >= 1 && week <= MAX_WEEK ? week : 1;
+      setSelectedWeek(nextWeek);
+      setSelectedSecondaryFilter(getBaseFilterForWeek(nextWeek).id);
+      setWeekInitialized(true);
+    };
+    if (cachedActive) {
+      resolveWeek(cachedActive);
+    } else {
+      requestScoresWeek(1).then(
+        (data) => resolveWeek(Number(data?.activeWeek)),
+        () => resolveWeek(1),
+      );
+    }
+    return () => { cancelled = true; };
+  }, []);
+  useEffect(() => {
+    if (!weekInitialized) return;
     let cancelled = false;
     const cached = getCachedScoresWeek(selectedWeek);
     setScoresData(cached);
@@ -793,7 +824,7 @@ export default function Scores() {
       );
     }
     return () => { cancelled = true; };
-  }, [selectedWeek]);
+  }, [selectedWeek, weekInitialized]);
   const primaryLabel =
     PRIMARY_FILTERS.find((item) => item.id === selectedPrimaryFilter)?.label ??
     "Featured";
@@ -828,6 +859,8 @@ export default function Scores() {
   }
   function changeWeek(nextWeek) {
     if (nextWeek < 1 || nextWeek > MAX_WEEK) return;
+    manualWeekSelectionRef.current = true;
+    setWeekInitialized(true);
     setSelectedWeek(nextWeek);
     resetSecondaryForWeek(nextWeek);
   }
@@ -899,8 +932,8 @@ export default function Scores() {
         </section>
       ) : null}
       <ScoresResults
-        data={scoresData}
-        loading={scoresLoading}
+        data={weekInitialized ? scoresData : null}
+        loading={!weekInitialized || scoresLoading}
         error={scoresError}
         selectedPrimaryFilter={selectedPrimaryFilter}
         selectedSecondaryFilter={selectedSecondaryFilter}

@@ -48,6 +48,30 @@ async function requestStandings(season) {
   try { return await task; }
   finally { if (standingsPending.get(key) === task) standingsPending.delete(key); }
 }
+// Pulse has its own API action and cache lifecycle; keep the base standings
+// endpoint unchanged and request the live Pulse only when needed.
+const pulseCache = new Map();
+const pulsePending = new Map();
+async function requestStandingsPulse(season) {
+  const key = season == null ? "default" : String(season);
+  const entry = pulseCache.get(key);
+  if (entry && entry.expiresAt > Date.now()) return entry.payload;
+  if (pulsePending.has(key)) return pulsePending.get(key);
+  const task = (async () => {
+    const url = new URL(STANDINGS_API_URL);
+    url.searchParams.set("action", "standingspulse");
+    if (season != null) url.searchParams.set("season", String(season));
+    const response = await fetch(url.toString());
+    if (!response.ok) throw new Error(`Pulse request failed with HTTP ${response.status}.`);
+    const payload = await response.json();
+    if (!payload?.ok) throw new Error(payload?.error || "Unable to load Pulse.");
+    pulseCache.set(key, { payload, expiresAt: Date.now() + STANDINGS_LIVE_TTL });
+    return payload;
+  })();
+  pulsePending.set(key, task);
+  try { return await task; }
+  finally { if (pulsePending.get(key) === task) pulsePending.delete(key); }
+}
 const VIEWS = [
   { value: "pulse", label: "Pulse" },
   { value: "top-25", label: "Top 25" },
@@ -169,7 +193,7 @@ function TeamIdentity({ team, showNationalRank = false }) {
     </div>
   );
 }
-function RankingsTable({ title, eyebrow, teams, rankField = "nationalRank", conferenceMode = false }) {
+function RankingsTable({ title, eyebrow, teams, rankField = "nationalRank", conferenceMode = false, movements = null }) {
   return (
     <section className="standings-section">
       <div className="standings-section-heading">
@@ -184,6 +208,27 @@ function RankingsTable({ title, eyebrow, teams, rankField = "nationalRank", conf
           <div className="standings-table-row" key={team.franchiseId}>
             <div className="standings-position">
               {team[rankField] ?? index + 1}
+              {movements && movements[team.franchiseId] ? (
+                <span
+                  className="standings-rank-movement"
+                  style={{
+                    display: "block",
+                    fontSize: "0.72em",
+                    fontWeight: 800,
+                    color: movements[team.franchiseId].change > 0 ? "#22c55e"
+                      : movements[team.franchiseId].change < 0 ? "#ef4444" : "#9ca3af",
+                    whiteSpace: "nowrap",
+                    marginTop: 3,
+                  }}
+                  title={`Previous rank: ${movements[team.franchiseId].previousRank}`}
+                >
+                  {movements[team.franchiseId].change > 0
+                    ? `▲ ${movements[team.franchiseId].change}`
+                    : movements[team.franchiseId].change < 0
+                      ? `▼ ${Math.abs(movements[team.franchiseId].change)}`
+                      : "—"}
+                </span>
+              ) : null}
             </div>
             <TeamIdentity team={team} showNationalRank={conferenceMode} />
             <div className="standings-record">{team.overallRecord || "0-0"}</div>
@@ -365,6 +410,28 @@ export default function Standings() {
     // Do not abort shared requests: a quick return can reuse the same response.
     return () => { cancelled = true; };
   }, [season]);
+  const [pulseData, setPulseData] = useState(null);
+  const [pulseError, setPulseError] = useState("");
+  useEffect(() => {
+    if (!data || Number(season) !== Number(data.activeSeason)) {
+      setPulseData(null);
+      setPulseError("");
+      return;
+    }
+    let cancelled = false;
+    setPulseData(null);
+    setPulseError("");
+    requestStandingsPulse(data.activeSeason).then(payload => {
+      if (!cancelled) setPulseData(payload);
+    }).catch(err => {
+      if (!cancelled) setPulseError(err?.message || "Pulse unavailable.");
+    });
+    return () => { cancelled = true; };
+  }, [data?.activeSeason, season, data?.lastCompletedWeek]);
+  const enrichedData = data && pulseData?.pulse
+    ? { ...data, pulse: pulseData.pulse }
+    : data;
+  const movements = pulseData?.pulse?.rankMovements || {};
   const teams = data?.teams ?? [];
   const ranked = useMemo(
     () => [...teams].sort((a, b) => (a.nationalRank ?? 9999) - (b.nationalRank ?? 9999)),
@@ -438,10 +505,13 @@ export default function Standings() {
       {!loading && !error && data ? (
         <>
           {view === "pulse" ? (
-            <PulseView data={data} />
+            <>
+              {pulseError ? <div className="standings-message standings-error">Pulse data unavailable: {pulseError}</div> : null}
+              {pulseData ? <PulseView data={enrichedData} /> : !pulseError ? <div className="standings-message">Loading MESH Pulse…</div> : null}
+            </>
           ) : null}
           {view === "top-25" ? (
-            <RankingsTable title="MESH Top 25" eyebrow="National Rankings" teams={displayTeams} />
+            <RankingsTable title="MESH Top 25" eyebrow="National Rankings" teams={displayTeams} movements={movements} />
           ) : null}
           {view === "mid-major-top-25" ? (
             <RankingsTable title="Mid Major Top 25" eyebrow="National Rankings" teams={displayTeams} />
